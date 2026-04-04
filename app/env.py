@@ -10,7 +10,7 @@ from app.pillars.dataset_qc import grade_dataset, load_dataset
 from app.pillars.rl_reward import grade_reward, load_rl_config
 from app.pillars.tool_tester import grade_tool, load_tool
 
-class OpenAuditEnv(Environment):
+class OpenAuditEnv:
     def __init__(self):
         self.current_episode_id = None
         self.current_pillar = None
@@ -234,5 +234,6 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
 
 
