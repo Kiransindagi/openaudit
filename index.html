@@ -5,56 +5,308 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenAudit - AI Ecosystem Trust & Quality Auditing</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #fff;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .header { text-align: center; padding: 2rem 1rem; animation: fadeInDown 0.8s ease; }
-        .logo { font-size: 4rem; margin-bottom: 1rem; }
-        h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #e0e0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .tagline { font-size: 1.25rem; opacity: 0.95; margin-bottom: 2rem; }
-        .status-badge { display: inline-block; background: #4CAF50; color: white; padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: bold; margin-bottom: 1rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-        .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1.5rem; transition: transform 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
-        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
-        .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-        .card p { font-size: 0.9rem; opacity: 0.9; line-height: 1.5; }
-        .test-results { background: rgba(0,0,0,0.3); border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; overflow-x: auto; }
-        .test-results h3 { margin-bottom: 1rem; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
-        th { font-weight: 600; opacity: 0.8; }
-        .status-pass { color: #4CAF50; }
-        .status-partial { color: #FFC107; }
-        .status-fail { color: #f44336; }
-        .loading { text-align: center; padding: 2rem; opacity: 0.7; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; text-align: center; }
-        .stat-card { background: rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 1rem; }
-        .stat-number { font-size: 2rem; font-weight: bold; }
-        .stat-label { font-size: 0.85rem; opacity: 0.8; }
-        .api-section { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; }
-        .endpoint { background: rgba(0,0,0,0.3); border-radius: 0.5rem; padding: 0.75rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.85rem; }
-        .method { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-weight: bold; margin-right: 0.5rem; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 1rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .test-results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .test-results h3 {
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .status-pass {
+            color: #4CAF50;
+        }
+
+        .status-partial {
+            color: #FFC107;
+        }
+
+        .status-fail {
+            color: #f44336;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .api-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .endpoint {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
         .method.post { background: #4CAF50; }
         .method.get { background: #2196F3; }
         .url { color: #ffd700; }
-        .code-block { background: rgba(0,0,0,0.4); border-radius: 0.5rem; padding: 1rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; }
-        .buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
-        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 2rem; text-decoration: none; font-weight: 600; transition: all 0.3s ease; cursor: pointer; }
-        .btn-primary { background: #fff; color: #667eea; }
-        .btn-primary:hover { transform: scale(1.05); }
-        .btn-secondary { background: transparent; border: 2px solid #fff; color: #fff; }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-        .footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; opacity: 0.8; }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .grid, .stats, .api-section, .test-results { animation: fadeInUp 0.8s ease; }
-        @media (max-width: 768px) { .container { padding: 1rem; } h1 { font-size: 2rem; } .logo { font-size: 3rem; } th, td { font-size: 0.7rem; padding: 0.5rem; } .code-block { font-size: 0.7rem; } }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Live Audit Log Styles */
+        .audit-log {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+        }
+
+        .log-entry {
+            padding: 0.2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .log-info { color: #64B5F6; }
+        .log-success { color: #81C784; }
+        .log-warning { color: #FFD54F; }
+        .log-error { color: #E57373; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid, .stats, .api-section, .test-results {
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 2rem; }
+            .logo { font-size: 3rem; }
+            th, td { font-size: 0.7rem; padding: 0.5rem; }
+            .code-block { font-size: 0.7rem; }
+            .audit-log { height: 150px; font-size: 0.6rem; }
+        }
     </style>
 </head>
 <body>
@@ -67,11 +319,21 @@
     </div>
 
     <div class="stats" id="statsContainer">
-        <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Auditing Tasks</div></div>
+        <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Auditing Tasks</div></div>
         <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Working Tasks</div></div>
         <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
         <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
         <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
+    </div>
+
+    <!-- LIVE AUDIT LOG - ADDED -->
+    <div class="api-section">
+        <h3>📝 Live Audit Log <span style="font-size:0.7rem; opacity:0.7;">(Real-time agent activity)</span></h3>
+        <div id="auditLog" class="audit-log">
+            <div class="log-entry log-info">🟢 OpenAudit environment initialized</div>
+            <div class="log-entry log-info">📡 Connected to API endpoint</div>
+            <div class="log-entry log-info">🔄 Starting automated audit cycle...</div>
+        </div>
     </div>
 
     <div class="test-results">
@@ -80,12 +342,13 @@
     </div>
 
     <div class="grid">
-        <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud.</p></div>
-        <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicates, and train/test leakage.</p></div>
-        <div class="card"><div class="card-icon">🎯</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, broken verifiers.</p></div>
-        <div class="card"><div class="card-icon">🛠️</div><h3>Tool Tester</h3><p>Detect code quality, silent failures, dangerous chains.</p></div>
+        <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</p></div>
+        <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicate rows, and train/test leakage in datasets.</p></div>
+        <div class="card"><div class="card-icon">🎯</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, and broken verifiers in RL training.</p></div>
+        <div class="card"><div class="card-icon">🛠️</div><h3>Tool Tester</h3><p>Detect code quality issues, silent failures, and dangerous tool chains.</p></div>
     </div>
 
+    <!-- API Endpoints Section -->
     <div class="api-section">
         <h3>📡 API Endpoints</h3>
         <div class="endpoint"><span class="method post">POST</span><span class="url">/reset?task_id={task_id}</span><span style="float:right;">Start a new audit episode</span></div>
@@ -96,17 +359,62 @@
         <div class="endpoint"><span class="method get">GET</span><span class="url">/docs</span><span style="float:right;">Swagger UI</span></div>
     </div>
 
+    <!-- Quick Start / Copy-Paste Command Snippets -->
     <div class="api-section">
-        <h3>🚀 Quick Start</h3>
-        <div class="endpoint"><strong>Reset:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy</div></div>
-        <div class="endpoint"><strong>Step:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/step -H "Content-Type: application/json" -d '{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"Missing license","severity":2}'</div></div>
-        <div class="endpoint"><strong>Tasks:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/tasks</div></div>
+        <h3>🚀 Quick Start - Copy & Paste</h3>
+
+        <div class="endpoint">
+            <strong>1. Reset an episode:</strong>
+            <div class="code-block">
+curl -X POST https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <strong>2. Submit a finding:</strong>
+            <div class="code-block">
+curl -X POST https://kiransin-openaudit.hf.space/step \
+  -H "Content-Type: application/json" \
+  -d '{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"Missing license","severity":2}'
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <strong>3. Check episode state:</strong>
+            <div class="code-block">
+curl -X GET https://kiransin-openaudit.hf.space/state
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <strong>4. List all 13 tasks:</strong>
+            <div class="code-block">
+curl -X GET https://kiransin-openaudit.hf.space/tasks
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <strong>5. Health check:</strong>
+            <div class="code-block">
+curl -X GET https://kiransin-openaudit.hf.space/health
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <strong>6. Run the full AI agent (requires OpenAI key):</strong>
+            <div class="code-block">
+export API_BASE_URL="https://kiransin-openaudit.hf.space"
+export MODEL_NAME="gpt-3.5-turbo"
+export OPENAI_API_KEY="your_openai_key"
+python inference.py
+            </div>
+        </div>
     </div>
 
     <div class="buttons">
-        <a href="/docs" class="btn btn-primary">📖 API Docs</a>
-        <a href="/health" class="btn btn-secondary">❤️ Health</a>
-        <a href="/tasks" class="btn btn-secondary">📋 Tasks</a>
+        <a href="/docs" class="btn btn-primary">📖 API Documentation</a>
+        <a href="/health" class="btn btn-secondary">❤️ Health Check</a>
+        <a href="/tasks" class="btn btn-secondary">📋 View Tasks</a>
     </div>
 
     <div class="footer">
@@ -117,45 +425,74 @@
 
 <script>
     const BASE_URL = window.location.origin;
+    let autoRefreshInterval = null;
+
+    // Live Audit Log function
+    function addLogEntry(message, type) {
+        const logDiv = document.getElementById('auditLog');
+        if (!logDiv) return;
+        const timestamp = new Date().toLocaleTimeString();
+        let icon = '📌', cls = 'log-info';
+        if (type === 'success') { icon = '✅'; cls = 'log-success'; }
+        else if (type === 'warning') { icon = '⚠️'; cls = 'log-warning'; }
+        else if (type === 'error') { icon = '❌'; cls = 'log-error'; }
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${cls}`;
+        entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
+        logDiv.appendChild(entry);
+        entry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        while (logDiv.children.length > 100) logDiv.removeChild(logDiv.firstChild);
+    }
 
     const ACTIONS = {
         model_card_easy: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "Missing license, evaluation results, and CO2 emissions fields", severity: 2 },
-        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict: MIT license but parent model uses GPL-3.0", severity: 3 },
-        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "MMLU benchmark fraud: claimed 87.3 actual 81.2", severity: 3 },
-        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "colA,colB,colC", description: "Found null values in columns colA, colB, colC", severity: 2 },
-        dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Found duplicate rows", severity: 2 },
-        dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Train/test leakage detected", severity: 3 },
-        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Sparse reward detected", severity: 2 },
-        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected", severity: 3 },
-        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier", severity: 3 },
-        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Missing docstring and type hints", severity: 2 },
-        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Swallows exceptions", severity: 3 },
+        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict: MIT license but parent model uses GPL-3.0 which is incompatible", severity: 3 },
+        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "MMLU benchmark fraud: card claims 87.3 but paper shows actual score is 81.2", severity: 3 },
+        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "colA, colB, colC", description: "Found null values in columns colA, colB, colC. Total 8 null cells detected.", severity: 2 },
+        dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Found exact duplicate rows at positions 5 and 42, and near-duplicates at rows 7 and 88", severity: 2 },
+        dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Train/test leakage detected: test rows 96,97,98,99 appear in training data with minor edits", severity: 3 },
+        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Sparse reward detected: only 1 out of 10 steps has non-zero reward (sparsity ratio 0.9)", severity: 2 },
+        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected: agent always outputs 'YES' to get maximum reward regardless of context", severity: 3 },
+        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier: reward function always returns 1.0 and never penalizes incorrect outputs", severity: 3 },
+        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Code quality issues: missing docstring, no type hints, missing return annotation", severity: 2 },
+        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure: try-except block swallows all exceptions and returns None without logging", severity: 3 },
         tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool C executes arbitrary code from file written by Tool A, creating a dangerous injection vulnerability", severity: 3 },
-        model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License missing. INVESTIGATE: Confirmed. REPORT: Missing", severity: 2 }
+        // 13th Task - Multi-step audit chain
+        model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License field appears missing. INVESTIGATE: Confirmed [MISSING] placeholder. REPORT: License field missing - compliance issue.", severity: 2 }
     };
 
     async function testTask(taskId) {
         try {
             const resetRes = await fetch(`${BASE_URL}/reset?task_id=${taskId}`, { method: 'POST' });
-            if (!resetRes.ok) return { reward: null };
+            if (!resetRes.ok) return { reward: null, done: false, error: `Reset failed (${resetRes.status})` };
+            const resetData = await resetRes.json();
+            const totalFlaws = resetData.observation?.total_flaws || 0;
+
             const action = ACTIONS[taskId] || { pillar: "unknown", finding_type: "test", target_field: "unknown", description: "test", severity: 1 };
-            const stepRes = await fetch(`${BASE_URL}/step`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action) });
-            if (!stepRes.ok) return { reward: null };
+            const stepRes = await fetch(`${BASE_URL}/step`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(action)
+            });
+            if (!stepRes.ok) return { reward: null, done: false, error: `Step failed (${stepRes.status})` };
             const stepData = await stepRes.json();
-            return { reward: stepData.reward, done: stepData.done };
+            const reward = stepData.reward;
+            const done = stepData.done;
+
+            return { reward, done, totalFlaws };
         } catch (err) {
-            return { reward: null };
+            return { reward: null, done: false, error: err.message };
         }
     }
 
-    function getStatusClass(reward) {
+    function getStatusClass(reward, done) {
         if (reward === null) return "status-fail";
         if (reward >= 0.8) return "status-pass";
         if (reward >= 0.3) return "status-partial";
         return "status-fail";
     }
 
-    function getStatusText(reward) {
+    function getStatusText(reward, done) {
         if (reward === null) return "❌ Error";
         if (reward >= 0.8) return "✅ Pass";
         if (reward >= 0.3) return "⚠️ Partial";
@@ -165,16 +502,29 @@
     async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
         tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
+        addLogEntry('Starting automated audit cycle...', 'info');
         
-        const taskList = [
-            "model_card_easy", "model_card_medium", "model_card_hard",
-            "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
-            "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
-            "tool_tester_easy", "tool_tester_medium", "tool_tester_hard",
-            "model_card_audit_chain"
-        ];
+        let taskList = [];
+        try {
+            const tasksRes = await fetch(`${BASE_URL}/tasks`);
+            if (tasksRes.ok) {
+                const tasksData = await tasksRes.json();
+                taskList = tasksData.tasks || [];
+                addLogEntry(`Loaded ${taskList.length} audit tasks from /tasks endpoint`, 'success');
+            }
+        } catch(e) { console.warn("Could not fetch tasks, using fallback list"); }
         
-        let rowsHtml = `<table><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
+        if (taskList.length === 0) {
+            taskList = [
+                "model_card_easy", "model_card_medium", "model_card_hard",
+                "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
+                "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
+                "tool_tester_easy", "tool_tester_medium", "tool_tester_hard",
+                "model_card_audit_chain"
+            ];
+        }
+
+        let rowsHtml = `</table><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
         let totalReward = 0;
         let workingCount = 0;
         let totalTasks = taskList.length;
@@ -189,20 +539,38 @@
             
             const result = await testTask(taskId);
             const reward = result.reward !== null ? result.reward.toFixed(3) : '—';
+            const statusClass = getStatusClass(result.reward, result.done);
+            const statusText = getStatusText(result.reward, result.done);
+            
             if (result.reward !== null && result.reward > 0) workingCount++;
             if (typeof result.reward === 'number') totalReward += result.reward;
             
             rowsHtml += `<tr>
                 <td>${taskId}</td>
-                <td>${pillar}</td>
+                <td>${pillar.charAt(0).toUpperCase() + pillar.slice(1)}</td>
                 <td>${difficulty}</td>
                 <td>${reward}</td>
-                <td class="${getStatusClass(result.reward)}">${getStatusText(result.reward)}${result.reward >= 0.8 ? ' ✅' : result.reward >= 0.3 ? ' ⚠️' : ' ❌'}</td>
+                <td class="${statusClass}">${statusText}${result.reward >= 0.8 ? ' ✅' : result.reward >= 0.3 ? ' ⚠️' : ' ❌'}</td>
             </tr>`;
+            
+            // Add to live audit log
+            if (result.reward !== null) {
+                if (result.reward >= 0.8) {
+                    addLogEntry(`${taskId}: Audit passed with reward ${result.reward}`, 'success');
+                } else if (result.reward >= 0.3) {
+                    addLogEntry(`${taskId}: Partial pass - reward ${result.reward}`, 'warning');
+                } else if (result.reward > 0) {
+                    addLogEntry(`${taskId}: Low reward (${result.reward}) - needs improvement`, 'warning');
+                } else {
+                    addLogEntry(`${taskId}: Audit failed - reward ${result.reward}`, 'error');
+                }
+            }
         }
         
-        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalReward.toFixed(2)} | Success Rate: ${((workingCount/totalTasks)*100).toFixed(1)}%</strong></td></tr>`;
-        tableDiv.innerHTML = `<table>${rowsHtml}</table>`;
+        const successRate = totalTasks > 0 ? ((workingCount / totalTasks) * 100).toFixed(1) : 0;
+        const totalRewardFormatted = totalReward.toFixed(2);
+        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong></td>`;
+        tableDiv.innerHTML = `</table>${rowsHtml}</table>`;
         
         document.getElementById('statsContainer').innerHTML = `
             <div class="stat-card"><div class="stat-number">${totalTasks}</div><div class="stat-label">Auditing Tasks</div></div>
@@ -212,15 +580,19 @@
             <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
         `;
         
-        document.getElementById('lastUpdate').innerHTML = `(updated ${new Date().toLocaleTimeString()})`;
+        const now = new Date();
+        document.getElementById('lastUpdate').innerHTML = `(updated ${now.toLocaleTimeString()})`;
         document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
+        addLogEntry(`Audit cycle complete: ${workingCount}/${totalTasks} tasks passed (${successRate}% success rate)`, 'success');
     }
 
+    // Initial load with welcome message
+    addLogEntry('🚀 OpenAudit dashboard ready', 'success');
+    addLogEntry('📡 API endpoint: ' + BASE_URL, 'info');
     refreshAllTests();
-    setInterval(refreshAllTests, 30000);
+    
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+    autoRefreshInterval = setInterval(refreshAllTests, 30000);
 </script>
 </body>
 </html>
-
-
-
