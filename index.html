@@ -457,7 +457,6 @@ python inference.py
         tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Code quality issues: missing docstring, no type hints, missing return annotation", severity: 2 },
         tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure: try-except block swallows all exceptions and returns None without logging", severity: 3 },
         tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool C executes arbitrary code from file written by Tool A, creating a dangerous injection vulnerability", severity: 3 },
-        // 13th Task - Multi-step audit chain
         model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License field appears missing. INVESTIGATE: Confirmed [MISSING] placeholder. REPORT: License field missing - compliance issue.", severity: 2 }
     };
 
