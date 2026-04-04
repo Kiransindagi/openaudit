@@ -1,33 +1,33 @@
 ﻿from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import HTMLResponse
 from typing import Optional
 from app.models import AuditAction, ResetResult
 from app.env import get_env
-
-# Create the FastAPI app instance
-app = FastAPI(title="OpenAudit", version="1.0.0", description="AI Ecosystem Trust & Quality Auditing Environment")
-
-# Root endpoint
-
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 import os
 
-# Serve index.html at root
+app = FastAPI(title="OpenAudit", version="1.0.0", description="AI Ecosystem Trust & Quality Auditing Environment")
+
+# Serve HTML landing page at root
 @app.get("/", response_class=HTMLResponse)
-async def serve_frontend():
+async def root():
     if os.path.exists("index.html"):
         with open("index.html", "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     else:
-        return {"message": "OpenAudit API is running", "docs": "/docs"}",
-            "step": "POST /step",
-            "state": "GET /state",
-            "tasks": "GET /tasks",
-            "health": "GET /health",
-            "docs": "GET /docs"
-        },
-        "space_url": "https://kiransin-openaudit.hf.space"
-    }
+        return {
+            "service": "OpenAudit",
+            "version": "1.0.0",
+            "description": "AI Ecosystem Trust & Quality Auditing Environment",
+            "endpoints": {
+                "reset": "POST /reset?task_id={task_id}",
+                "step": "POST /step",
+                "state": "GET /state",
+                "tasks": "GET /tasks",
+                "health": "GET /health",
+                "docs": "GET /docs"
+            },
+            "space_url": "https://kiransin-openaudit.hf.space"
+        }
 
 # Get global environment instance
 env = get_env()
@@ -88,4 +88,3 @@ def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
-
