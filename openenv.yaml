@@ -41,6 +41,9 @@ tasks:
   - id: tool_tester_hard
     name: "Adversarial chain detection"
     difficulty: hard
+  - id: model_card_audit_chain
+    name: "Multi-step audit chain"
+    difficulty: hard
 
 observation_space:
   type: object
@@ -69,8 +72,3 @@ reward_space:
   max: 1.0
 
 endpoint: https://kiransin-openaudit.hf.space
-
-
-  - id: model_card_audit_chain
-    name: "Multi-step audit chain (Scan -> Investigate -> Report)"
-    difficulty: hard
