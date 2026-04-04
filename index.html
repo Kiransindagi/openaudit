@@ -50,18 +50,25 @@
         .btn-primary:hover { transform: scale(1.05); }
         .btn-secondary { background: transparent; border: 2px solid #fff; color: #fff; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        .audit-log { background: rgba(0,0,0,0.4); border-radius: 0.75rem; padding: 1rem; height: 250px; overflow-y: auto; font-family: monospace; font-size: 0.75rem; margin-top: 0.5rem; }
+        .log-entry { padding: 0.25rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.3s ease; }
+        .log-info { color: #64B5F6; }
+        .log-success { color: #81C784; }
+        .log-warning { color: #FFD54F; }
+        .log-error { color: #E57373; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         .footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; opacity: 0.8; }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .grid, .stats, .api-section, .test-results { animation: fadeInUp 0.8s ease; }
-        @media (max-width: 768px) { .container { padding: 1rem; } h1 { font-size: 2rem; } .logo { font-size: 3rem; } th, td { font-size: 0.7rem; padding: 0.5rem; } }
+        @media (max-width: 768px) { .container { padding: 1rem; } h1 { font-size: 2rem; } .logo { font-size: 3rem; } th, td { font-size: 0.7rem; padding: 0.5rem; } .code-block { font-size: 0.7rem; } .audit-log { height: 180px; font-size: 0.65rem; } }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="logo">🔍</div>
-        <div class="status-badge" id="liveStatus">🔄 Auto-refreshing every 30s</div>
+        <div class="status-badge" id="liveStatus">🔄 Auto‑refreshing every 30s</div>
         <h1>OpenAudit</h1>
         <div class="tagline">AI Ecosystem Trust & Quality Auditing Environment</div>
     </div>
@@ -79,6 +86,14 @@
         <div id="resultsTable" class="loading">⏳ Fetching latest test results...</div>
     </div>
 
+    <div class="api-section">
+        <h3>📝 Live Audit Log</h3>
+        <div id="auditLog" class="audit-log">
+            <div class="log-entry log-info">🟢 OpenAudit environment initialized</div>
+            <div class="log-entry log-info">📡 Connected to API endpoint</div>
+        </div>
+    </div>
+
     <div class="grid">
         <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</p></div>
         <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicate rows, and train/test leakage in datasets.</p></div>
@@ -88,28 +103,25 @@
 
     <div class="api-section">
         <h3>📡 API Endpoints</h3>
-        <div class="endpoint"><span class="method post">POST</span><span class="url">/reset?task_id={task_id}</span><span style="float:right;">Start a new audit episode</span></div>
-        <div class="endpoint"><span class="method post">POST</span><span class="url">/step</span><span style="float:right;">Submit an audit finding</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/state</span><span style="float:right;">Get current episode state</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/tasks</span><span style="float:right;">List all 12 tasks</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/health</span><span style="float:right;">Health check</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/docs</span><span style="float:right;">Swagger UI</span></div>
+        <div class="endpoint"><span class="method post">POST</span><span class="url">/reset?task_id={task_id}</span><span>Start a new audit episode</span></div>
+        <div class="endpoint"><span class="method post">POST</span><span class="url">/step</span><span>Submit an audit finding</span></div>
+        <div class="endpoint"><span class="method get">GET</span><span class="url">/state</span><span>Get current episode state</span></div>
+        <div class="endpoint"><span class="method get">GET</span><span class="url">/tasks</span><span>List all 13 tasks</span></div>
+        <div class="endpoint"><span class="method get">GET</span><span class="url">/health</span><span>Health check</span></div>
+        <div class="endpoint"><span class="method get">GET</span><span class="url">/docs</span><span>Swagger UI</span></div>
     </div>
 
     <div class="api-section">
-        <h3>🚀 Quick Start - Copy & Paste</h3>
-        <div class="endpoint"><strong>1. Reset an episode:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy</div></div>
-        <div class="endpoint"><strong>2. Submit a finding:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/step -H "Content-Type: application/json" -d '{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"Missing license","severity":2}'</div></div>
-        <div class="endpoint"><strong>3. Check episode state:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/state</div></div>
-        <div class="endpoint"><strong>4. List all 12 tasks:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/tasks</div></div>
-        <div class="endpoint"><strong>5. Health check:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/health</div></div>
-        <div class="endpoint"><strong>6. Run the full AI agent:</strong><div class="code-block">export API_BASE_URL="https://kiransin-openaudit.hf.space"<br>export MODEL_NAME="gpt-3.5-turbo"<br>export OPENAI_API_KEY="your_key"<br>python inference.py</div></div>
+        <h3>🚀 Quick Start</h3>
+        <div class="endpoint"><strong>Reset:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy</div></div>
+        <div class="endpoint"><strong>Step:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/step -H "Content-Type: application/json" -d '{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"Missing license","severity":2}'</div></div>
+        <div class="endpoint"><strong>Tasks:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/tasks</div></div>
     </div>
 
     <div class="buttons">
-        <a href="/docs" class="btn btn-primary">📖 API Documentation</a>
-        <a href="/health" class="btn btn-secondary">❤️ Health Check</a>
-        <a href="/tasks" class="btn btn-secondary">📋 View Tasks</a>
+        <a href="/docs" class="btn btn-primary">📖 API Docs</a>
+        <a href="/health" class="btn btn-secondary">❤️ Health</a>
+        <a href="/tasks" class="btn btn-secondary">📋 Tasks</a>
     </div>
 
     <div class="footer">
@@ -122,33 +134,48 @@
     const BASE_URL = window.location.origin;
     let autoRefreshInterval = null;
 
+    function addLogEntry(message, type) {
+        const logDiv = document.getElementById('auditLog');
+        const timestamp = new Date().toLocaleTimeString();
+        let icon = '📌', cls = 'log-info';
+        if (type === 'success') { icon = '✅'; cls = 'log-success'; }
+        else if (type === 'warning') { icon = '⚠️'; cls = 'log-warning'; }
+        else if (type === 'error') { icon = '❌'; cls = 'log-error'; }
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${cls}`;
+        entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
+        logDiv.appendChild(entry);
+        entry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        while (logDiv.children.length > 100) logDiv.removeChild(logDiv.firstChild);
+    }
+
     const ACTIONS = {
-        model_card_easy: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "Missing license, evaluation results, and CO2 emissions fields", severity: 2 },
-        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict: MIT license but parent model uses GPL-3.0", severity: 3 },
-        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "MMLU benchmark fraud: claimed 87.3 actual 81.2", severity: 3 },
-        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "colA,colB,colC", description: "Found null values in columns", severity: 2 },
-        dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Found duplicate rows", severity: 2 },
-        dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Train/test leakage detected", severity: 3 },
-        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Sparse reward detected", severity: 2 },
-        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected", severity: 3 },
+        model_card_easy: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "Missing license", severity: 2 },
+        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict", severity: 3 },
+        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "Benchmark fraud", severity: 3 },
+        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "columns", description: "Null values", severity: 2 },
+        dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Duplicate rows", severity: 2 },
+        dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Test leakage", severity: 3 },
+        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward", description: "Sparse reward", severity: 2 },
+        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking", severity: 3 },
         rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier", severity: 3 },
-        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Missing docstring and type hints", severity: 2 },
-        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Swallows exceptions", severity: 3 },
-        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Dangerous code execution", severity: 3 }
+        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Code quality", severity: 2 },
+        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure", severity: 3 },
+        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "chain", description: "Adversarial chain", severity: 3 },
+        model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License missing. INVESTIGATE: Confirmed. REPORT: Missing - compliance issue.", severity: 2 }
     };
 
     async function testTask(taskId) {
         try {
             const resetRes = await fetch(`${BASE_URL}/reset?task_id=${taskId}`, { method: 'POST' });
-            if (!resetRes.ok) return { reward: null, done: false, error: `Reset failed` };
-            const resetData = await resetRes.json();
+            if (!resetRes.ok) return { reward: null };
             const action = ACTIONS[taskId] || { pillar: "unknown", finding_type: "test", target_field: "unknown", description: "test", severity: 1 };
             const stepRes = await fetch(`${BASE_URL}/step`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action) });
-            if (!stepRes.ok) return { reward: null, done: false, error: `Step failed` };
+            if (!stepRes.ok) return { reward: null };
             const stepData = await stepRes.json();
             return { reward: stepData.reward, done: stepData.done };
         } catch (err) {
-            return { reward: null, done: false, error: err.message };
+            return { reward: null };
         }
     }
 
@@ -169,40 +196,45 @@
     async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
         tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
-        const taskList = [
+        let taskList = [
             "model_card_easy", "model_card_medium", "model_card_hard",
             "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
             "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
-            "tool_tester_easy", "tool_tester_medium", "tool_tester_hard"
+            "tool_tester_easy", "tool_tester_medium", "tool_tester_hard",
+            "model_card_audit_chain"
         ];
-        let rowsHtml = `<tr><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
-        let totalReward = 0;
-        let workingCount = 0;
+        let rowsHtml = `<table><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
+        let totalReward = 0, workingCount = 0, totalTasks = taskList.length;
         for (const taskId of taskList) {
             const pillar = taskId.split('_')[0];
-            const difficulty = taskId.includes('easy') ? 'easy' : taskId.includes('medium') ? 'medium' : 'hard';
+            let difficulty = taskId.includes('easy') ? 'easy' : taskId.includes('medium') ? 'medium' : taskId.includes('hard') ? 'hard' : 'multi-step';
             const result = await testTask(taskId);
             const reward = result.reward !== null ? result.reward.toFixed(3) : '—';
             if (result.reward !== null && result.reward > 0) workingCount++;
             if (typeof result.reward === 'number') totalReward += result.reward;
             rowsHtml += `<tr><td>${taskId}</td><td>${pillar}</td><td>${difficulty}</td><td>${reward}</td><td class="${getStatusClass(result.reward)}">${getStatusText(result.reward)}</td></tr>`;
+            if (result.reward !== null && result.reward >= 0.8) addLogEntry(`${taskId}: Passed (${result.reward})`, 'success');
+            else if (result.reward !== null && result.reward >= 0.3) addLogEntry(`${taskId}: Partial (${result.reward})`, 'warning');
+            else if (result.reward !== null) addLogEntry(`${taskId}: Failed (${result.reward})`, 'error');
         }
-        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/12 tasks working | Total Reward: ${totalReward.toFixed(2)} | Success Rate: ${((workingCount/12)*100).toFixed(1)}%</strong></td></tr>`;
+        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalReward.toFixed(2)} | Success Rate: ${((workingCount/totalTasks)*100).toFixed(1)}%</strong></td></tr>`;
         tableDiv.innerHTML = `<table>${rowsHtml}</table>`;
         document.getElementById('statsContainer').innerHTML = `
-            <div class="stat-card"><div class="stat-number">12</div><div class="stat-label">Auditing Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">${workingCount}/12</div><div class="stat-label">Working Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">${totalTasks}</div><div class="stat-label">Auditing Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">${workingCount}/${totalTasks}</div><div class="stat-label">Working Tasks</div></div>
             <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
             <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
             <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
         `;
         document.getElementById('lastUpdate').innerHTML = `(updated ${new Date().toLocaleTimeString()})`;
+        document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
+        addLogEntry(`Audit complete: ${workingCount}/${totalTasks} passed`, 'success');
     }
 
+    addLogEntry('🚀 Dashboard ready', 'success');
     refreshAllTests();
     if (autoRefreshInterval) clearInterval(autoRefreshInterval);
     autoRefreshInterval = setInterval(refreshAllTests, 30000);
 </script>
 </body>
 </html>
-
