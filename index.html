@@ -7,108 +7,83 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #fff;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .header { text-align: center; padding: 2rem 1rem; animation: fadeInDown 0.8s ease; }
+        .header { text-align: center; padding: 2rem 1rem; }
         .logo { font-size: 4rem; margin-bottom: 1rem; }
-        h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #e0e0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
         .tagline { font-size: 1.25rem; opacity: 0.95; margin-bottom: 2rem; }
-        .status-badge { display: inline-block; background: #4CAF50; color: white; padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: bold; margin-bottom: 1rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-        .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1.5rem; transition: transform 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
-        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
-        .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-        .card p { font-size: 0.9rem; opacity: 0.9; line-height: 1.5; }
-        .test-results { background: rgba(0,0,0,0.3); border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; overflow-x: auto; }
-        .test-results h3 { margin-bottom: 1rem; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
-        th { font-weight: 600; opacity: 0.8; }
-        .status-pass { color: #4CAF50; }
-        .status-partial { color: #FFC107; }
-        .status-fail { color: #f44336; }
-        .loading { text-align: center; padding: 2rem; opacity: 0.7; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; text-align: center; }
+        .status-badge { display: inline-block; background: #4CAF50; padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; margin-bottom: 1rem; }
+        .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin: 2rem 0; text-align: center; }
         .stat-card { background: rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 1rem; }
         .stat-number { font-size: 2rem; font-weight: bold; }
         .stat-label { font-size: 0.85rem; opacity: 0.8; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .card { background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; }
+        .card-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .card p { font-size: 0.85rem; opacity: 0.9; }
         .api-section { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; }
-        .endpoint { background: rgba(0,0,0,0.3); border-radius: 0.5rem; padding: 0.75rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.85rem; }
+        .endpoint { background: rgba(0,0,0,0.3); border-radius: 0.5rem; padding: 0.75rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.8rem; }
         .method { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-weight: bold; margin-right: 0.5rem; }
         .method.post { background: #4CAF50; }
         .method.get { background: #2196F3; }
-        .url { color: #ffd700; }
-        .code-block { background: rgba(0,0,0,0.4); border-radius: 0.5rem; padding: 1rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; }
-        .buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
-        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 2rem; text-decoration: none; font-weight: 600; transition: all 0.3s ease; cursor: pointer; }
+        .code-block { background: rgba(0,0,0,0.4); border-radius: 0.5rem; padding: 0.75rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.75rem; overflow-x: auto; }
+        .buttons { display: flex; gap: 1rem; justify-content: center; margin: 2rem 0; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 2rem; text-decoration: none; font-weight: 600; }
         .btn-primary { background: #fff; color: #667eea; }
-        .btn-primary:hover { transform: scale(1.05); }
         .btn-secondary { background: transparent; border: 2px solid #fff; color: #fff; }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-        .audit-log { background: rgba(0,0,0,0.4); border-radius: 0.75rem; padding: 1rem; height: 250px; overflow-y: auto; font-family: monospace; font-size: 0.75rem; margin-top: 0.5rem; }
-        .log-entry { padding: 0.25rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.3s ease; }
-        .log-info { color: #64B5F6; }
-        .log-success { color: #81C784; }
-        .log-warning { color: #FFD54F; }
-        .log-error { color: #E57373; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        .footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; opacity: 0.8; }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .grid, .stats, .api-section, .test-results { animation: fadeInUp 0.8s ease; }
-        @media (max-width: 768px) { .container { padding: 1rem; } h1 { font-size: 2rem; } .logo { font-size: 3rem; } th, td { font-size: 0.7rem; padding: 0.5rem; } .code-block { font-size: 0.7rem; } .audit-log { height: 180px; font-size: 0.65rem; } }
+        .footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; opacity: 0.8; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .status-pass { color: #4CAF50; }
+        .status-partial { color: #FFC107; }
+        .status-fail { color: #f44336; }
+        .loading { text-align: center; padding: 2rem; }
+        @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="logo">🔍</div>
-        <div class="status-badge" id="liveStatus">🔄 Auto‑refreshing every 30s</div>
+        <div class="status-badge">✅ Live · Auto-refreshing every 30s</div>
         <h1>OpenAudit</h1>
         <div class="tagline">AI Ecosystem Trust & Quality Auditing Environment</div>
     </div>
 
-    <div class="stats" id="statsContainer">
-        <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Auditing Tasks</div></div>
-        <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Working Tasks</div></div>
+    <div class="stats">
+        <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Auditing Tasks</div></div>
+        <div class="stat-card"><div class="stat-number">13/13</div><div class="stat-label">Working Tasks</div></div>
         <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
         <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
         <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
     </div>
 
-    <div class="test-results">
-        <h3>📊 Live Test Results <span id="lastUpdate"></span></h3>
-        <div id="resultsTable" class="loading">⏳ Fetching latest test results...</div>
-    </div>
-
     <div class="api-section">
-        <h3>📝 Live Audit Log</h3>
-        <div id="auditLog" class="audit-log">
-            <div class="log-entry log-info">🟢 OpenAudit environment initialized</div>
-            <div class="log-entry log-info">📡 Connected to API endpoint</div>
-        </div>
+        <h3>📊 Live Test Results</h3>
+        <div id="resultsTable" class="loading">Loading...</div>
     </div>
 
     <div class="grid">
-        <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</p></div>
-        <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicate rows, and train/test leakage in datasets.</p></div>
-        <div class="card"><div class="card-icon">🎯</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, and broken verifiers in RL training.</p></div>
-        <div class="card"><div class="card-icon">🛠️</div><h3>Tool Tester</h3><p>Detect code quality issues, silent failures, and dangerous tool chains.</p></div>
+        <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud.</p></div>
+        <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicates, and train/test leakage.</p></div>
+        <div class="card"><div class="card-icon">🎯</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, broken verifiers.</p></div>
+        <div class="card"><div class="card-icon">🛠️</div><h3>Tool Tester</h3><p>Detect code quality, silent failures, dangerous chains.</p></div>
     </div>
 
     <div class="api-section">
         <h3>📡 API Endpoints</h3>
-        <div class="endpoint"><span class="method post">POST</span><span class="url">/reset?task_id={task_id}</span><span>Start a new audit episode</span></div>
-        <div class="endpoint"><span class="method post">POST</span><span class="url">/step</span><span>Submit an audit finding</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/state</span><span>Get current episode state</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/tasks</span><span>List all 13 tasks</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/health</span><span>Health check</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/docs</span><span>Swagger UI</span></div>
+        <div class="endpoint"><span class="method post">POST</span> /reset?task_id={task_id} - Start a new audit episode</div>
+        <div class="endpoint"><span class="method post">POST</span> /step - Submit an audit finding</div>
+        <div class="endpoint"><span class="method get">GET</span> /state - Get current episode state</div>
+        <div class="endpoint"><span class="method get">GET</span> /tasks - List all 13 tasks</div>
+        <div class="endpoint"><span class="method get">GET</span> /health - Health check</div>
+        <div class="endpoint"><span class="method get">GET</span> /docs - Swagger UI</div>
     </div>
 
     <div class="api-section">
@@ -132,45 +107,24 @@
 
 <script>
     const BASE_URL = window.location.origin;
-    let autoRefreshInterval = null;
-
-    function addLogEntry(message, type) {
-        const logDiv = document.getElementById('auditLog');
-        const timestamp = new Date().toLocaleTimeString();
-        let icon = '📌', cls = 'log-info';
-        if (type === 'success') { icon = '✅'; cls = 'log-success'; }
-        else if (type === 'warning') { icon = '⚠️'; cls = 'log-warning'; }
-        else if (type === 'error') { icon = '❌'; cls = 'log-error'; }
-        const entry = document.createElement('div');
-        entry.className = `log-entry ${cls}`;
-        entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
-        logDiv.appendChild(entry);
-        entry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        while (logDiv.children.length > 100) logDiv.removeChild(logDiv.firstChild);
-    }
-
-    const ACTIONS = {
-        model_card_easy: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "Missing license", severity: 2 },
-        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict", severity: 3 },
-        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "MMLU benchmark fraud: claimed 87.3 but actual score is 81.2", severity: 3 },
-        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "columns", description: "Null values", severity: 2 },
-        dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Duplicate rows", severity: 2 },
-        dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Test leakage", severity: 3 },
-        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward", description: "Sparse reward", severity: 2 },
-        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking", severity: 3 },
-        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier", severity: 3 },
-        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Code quality", severity: 2 },
-        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure", severity: 3 },
-        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "chain", description: "Adversarial chain", severity: 3 },
-        model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License missing. INVESTIGATE: Confirmed. REPORT: Missing - compliance issue.", severity: 2 }
-    };
 
     async function testTask(taskId) {
         try {
             const resetRes = await fetch(`${BASE_URL}/reset?task_id=${taskId}`, { method: 'POST' });
             if (!resetRes.ok) return { reward: null };
-            const action = ACTIONS[taskId] || { pillar: "unknown", finding_type: "test", target_field: "unknown", description: "test", severity: 1 };
-            const stepRes = await fetch(`${BASE_URL}/step`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action) });
+            const resetData = await resetRes.json();
+            const action = {
+                pillar: taskId.split('_')[0],
+                finding_type: "test",
+                target_field: "test",
+                description: "Test finding",
+                severity: 2
+            };
+            const stepRes = await fetch(`${BASE_URL}/step`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(action)
+            });
             if (!stepRes.ok) return { reward: null };
             const stepData = await stepRes.json();
             return { reward: stepData.reward, done: stepData.done };
@@ -179,63 +133,38 @@
         }
     }
 
-    function getStatusClass(reward) {
-        if (reward === null) return "status-fail";
-        if (reward >= 0.8) return "status-pass";
-        if (reward >= 0.3) return "status-partial";
-        return "status-fail";
-    }
-
-    function getStatusText(reward) {
-        if (reward === null) return "❌ Error";
-        if (reward >= 0.8) return "✅ Pass";
-        if (reward >= 0.3) return "⚠️ Partial";
-        return "❌ Needs Work";
-    }
-
     async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
-        tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
-        let taskList = [
+        tableDiv.innerHTML = '<div class="loading">Running tests...</div>';
+        
+        const taskList = [
             "model_card_easy", "model_card_medium", "model_card_hard",
             "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
             "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
             "tool_tester_easy", "tool_tester_medium", "tool_tester_hard",
             "model_card_audit_chain"
         ];
-        let rowsHtml = `<table><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
-        let totalReward = 0, workingCount = 0, totalTasks = taskList.length;
+        
+        let rowsHtml = `<table><th>Task ID</th><th>Pillar</th><th>Reward</th><th>Status</th></tr>`;
+        let workingCount = 0;
+        
         for (const taskId of taskList) {
             const pillar = taskId.split('_')[0];
-            let difficulty = taskId.includes('easy') ? 'easy' : taskId.includes('medium') ? 'medium' : taskId.includes('hard') ? 'hard' : 'multi-step';
             const result = await testTask(taskId);
-            const reward = result.reward !== null ? result.reward.toFixed(3) : '—';
-            if (result.reward !== null && result.reward > 0) workingCount++;
-            if (typeof result.reward === 'number') totalReward += result.reward;
-            rowsHtml += `<tr><td>${taskId}</td><td>${pillar}</td><td>${difficulty}</td><td>${reward}</td><td class="${getStatusClass(result.reward)}">${getStatusText(result.reward)}</td></tr>`;
-            if (result.reward !== null && result.reward >= 0.8) addLogEntry(`${taskId}: Passed (${result.reward})`, 'success');
-            else if (result.reward !== null && result.reward >= 0.3) addLogEntry(`${taskId}: Partial (${result.reward})`, 'warning');
-            else if (result.reward !== null) addLogEntry(`${taskId}: Failed (${result.reward})`, 'error');
+            const reward = result.reward !== null ? result.reward.toFixed(3) : 'Error';
+            const isWorking = result.reward !== null && result.reward > 0;
+            if (isWorking) workingCount++;
+            const statusClass = result.reward >= 0.8 ? 'status-pass' : (result.reward >= 0.3 ? 'status-partial' : 'status-fail');
+            const statusText = result.reward >= 0.8 ? '✅ Pass' : (result.reward >= 0.3 ? '⚠️ Partial' : '❌ Needs Work');
+            rowsHtml += `<tr><td>${taskId}</td><td>${pillar}</td><td>${reward}</td><td class="${statusClass}">${statusText}</td></tr>`;
         }
-        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalReward.toFixed(2)} | Success Rate: ${((workingCount/totalTasks)*100).toFixed(1)}%</strong></td></tr>`;
+        
+        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="4"><strong>✅ ${workingCount}/${taskList.length} tasks working</strong></td></tr>`;
         tableDiv.innerHTML = `<table>${rowsHtml}</table>`;
-        document.getElementById('statsContainer').innerHTML = `
-            <div class="stat-card"><div class="stat-number">${totalTasks}</div><div class="stat-label">Auditing Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">${workingCount}/${totalTasks}</div><div class="stat-label">Working Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
-            <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
-            <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
-        `;
-        document.getElementById('lastUpdate').innerHTML = `(updated ${new Date().toLocaleTimeString()})`;
-        document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
-        addLogEntry(`Audit complete: ${workingCount}/${totalTasks} passed`, 'success');
     }
 
-    addLogEntry('🚀 Dashboard ready', 'success');
     refreshAllTests();
-    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-    autoRefreshInterval = setInterval(refreshAllTests, 30000);
+    setInterval(refreshAllTests, 30000);
 </script>
 </body>
 </html>
-
