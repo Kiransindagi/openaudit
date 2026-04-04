@@ -1,4 +1,4 @@
-﻿{
+{
   "config_id": "rl_1",
   "algorithm": "PPO",
   "learning_rate": 0.0001,

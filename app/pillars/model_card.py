@@ -1,4 +1,4 @@
-﻿"""
+"""
 Pillar 1: Model Card Auditing
 Deterministic graders for synthetic data with ground truth flaws
 """
@@ -112,67 +112,41 @@ def grade_license_conflict(action: AuditAction, ground_truth: List[Dict]) -> Aud
     )
 
 def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
-    """
-    Hard grader: Benchmark fraud detection - improved with partial credit
-    """
     description = action.description.lower()
-    
     fraud = None
     for flaw in ground_truth:
         if flaw.get("flaw_type") == "benchmark_fraud":
             fraud = flaw
             break
-    
     if not fraud:
-        return AuditReward(
-            value=0.0,
-            reason="No benchmark fraud in this card",
-            finding_matched=None,
-            is_false_positive=True,
-            penalty_applied=0.0,
-            cumulative_score=0.0
-        )
-    
+        return AuditReward(value=0.0, reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+
     benchmark = fraud.get("benchmark", "").lower()
-    claimed = fraud.get("claimed", 0.0)
-    actual = fraud.get("actual", 0.0)
-    tolerance = fraud.get("tolerance", 0.5)
-    
-    # Extract numbers from description
+    claimed = float(fraud.get("claimed", 0))
+    actual = float(fraud.get("actual", 0))
+
+    import re
     numbers = re.findall(r'\d+\.?\d*', description)
     numbers_float = [float(n) for n in numbers]
-    
-    # Check components with partial credit
+
     score = 0.0
-    has_benchmark = benchmark in description
-    if has_benchmark:
+    if benchmark in description:
         score += 0.3
-    
-    # Check claimed number (within tolerance)
-    claimed_correct = any(abs(n - claimed) <= tolerance for n in numbers_float)
-    if claimed_correct:
+
+    if any(abs(n - claimed) <= 0.5 for n in numbers_float):
         score += 0.35
-    else:
-        # Partial if any number is close
-        for n in numbers_float:
-            if abs(n - claimed) <= tolerance * 2:
-                score += 0.15
-                break
-    
-    # Check actual number
-    actual_correct = any(abs(n - actual) <= tolerance for n in numbers_float)
-    if actual_correct:
+    elif any(abs(n - claimed) <= 1.0 for n in numbers_float):
+        score += 0.2
+
+    if any(abs(n - actual) <= 0.5 for n in numbers_float):
         score += 0.35
-    else:
-        for n in numbers_float:
-            if abs(n - actual) <= tolerance * 2:
-                score += 0.15
-                break
-    
+    elif any(abs(n - actual) <= 1.0 for n in numbers_float):
+        score += 0.2
+
     return AuditReward(
         value=round(min(score, 1.0), 3),
-        reason=f"Benchmark fraud: {benchmark} mentioned={has_benchmark}, claimed={claimed_correct}, actual={actual_correct}",
-        finding_matched="benchmark_fraud" if score >= 0.6 else None,
+        reason=f"Benchmark fraud: {benchmark} claimed={claimed} actual={actual} score={score}",
+        finding_matched="benchmark_fraud" if score >= 0.5 else None,
         is_false_positive=score < 0.2,
         penalty_applied=0.0,
         cumulative_score=score
