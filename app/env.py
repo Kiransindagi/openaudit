@@ -1,5 +1,5 @@
-"""
-OpenAudit Environment - Complete with All 4 Pillars
+﻿"""
+OpenAudit Environment - Fixed Indentation
 """
 import json
 import uuid
@@ -23,32 +23,23 @@ class OpenAuditEnv:
         self.total_reward = 0.0
         self.flaws_found_count = 0
         
-        # Complete task registry - all 4 pillars
+        # Task registry
         self.tasks = {
-            # Model Card Pillar
             "model_card_easy": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8},
             "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 10},
             "model_card_hard": {"pillar": "model_card", "artifact_id": "card_2", "max_steps": 12},
-            
-            # Dataset QC Pillar
             "dataset_qc_easy": {"pillar": "dataset_qc", "artifact_id": "dataset_0", "max_steps": 8},
             "dataset_qc_medium": {"pillar": "dataset_qc", "artifact_id": "dataset_1", "max_steps": 10},
             "dataset_qc_hard": {"pillar": "dataset_qc", "artifact_id": "dataset_2", "max_steps": 12},
-            
-            # RL Reward Pillar
             "rl_reward_easy": {"pillar": "rl_reward", "artifact_id": "rl_0", "max_steps": 8},
             "rl_reward_medium": {"pillar": "rl_reward", "artifact_id": "rl_1", "max_steps": 10},
             "rl_reward_hard": {"pillar": "rl_reward", "artifact_id": "rl_2", "max_steps": 12},
-            
-            # Tool Tester Pillar
             "tool_tester_easy": {"pillar": "tool_tester", "artifact_id": "tool_0", "max_steps": 8},
             "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 10},
             "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 12},
         }
     
     def reset(self, task_id: str = None) -> AuditObservation:
-        print(f"[DEBUG] reset() called with task_id={task_id}")
-        
         if not task_id or task_id not in self.tasks:
             task_id = "model_card_easy"
         
@@ -66,7 +57,6 @@ class OpenAuditEnv:
         
         artifact_id = task_config["artifact_id"]
         
-        # Load artifact based on pillar
         if self.current_pillar == "model_card":
             self.current_artifact = load_card(artifact_id)
             content = self.current_artifact.get("card_text", "")
@@ -77,19 +67,19 @@ class OpenAuditEnv:
             self.current_artifact = load_dataset(artifact_id)
             content = "Dataset loaded for QC inspection"
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
+            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
             instructions = "Find null values in the dataset columns."
         elif self.current_pillar == "rl_reward":
             self.current_artifact = load_rl_config(artifact_id)
             content = "RL config loaded for reward auditing"
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
+            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
             instructions = "Identify sparse reward issues."
-        else:  # tool_tester
+        else:
             self.current_artifact = load_tool(artifact_id)
             content = "Tool loaded for security analysis"
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
+            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
             instructions = "Find code quality issues: missing docstrings, type hints, and return annotations."
         
         return AuditObservation(
@@ -169,11 +159,11 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
     
-            def _get_total_flaws(self) -> int:
+    def _get_total_flaws(self) -> int:
         if not self.current_artifact:
             return 0
-        # Count all flaws in ground_truth_flaws regardless of pillar
         return len(self.current_artifact.get("ground_truth_flaws", []))
+    
     def get_state(self) -> dict:
         return {
             "episode_id": self.current_episode_id,
@@ -193,6 +183,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
-
-
