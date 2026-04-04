@@ -1,4 +1,4 @@
-﻿"""
+"""
 OpenAudit Environment - Clean Working Version
 """
 import json
@@ -96,21 +96,20 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
 
-        def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
+    def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
         if self.completed:
             return self._get_observation(), self.total_reward, True, {"error": "Episode completed"}
-        
+
         if self.step_number >= self.max_steps:
             self.completed = True
             return self._get_observation(), self.total_reward, True, {"error": "Max steps reached"}
-        
+
         if action.pillar != self.current_pillar:
             return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
-        
+
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
-        
-        # Multi-phase bonus for audit chain task - use step_number to determine phase
+
         phase = "standard"
         if self.current_task_id == "model_card_audit_chain":
             if self.step_number == 0:
@@ -122,10 +121,10 @@ class OpenAuditEnv:
             else:
                 reward_value = reward_value * 1.2
                 phase = "report"
-        
+
         if reward_obj.finding_matched and not reward_obj.is_false_positive:
             self.flaws_found_count += 1
-        
+
         self.findings_so_far.append({
             "step": self.step_number,
             "action": action.dict(),
@@ -133,33 +132,24 @@ class OpenAuditEnv:
             "reason": reward_obj.reason,
             "phase": phase
         })
-        
+
         self.total_reward += reward_value
         self.step_number += 1
-        
+
         total_flaws = self._get_total_flaws()
         if self.flaws_found_count >= total_flaws and total_flaws > 0:
             self.completed = True
             self.total_reward += 0.2
-        
+
         if self.step_number >= self.max_steps:
             self.completed = True
-        
-        # Determine current phase for response
-        current_phase = "standard"
-        if self.current_task_id == "model_card_audit_chain":
-            if self.step_number <= 1:
-                current_phase = "scan"
-            elif self.step_number == 2:
-                current_phase = "investigate"
-            else:
-                current_phase = "report"
-        
+
         return self._get_observation(), self.total_reward, self.completed, {
             "flaws_found": self.flaws_found_count,
             "total_flaws": total_flaws,
-            "phase": current_phase
+            "phase": phase
         }
+
     def _grade_action(self, action: AuditAction) -> AuditReward:
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
@@ -244,4 +234,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
