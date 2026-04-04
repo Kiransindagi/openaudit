@@ -285,3 +285,5 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
+# Force rebuild for multi-phase rewards
