@@ -498,7 +498,7 @@ python inference.py
         return "❌ Needs Work";
     }
 
-    async function refreshAllTests() {
+        async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
         tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
         addLogEntry('Starting automated audit cycle...', 'info');
@@ -578,7 +578,8 @@ python inference.py
             }
         }
         
-        rowsHtml += `</tbody></table>`;
+        rowsHtml += `</tbody>
+        </table>`;
         
         const successRate = totalTasks > 0 ? ((workingCount / totalTasks) * 100).toFixed(1) : 0;
         const totalRewardFormatted = totalReward.toFixed(2);
@@ -601,7 +602,8 @@ python inference.py
         const now = new Date();
         document.getElementById('lastUpdate').innerHTML = `(updated ${now.toLocaleTimeString()})`;
         document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
-        addLogEntry(`Audit cycle complete: ${workingCou
+        addLogEntry(`Audit cycle complete: ${workingCount}/${totalTasks} tasks passed (${successRate}% success rate)`, 'success');
+    }
 
     // Initial load with welcome message
     addLogEntry('🚀 OpenAudit dashboard ready', 'success');
