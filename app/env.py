@@ -1,9 +1,9 @@
 ﻿"""
-OpenAudit Environment - Fixed Indentation
+OpenAudit Environment - With Multi-Step Auditing Support
 """
 import json
 import uuid
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 from app.models import AuditObservation, AuditAction, AuditReward
 from app.pillars.model_card import grade_model_card, load_card
 from app.pillars.dataset_qc import grade_dataset, load_dataset
@@ -11,6 +11,8 @@ from app.pillars.rl_reward import grade_reward, load_rl_config
 from app.pillars.tool_tester import grade_tool, load_tool
 
 class OpenAuditEnv:
+    """OpenAudit Environment with multi-step auditing support"""
+    
     def __init__(self):
         self.current_episode_id = None
         self.current_pillar = None
@@ -22,24 +24,44 @@ class OpenAuditEnv:
         self.completed = False
         self.total_reward = 0.0
         self.flaws_found_count = 0
+        self.current_phase = "scan"  # scan -> investigate -> report
         
         # Task registry
         self.tasks = {
+            # Model Card Pillar
             "model_card_easy": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8},
             "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 10},
             "model_card_hard": {"pillar": "model_card", "artifact_id": "card_2", "max_steps": 12},
+            
+            # Dataset QC Pillar
             "dataset_qc_easy": {"pillar": "dataset_qc", "artifact_id": "dataset_0", "max_steps": 8},
             "dataset_qc_medium": {"pillar": "dataset_qc", "artifact_id": "dataset_1", "max_steps": 10},
             "dataset_qc_hard": {"pillar": "dataset_qc", "artifact_id": "dataset_2", "max_steps": 12},
+            
+            # RL Reward Pillar
             "rl_reward_easy": {"pillar": "rl_reward", "artifact_id": "rl_0", "max_steps": 8},
             "rl_reward_medium": {"pillar": "rl_reward", "artifact_id": "rl_1", "max_steps": 10},
             "rl_reward_hard": {"pillar": "rl_reward", "artifact_id": "rl_2", "max_steps": 12},
+            
+            # Tool Tester Pillar
             "tool_tester_easy": {"pillar": "tool_tester", "artifact_id": "tool_0", "max_steps": 8},
             "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 10},
             "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 12},
+            
+            # Multi-step audit chain task
+            "model_card_audit_chain": {
+                "pillar": "model_card",
+                "artifact_id": "card_0",
+                "max_steps": 15,
+                "multi_step": True,
+                "required_findings": ["license", "eval_results", "co2_emitted"],
+                "phases": ["scan", "investigate", "report"]
+            }
         }
     
     def reset(self, task_id: str = None) -> AuditObservation:
+        print(f"[DEBUG] reset() called with task_id={task_id}")
+        
         if not task_id or task_id not in self.tasks:
             task_id = "model_card_easy"
         
@@ -53,10 +75,12 @@ class OpenAuditEnv:
         self.completed = False
         self.total_reward = 0.0
         self.flaws_found_count = 0
+        self.current_phase = "scan"
         self.max_steps = task_config["max_steps"]
         
         artifact_id = task_config["artifact_id"]
         
+        # Load artifact
         if self.current_pillar == "model_card":
             self.current_artifact = load_card(artifact_id)
             content = self.current_artifact.get("card_text", "")
@@ -65,22 +89,23 @@ class OpenAuditEnv:
             instructions = "Find missing required fields: license, evaluation results, and CO2 emissions."
         elif self.current_pillar == "dataset_qc":
             self.current_artifact = load_dataset(artifact_id)
-            content = "Dataset loaded for QC inspection"
+            dataset = self.current_artifact.get("dataset", [])
+            content = json.dumps({"sample_rows": dataset[:20], "total_rows": len(dataset)}, indent=2)
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
+            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
             instructions = "Find null values in the dataset columns."
         elif self.current_pillar == "rl_reward":
             self.current_artifact = load_rl_config(artifact_id)
-            content = "RL config loaded for reward auditing"
-            metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
+            content = self.current_artifact.get("reward_fn_code", "")
+            metadata = {"config": self.current_artifact.get("config", {})}
+            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
             instructions = "Identify sparse reward issues."
         else:
             self.current_artifact = load_tool(artifact_id)
-            content = "Tool loaded for security analysis"
+            content = self.current_artifact.get("tool_code", "")
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
-            instructions = "Find code quality issues: missing docstrings, type hints, and return annotations."
+            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
+            instructions = "Find code quality issues."
         
         return AuditObservation(
             artifact_type=self.current_pillar,
@@ -95,7 +120,8 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
     
-    def step(self, action: AuditAction) -> tuple:
+    def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
+        """Process agent action with multi-phase reward logic"""
         if self.completed:
             return self._get_observation(), self.total_reward, True, {"error": "Episode completed"}
         
@@ -109,6 +135,22 @@ class OpenAuditEnv:
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
         
+        # Multi-phase bonus for audit chain tasks
+        is_multi_step = self.tasks.get(self.current_task_id, {}).get("multi_step", False)
+        
+        if is_multi_step:
+            # Phase 1: Scan - low reward for initial detection
+            if self.current_phase == "scan" and reward_value > 0:
+                reward_value = min(reward_value * 0.5, 0.3)
+                self.current_phase = "investigate"
+            # Phase 2: Investigate - medium reward for evidence
+            elif self.current_phase == "investigate" and reward_value > 0:
+                reward_value = min(reward_value * 0.7, 0.5)
+                self.current_phase = "report"
+            # Phase 3: Report - full reward for final report
+            elif self.current_phase == "report" and reward_value > 0:
+                reward_value = min(reward_value * 1.2, 1.0)
+        
         if reward_obj.finding_matched and not reward_obj.is_false_positive:
             self.flaws_found_count += 1
         
@@ -116,7 +158,8 @@ class OpenAuditEnv:
             "step": self.step_number,
             "action": action.dict(),
             "reward": reward_value,
-            "reason": reward_obj.reason
+            "reason": reward_obj.reason,
+            "phase": self.current_phase
         })
         
         self.total_reward += reward_value
@@ -130,9 +173,14 @@ class OpenAuditEnv:
         if self.step_number >= self.max_steps:
             self.completed = True
         
-        return self._get_observation(), self.total_reward, self.completed, {}
+        return self._get_observation(), self.total_reward, self.completed, {
+            "flaws_found": self.flaws_found_count,
+            "total_flaws": total_flaws,
+            "phase": self.current_phase
+        }
     
     def _grade_action(self, action: AuditAction) -> AuditReward:
+        """Route action to appropriate grader"""
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
         elif self.current_pillar == "dataset_qc":
@@ -142,9 +190,16 @@ class OpenAuditEnv:
         elif self.current_pillar == "tool_tester":
             return grade_tool(action, self.current_artifact)
         else:
-            return AuditReward(value=0.0, reason="Unknown pillar", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+            return AuditReward(
+                value=0.0,
+                reason=f"Pillar {self.current_pillar} not recognized",
+                finding_matched=None,
+                is_false_positive=True,
+                penalty_applied=0.0,
+                cumulative_score=self.total_reward
+            )
     
-        def _get_observation(self) -> AuditObservation:
+    def _get_observation(self) -> AuditObservation:
         total_flaws = self._get_total_flaws()
         content = ""
         metadata = {}
@@ -154,7 +209,6 @@ class OpenAuditEnv:
                 content = self.current_artifact.get("card_text", "")
                 metadata = self.current_artifact.get("metadata", {})
             elif self.current_pillar == "dataset_qc":
-                # Show first 20 rows of dataset as sample
                 dataset = self.current_artifact.get("dataset", [])
                 content = json.dumps({"sample_rows": dataset[:20], "total_rows": len(dataset)}, indent=2)
                 metadata = self.current_artifact.get("metadata", {})
@@ -173,14 +227,42 @@ class OpenAuditEnv:
             findings_so_far=self.findings_so_far,
             max_steps=self.max_steps,
             task_id=self.current_task_id,
-            instructions=self._get_instructions(self.current_task_id),
+            instructions=self._get_instructions(),
             flaws_found_count=self.flaws_found_count,
             total_flaws=total_flaws
         )
+    
     def _get_total_flaws(self) -> int:
         if not self.current_artifact:
             return 0
-        return len(self.current_artifact.get("ground_truth_flaws", []))
+        if self.current_pillar == "model_card":
+            return len(self.current_artifact.get("ground_truth_flaws", []))
+        elif self.current_pillar == "dataset_qc":
+            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
+        elif self.current_pillar == "rl_reward":
+            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
+        elif self.current_pillar == "tool_tester":
+            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
+        return 0
+    
+    def _get_instructions(self) -> str:
+        task_id = self.current_task_id
+        instructions = {
+            "model_card_easy": "Find missing required fields: license, evaluation results, and CO2 emissions.",
+            "model_card_medium": "Check for license conflicts.",
+            "model_card_hard": "Verify benchmark claims.",
+            "dataset_qc_easy": "Find null values in the dataset columns.",
+            "dataset_qc_medium": "Detect duplicate rows.",
+            "dataset_qc_hard": "Identify train/test leakage.",
+            "rl_reward_easy": "Flag sparse reward patterns.",
+            "rl_reward_medium": "Detect reward hacking behavior.",
+            "rl_reward_hard": "Identify broken verifiers.",
+            "tool_tester_easy": "Find code quality issues.",
+            "tool_tester_medium": "Detect silent failure patterns.",
+            "tool_tester_hard": "Identify dangerous adversarial chains.",
+            "model_card_audit_chain": "MULTI-STEP AUDIT: Phase 1 - SCAN for potential issues. Phase 2 - INVESTIGATE with evidence. Phase 3 - REPORT final findings."
+        }
+        return instructions.get(task_id, "Find and report quality issues.")
     
     def get_state(self) -> dict:
         return {
@@ -189,9 +271,11 @@ class OpenAuditEnv:
             "current_task": self.current_task_id,
             "step_number": self.step_number,
             "findings_so_far": len(self.findings_so_far),
+            "flaws_found_count": self.flaws_found_count,
             "total_reward": self.total_reward,
             "max_steps": self.max_steps,
-            "completed": self.completed
+            "completed": self.completed,
+            "current_phase": self.current_phase
         }
 
 _env_instance = None
@@ -201,4 +285,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
