@@ -8,7 +8,7 @@ from openai import OpenAI
 
 # Environment variables
 ENV_API_URL = os.environ.get("API_BASE_URL", "https://kiransin-openaudit.hf.space")
-MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-3.5-turbo")
+MODEL_NAME = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")  # Real OpenAI key
 HF_TOKEN = os.environ.get("HF_TOKEN", "")  # For environment access if needed
 
@@ -124,3 +124,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

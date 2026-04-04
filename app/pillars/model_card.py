@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pillar 1: Model Card Auditing
 Deterministic graders for synthetic data with ground truth flaws
 """
@@ -19,7 +19,7 @@ def load_card(card_id: str) -> Dict[str, Any]:
 def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
     """
     Easy grader: Field completeness
-    Score = |agent_found ∩ ground_truth| / |ground_truth|
+    Score = |agent_found âˆ© ground_truth| / |ground_truth|
     """
     # Extract missing fields from ground truth
     missing_fields: Set[str] = set()
@@ -120,33 +120,40 @@ def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> Audi
             break
     if not fraud:
         return AuditReward(value=0.0, reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
-
+    
     benchmark = fraud.get("benchmark", "").lower()
     claimed = float(fraud.get("claimed", 0))
     actual = float(fraud.get("actual", 0))
-
+    
+    # Extract numbers from description
     import re
     numbers = re.findall(r'\d+\.?\d*', description)
     numbers_float = [float(n) for n in numbers]
-
+    
     score = 0.0
+    
+    # Check if benchmark is mentioned
     if benchmark in description:
         score += 0.3
-
-    if any(abs(n - claimed) <= 0.5 for n in numbers_float):
+    
+    # Check claimed number (allow 0.5 tolerance)
+    claimed_matched = any(abs(n - claimed) <= 0.5 for n in numbers_float)
+    if claimed_matched:
         score += 0.35
     elif any(abs(n - claimed) <= 1.0 for n in numbers_float):
         score += 0.2
-
-    if any(abs(n - actual) <= 0.5 for n in numbers_float):
+    
+    # Check actual number
+    actual_matched = any(abs(n - actual) <= 0.5 for n in numbers_float)
+    if actual_matched:
         score += 0.35
     elif any(abs(n - actual) <= 1.0 for n in numbers_float):
         score += 0.2
-
+    
     return AuditReward(
         value=round(min(score, 1.0), 3),
-        reason=f"Benchmark fraud: {benchmark} claimed={claimed} actual={actual} score={score}",
-        finding_matched="benchmark_fraud" if score >= 0.5 else None,
+        reason=f"Benchmark fraud: {benchmark} claimed={claimed} actual={actual}",
+        finding_matched="benchmark_fraud" if score >= 0.6 else None,
         is_false_positive=score < 0.2,
         penalty_applied=0.0,
         cumulative_score=score
@@ -178,7 +185,7 @@ def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditRew
 # ==================== UNIT TESTS ====================
 
 def test_graders():
-    """Test all graders: perfect action → 1.0, empty action → ~0.0"""
+    """Test all graders: perfect action â†’ 1.0, empty action â†’ ~0.0"""
     print("Testing Model Card Graders...")
     
     test_cases = [
@@ -236,10 +243,11 @@ def test_graders():
         print(f"Perfect action: {perfect_reward.value} (expected ~1.0)")
         assert perfect_reward.value >= 0.7, f"Perfect should score high, got {perfect_reward.value}"
         
-        print(f"✅ {card_id} tests passed")
+        print(f"âœ… {card_id} tests passed")
     
-    print("\n✅ All grader tests passed!")
+    print("\nâœ… All grader tests passed!")
 
 if __name__ == "__main__":
     test_graders()
+
 
