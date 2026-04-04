@@ -1,0 +1,35 @@
+{
+  "card_text": "# Model 2\n\nThis is a great model.\n- **eval_results**: Valid entry\n\n## License\nMIT License. Parent model: parent_model_2 (GPL-3.0)\n\n## Benchmarks\nMMLU: 87.3\n",
+  "metadata": {
+    "paper_dict": {
+      "MMLU": 81.2
+    },
+    "lineage_licenses": {
+      "parent_model_{i}": "GPL-3.0"
+    }
+  },
+  "ground_truth_flaws": [
+    {
+      "task": "model_card_easy",
+      "type": "missing_field",
+      "details": [
+        "dataset",
+        "license",
+        "base_model",
+        "co2_emitted"
+      ]
+    },
+    {
+      "task": "model_card_medium",
+      "type": "license_conflict",
+      "violating_parent": "parent_model_2"
+    },
+    {
+      "task": "model_card_hard",
+      "type": "benchmark_fraud",
+      "metric": "MMLU",
+      "claimed": 87.3,
+      "actual": 81.2
+    }
+  ]
+}

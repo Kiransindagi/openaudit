@@ -1,0 +1,11 @@
+﻿{
+    "model_name": "test-model",
+    "description": "A test model for auditing",
+    "ground_truth_flaws": [
+        {
+            "type": "missing_field",
+            "field": "license",
+            "severity": 2
+        }
+    ]
+}
