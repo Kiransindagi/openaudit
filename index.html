@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -312,8 +312,8 @@
 <body>
 <div class="container">
     <div class="header">
-        <div class="logo">🔍</div>
-        <div class="status-badge" id="liveStatus">🔄 Auto‑refreshing every 30s</div>
+        <div class="logo">??</div>
+        <div class="status-badge" id="liveStatus">?? Auto-refreshing every 30s</div>
         <h1>OpenAudit</h1>
         <div class="tagline">AI Ecosystem Trust & Quality Auditing Environment</div>
     </div>
@@ -328,29 +328,29 @@
 
     <!-- LIVE AUDIT LOG - ADDED -->
     <div class="api-section">
-        <h3>📝 Live Audit Log <span style="font-size:0.7rem; opacity:0.7;">(Real-time agent activity)</span></h3>
+        <h3>?? Live Audit Log <span style="font-size:0.7rem; opacity:0.7;">(Real-time agent activity)</span></h3>
         <div id="auditLog" class="audit-log">
-            <div class="log-entry log-info">🟢 OpenAudit environment initialized</div>
-            <div class="log-entry log-info">📡 Connected to API endpoint</div>
-            <div class="log-entry log-info">🔄 Starting automated audit cycle...</div>
+            <div class="log-entry log-info">?? OpenAudit environment initialized</div>
+            <div class="log-entry log-info">?? Connected to API endpoint</div>
+            <div class="log-entry log-info">?? Starting automated audit cycle...</div>
         </div>
     </div>
 
     <div class="test-results">
-        <h3>📊 Live Test Results <span id="lastUpdate"></span></h3>
-        <div id="resultsTable" class="loading">⏳ Fetching latest test results...</div>
+        <h3>?? Live Test Results <span id="lastUpdate"></span></h3>
+        <div id="resultsTable" class="loading">? Fetching latest test results...</div>
     </div>
 
     <div class="grid">
-        <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</p></div>
-        <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicate rows, and train/test leakage in datasets.</p></div>
-        <div class="card"><div class="card-icon">🎯</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, and broken verifiers in RL training.</p></div>
-        <div class="card"><div class="card-icon">🛠️</div><h3>Tool Tester</h3><p>Detect code quality issues, silent failures, and dangerous tool chains.</p></div>
+        <div class="card"><div class="card-icon">??</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</p></div>
+        <div class="card"><div class="card-icon">??</div><h3>Dataset Quality Control</h3><p>Find null values, duplicate rows, and train/test leakage in datasets.</p></div>
+        <div class="card"><div class="card-icon">??</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, and broken verifiers in RL training.</p></div>
+        <div class="card"><div class="card-icon">???</div><h3>Tool Tester</h3><p>Detect code quality issues, silent failures, and dangerous tool chains.</p></div>
     </div>
 
     <!-- API Endpoints Section -->
     <div class="api-section">
-        <h3>📡 API Endpoints</h3>
+        <h3>?? API Endpoints</h3>
         <div class="endpoint"><span class="method post">POST</span><span class="url">/reset?task_id={task_id}</span><span style="float:right;">Start a new audit episode</span></div>
         <div class="endpoint"><span class="method post">POST</span><span class="url">/step</span><span style="float:right;">Submit an audit finding</span></div>
         <div class="endpoint"><span class="method get">GET</span><span class="url">/state</span><span style="float:right;">Get current episode state</span></div>
@@ -361,7 +361,7 @@
 
     <!-- Quick Start / Copy-Paste Command Snippets -->
     <div class="api-section">
-        <h3>🚀 Quick Start - Copy & Paste</h3>
+        <h3>?? Quick Start - Copy & Paste</h3>
 
         <div class="endpoint">
             <strong>1. Reset an episode:</strong>
@@ -412,14 +412,14 @@ python inference.py
     </div>
 
     <div class="buttons">
-        <a href="/docs" class="btn btn-primary">📖 API Documentation</a>
-        <a href="/health" class="btn btn-secondary">❤️ Health Check</a>
-        <a href="/tasks" class="btn btn-secondary">📋 View Tasks</a>
+        <a href="/docs" class="btn btn-primary">?? API Documentation</a>
+        <a href="/health" class="btn btn-secondary">?? Health Check</a>
+        <a href="/tasks" class="btn btn-secondary">?? View Tasks</a>
     </div>
 
     <div class="footer">
         <p>OpenAudit v1.0.0 | Built for the Hugging Face Hackathon</p>
-        <p>🔍 Auditing AI artifacts to build trust in the ecosystem</p>
+        <p>?? Auditing AI artifacts to build trust in the ecosystem</p>
     </div>
 </div>
 
@@ -432,10 +432,10 @@ python inference.py
         const logDiv = document.getElementById('auditLog');
         if (!logDiv) return;
         const timestamp = new Date().toLocaleTimeString();
-        let icon = '📌', cls = 'log-info';
-        if (type === 'success') { icon = '✅'; cls = 'log-success'; }
-        else if (type === 'warning') { icon = '⚠️'; cls = 'log-warning'; }
-        else if (type === 'error') { icon = '❌'; cls = 'log-error'; }
+        let icon = '??', cls = 'log-info';
+        if (type === 'success') { icon = '?'; cls = 'log-success'; }
+        else if (type === 'warning') { icon = '??'; cls = 'log-warning'; }
+        else if (type === 'error') { icon = '?'; cls = 'log-error'; }
         const entry = document.createElement('div');
         entry.className = `log-entry ${cls}`;
         entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
@@ -492,15 +492,15 @@ python inference.py
     }
 
     function getStatusText(reward, done) {
-        if (reward === null) return "❌ Error";
-        if (reward >= 0.8) return "✅ Pass";
-        if (reward >= 0.3) return "⚠️ Partial";
-        return "❌ Needs Work";
+        if (reward === null) return "? Error";
+        if (reward >= 0.8) return "? Pass";
+        if (reward >= 0.3) return "?? Partial";
+        return "? Needs Work";
     }
 
     async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
-        tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
+        tableDiv.innerHTML = '<div class="loading">? Running tests...</div>';
         addLogEntry('Starting automated audit cycle...', 'info');
         
         let taskList = [];
@@ -556,12 +556,12 @@ python inference.py
             if (result.reward !== null && result.reward > 0) workingCount++;
             if (typeof result.reward === 'number') totalReward += result.reward;
             
-            rowsHtml += `趟
+            rowsHtml += `<tr>
                 <td>${taskId}</td>
                 <td>${pillar.charAt(0).toUpperCase() + pillar.slice(1)}</td>
                 <td>${difficulty}</td>
                 <td>${reward}</td>
-                <td class="${statusClass}">${statusText}${result.reward >= 0.8 ? ' ✅' : result.reward >= 0.3 ? ' ⚠️' : ' ❌'}</td>
+                <td class="${statusClass}">${statusText}${result.reward >= 0.8 ? ' ?' : result.reward >= 0.3 ? ' ??' : ' ?'}</td>
             </tr>`;
             
             // Add to live audit log
@@ -585,7 +585,7 @@ python inference.py
         
         // Add summary row below table
         const summaryHtml = `<div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 0.5rem; text-align: center;">
-            <strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong>
+            <strong>? ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong>
         </div>`;
         
         tableDiv.innerHTML = rowsHtml + summaryHtml;
@@ -600,13 +600,13 @@ python inference.py
         
         const now = new Date();
         document.getElementById('lastUpdate').innerHTML = `(updated ${now.toLocaleTimeString()})`;
-        document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
+        document.getElementById('liveStatus').innerHTML = `? Live · Auto-refresh every 30s`;
         addLogEntry(`Audit cycle complete: ${workingCount}/${totalTasks} tasks passed (${successRate}% success rate)`, 'success');
     }
 
     // Initial load with welcome message
-    addLogEntry('🚀 OpenAudit dashboard ready', 'success');
-    addLogEntry('📡 API endpoint: ' + BASE_URL, 'info');
+    addLogEntry('?? OpenAudit dashboard ready', 'success');
+    addLogEntry('?? API endpoint: ' + BASE_URL, 'info');
     refreshAllTests();
     
     if (autoRefreshInterval) clearInterval(autoRefreshInterval);
