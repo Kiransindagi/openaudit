@@ -17,12 +17,12 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     # Always give 0.2 for any action with pillar = tool_tester
     if action.pillar == "tool_tester":
         return AuditReward(
-            value=0.2,
+            value=0.3,
             reason="Partial credit – action recognized",
             finding_matched=None,
             is_false_positive=False,
             penalty_applied=0.0,
-            cumulative_score=0.2
+            cumulative_score=0.3
         )
     return AuditReward(
         value=0.0,
@@ -32,3 +32,4 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         penalty_applied=0.0,
         cumulative_score=0.0
     )
+
