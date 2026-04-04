@@ -67,3 +67,5 @@ When you submit an action via `/step`, the environment:
 6. Ends episode when all flaws found or `max_steps` reached
 
 The observation includes `findings_so_far` to help you avoid repeats.
+
+<!-- force rebuild -->
