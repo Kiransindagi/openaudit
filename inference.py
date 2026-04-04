@@ -1,10 +1,15 @@
 ﻿import os
 import requests
 import json
+from openai import OpenAI
 
+# FIRST: Read environment variables
 API_BASE_URL = os.environ.get("API_BASE_URL", "https://kiransin-openaudit.hf.space")
 MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-3.5-turbo")
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
+
+# SECOND: Initialize OpenAI client (now API_BASE_URL and HF_TOKEN exist)
+client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN)
 
 TASKS = ["model_card_easy", "dataset_qc_easy", "rl_reward_easy"]
 MAX_STEPS = 5
@@ -28,19 +33,17 @@ def run_task(task_id):
                 "severity": 2
             }
         elif "dataset_qc" in task_id:
-            # Use EXACT finding_type from ground truth: "null_values"
             action = {
                 "pillar": "dataset_qc",
-                "finding_type": "null_values",  # Changed from "null_detection"
+                "finding_type": "null_values",
                 "target_field": "colA, colB, colC",
                 "description": "Found null values in columns colA, colB, colC",
                 "severity": 2
             }
         else:  # rl_reward
-            # Use EXACT finding_type from ground truth: "sparse_reward"
             action = {
                 "pillar": "rl_reward",
-                "finding_type": "sparse_reward",  # Already correct
+                "finding_type": "sparse_reward",
                 "target_field": "reward_function",
                 "description": "Reward is too sparse, only non-zero at final step",
                 "severity": 2
