@@ -130,7 +130,7 @@
         rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier", severity: 3 },
         tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Missing docstring and type hints", severity: 2 },
         tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Swallows exceptions", severity: 3 },
-        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Dangerous code execution", severity: 3 },
+        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool C executes arbitrary code from file written by Tool A, creating a dangerous injection vulnerability", severity: 3 },
         model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License missing. INVESTIGATE: Confirmed. REPORT: Missing", severity: 2 }
     };
 
@@ -221,3 +221,5 @@
 </script>
 </body>
 </html>
+
+
