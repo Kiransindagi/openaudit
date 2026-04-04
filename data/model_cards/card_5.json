@@ -1,36 +1,23 @@
 {
-  "card_text": "# Model 5\n\nThis is a great model.\n\n## License\nMIT License. Parent model: parent_model_5 (GPL-3.0)\n\n## Benchmarks\nMMLU: 87.3\n",
-  "metadata": {
-    "paper_dict": {
-      "MMLU": 81.2
-    },
-    "lineage_licenses": {
-      "parent_model_{i}": "GPL-3.0"
-    }
-  },
+  "card_text": "# Model Card: Test-Model-F\n\n## Model Details\n- Architecture: Transformer\n- Parameters: 42B\n- Base Model: parent/model-5\n\n## License\nApache-2.0\n\n## Training Data\nTraining corpus 5\n\n## Evaluation Results\n{\"GSM8K\": {\"claimed_score\": 810339707}}\n\n## Environmental Impact\nCO2 Emitted: 60 kg\n\n## Limitations\nStandard limitations",
+  "difficulty": "hard",
+  "card_id": "card_5",
   "ground_truth_flaws": [
     {
-      "task": "model_card_easy",
-      "type": "missing_field",
-      "details": [
-        "base_model",
-        "co2_emitted",
-        "eval_results",
-        "license",
-        "dataset"
-      ]
-    },
-    {
-      "task": "model_card_medium",
-      "type": "license_conflict",
-      "violating_parent": "parent_model_5"
-    },
-    {
-      "task": "model_card_hard",
-      "type": "benchmark_fraud",
-      "metric": "MMLU",
-      "claimed": 87.3,
-      "actual": 81.2
+      "tolerance": 0.5,
+      "benchmark": "GSM8K",
+      "claimed": 810339707,
+      "severity": "critical",
+      "actual": 1477044164,
+      "flaw_type": "benchmark_fraud"
     }
-  ]
+  ],
+  "metadata": {
+    "training_data": "Training corpus 5",
+    "architecture": "Transformer",
+    "base_model": "parent/model-5",
+    "model_name": "Test-Model-F",
+    "parameters": "42B",
+    "license": "Apache-2.0"
+  }
 }

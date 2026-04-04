@@ -1,35 +1,27 @@
 {
-  "card_text": "# Model 1\n\nThis is a great model.\n- **license**: Valid entry\n\n## License\nMIT License. Parent model: parent_model_1 (GPL-3.0)\n\n## Benchmarks\nMMLU: 87.3\n",
+  "card_id": "card_1",
+  "card_text": "# Model Card: Test-Model-Beta\n\n## Model Details\n- Architecture: Transformer\n- Parameters: 13B\n- Base Model: GPL-model/gpt-3.5-base\n\n## License\nMIT\n\n## Training Data\nWeb crawl and books corpus\n\n## Evaluation Results\n{\n  \"MMLU\": 72.5,\n  \"TruthfulQA\": 65.0\n}\n\n## Environmental Impact\nCO2 Emitted: 45.2 kg\n\n## Limitations\nMay produce biased outputs",
   "metadata": {
-    "paper_dict": {
-      "MMLU": 81.2
+    "model_name": "Test-Model-Beta",
+    "architecture": "Transformer",
+    "parameters": "13B",
+    "base_model": "GPL-model/gpt-3.5-base",
+    "license": "MIT",
+    "training_data": "Web crawl and books",
+    "eval_results": {
+      "MMLU": 72.5,
+      "TruthfulQA": 65.0
     },
-    "lineage_licenses": {
-      "parent_model_{i}": "GPL-3.0"
-    }
+    "co2_emitted": "45.2 kg"
   },
   "ground_truth_flaws": [
     {
-      "task": "model_card_easy",
-      "type": "missing_field",
-      "details": [
-        "base_model",
-        "eval_results",
-        "dataset",
-        "co2_emitted"
-      ]
-    },
-    {
-      "task": "model_card_medium",
-      "type": "license_conflict",
-      "violating_parent": "parent_model_1"
-    },
-    {
-      "task": "model_card_hard",
-      "type": "benchmark_fraud",
-      "metric": "MMLU",
-      "claimed": 87.3,
-      "actual": 81.2
+      "flaw_type": "license_conflict",
+      "card_license": "MIT",
+      "parent_license": "GPL-3.0",
+      "parent_model": "GPL-model/gpt-3.5-base",
+      "severity": "critical"
     }
-  ]
+  ],
+  "difficulty": "medium"
 }

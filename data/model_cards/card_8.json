@@ -1,35 +1,23 @@
 {
-  "card_text": "# Model 8\n\nThis is a great model.\n- **co2_emitted**: Valid entry\n\n## License\nMIT License. Parent model: parent_model_8 (GPL-3.0)\n\n## Benchmarks\nMMLU: 87.3\n",
-  "metadata": {
-    "paper_dict": {
-      "MMLU": 81.2
-    },
-    "lineage_licenses": {
-      "parent_model_{i}": "GPL-3.0"
-    }
-  },
+  "card_text": "# Model Card: Test-Model-I\n\n## Model Details\n- Architecture: Transformer\n- Parameters: 63B\n- Base Model: parent/model-8\n\n## License\nApache-2.0\n\n## Training Data\nTraining corpus 8\n\n## Evaluation Results\n{\"TruthfulQA\": {\"claimed_score\": 1696028653}}\n\n## Environmental Impact\nCO2 Emitted: 90 kg\n\n## Limitations\nStandard limitations",
+  "difficulty": "hard",
+  "card_id": "card_8",
   "ground_truth_flaws": [
     {
-      "task": "model_card_easy",
-      "type": "missing_field",
-      "details": [
-        "license",
-        "base_model",
-        "dataset",
-        "eval_results"
-      ]
-    },
-    {
-      "task": "model_card_medium",
-      "type": "license_conflict",
-      "violating_parent": "parent_model_8"
-    },
-    {
-      "task": "model_card_hard",
-      "type": "benchmark_fraud",
-      "metric": "MMLU",
-      "claimed": 87.3,
-      "actual": 81.2
+      "tolerance": 0.5,
+      "benchmark": "TruthfulQA",
+      "claimed": 1696028653,
+      "severity": "critical",
+      "actual": 3332376772,
+      "flaw_type": "benchmark_fraud"
     }
-  ]
+  ],
+  "metadata": {
+    "training_data": "Training corpus 8",
+    "architecture": "Transformer",
+    "base_model": "parent/model-8",
+    "model_name": "Test-Model-I",
+    "parameters": "63B",
+    "license": "Apache-2.0"
+  }
 }
