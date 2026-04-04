@@ -5,6 +5,9 @@ Manages episode state, task routing, and grader orchestration
 from typing import Dict, Any, Optional, List
 from app.models import AuditObservation, AuditAction, AuditReward
 from app.pillars.model_card import grade_model_card, load_card
+from app.pillars.dataset_qc import grade_dataset, load_dataset
+from app.pillars.rl_reward import grade_reward, load_rl_config
+from app.pillars.tool_tester import grade_tool, load_tool
 import uuid
 
 class OpenAuditEnv:
@@ -161,17 +164,21 @@ class OpenAuditEnv:
         
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
+        elif self.current_pillar == "dataset_qc":
+            return grade_dataset(action, self.current_artifact)
+        elif self.current_pillar == "rl_reward":
+            return grade_reward(action, self.current_artifact)
+        elif self.current_pillar == "tool_tester":
+            return grade_tool(action, self.current_artifact)
         else:
-            # Placeholder for other pillars
             return AuditReward(
                 value=0.0,
-                reason=f"Pillar {self.current_pillar} not implemented yet",
+                reason=f"Pillar {self.current_pillar} not recognized",
                 finding_matched=None,
-                is_false_positive=False,
+                is_false_positive=True,
                 penalty_applied=0.0,
                 cumulative_score=self.total_reward
             )
-    
     def _get_observation(self) -> AuditObservation:
         """Build current observation"""
         total_flaws = len(self.current_artifact.get("ground_truth_flaws", [])) if self.current_artifact else 0
@@ -222,3 +229,5 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
+
