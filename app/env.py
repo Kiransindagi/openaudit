@@ -89,7 +89,7 @@ class OpenAuditEnv:
             self.current_artifact = load_tool(artifact_id)
             content = "Tool loaded for security analysis"
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "static_analysis"])
+            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
             instructions = "Find code quality issues: missing docstrings, type hints, and return annotations."
         
         return AuditObservation(
@@ -179,7 +179,7 @@ class OpenAuditEnv:
         elif self.current_pillar == "rl_reward":
             return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
         elif self.current_pillar == "tool_tester":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "static_analysis"])
+            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
         return 0
     
     def get_state(self) -> dict:
@@ -201,3 +201,4 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
