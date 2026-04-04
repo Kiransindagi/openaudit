@@ -1,6 +1,6 @@
-{
+﻿{
   "card_id": "card_2",
-  "card_text": "# Model Card: Test-Model-Gamma\n\n## Model Details\n- Architecture: Transformer\n- Parameters: 70B\n- Base Model: mistralai/Mistral-7B\n\n## License\nApache-2.0\n\n## Training Data\nCurated high-quality corpus\n\n## Evaluation Results\n{\n  \"MMLU\": {\n    \"claimed_score\": 87.3,\n    \"paper_reference\": \"Smith et al. 2024\"\n  }\n}\n\n## Environmental Impact\nCO2 Emitted: 892.5 kg\n\n## Limitations\nRequires significant compute",
+  "card_text": "# Model Card: Test-Model-Gamma\n\n## Model Details\n- Architecture: Transformer\n- Parameters: 70B\n- Base Model: mistralai/Mistral-7B\n\n## License\nApache-2.0\n\n## Training Data\nCurated high-quality corpus\n\n## Evaluation Results\n{\n  \"MMLU\": {\n    \"claimed_score\": 87.3,\n    \"paper_reference\": \"Smith et al. 2024\",\n    \"actual_score\": 81.2\n  }\n}\n\n## Environmental Impact\nCO2 Emitted: 892.5 kg\n\n## Limitations\nRequires significant compute",
   "metadata": {
     "model_name": "Test-Model-Gamma",
     "architecture": "Transformer",
@@ -8,12 +8,7 @@
     "base_model": "mistralai/Mistral-7B",
     "license": "Apache-2.0",
     "training_data": "Curated corpus",
-    "eval_results": {
-      "MMLU": {
-        "claimed_score": 87.3,
-        "actual_score": 81.2
-      }
-    },
+    "eval_results": {"MMLU": {"claimed_score": 87.3, "actual_score": 81.2}},
     "co2_emitted": "892.5 kg"
   },
   "ground_truth_flaws": [
