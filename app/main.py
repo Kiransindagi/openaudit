@@ -5,36 +5,37 @@ from app.models import AuditAction, ResetResult
 from app.env import get_env
 import os
 
-app = FastAPI(title="OpenAudit", version="1.0.0", description="AI Ecosystem Trust & Quality Auditing Environment")
+app = FastAPI(
+    title="OpenAudit",
+    version="1.0.0",
+    description="AI Ecosystem Trust & Quality Auditing Environment",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
-# Serve HTML landing page at root
+# Root endpoint
 @app.get("/", response_class=HTMLResponse)
 async def root():
     if os.path.exists("index.html"):
         with open("index.html", "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
-    else:
-        return {
-            "service": "OpenAudit",
-            "version": "1.0.0",
-            "description": "AI Ecosystem Trust & Quality Auditing Environment",
-            "endpoints": {
-                "reset": "POST /reset?task_id={task_id}",
-                "step": "POST /step",
-                "state": "GET /state",
-                "tasks": "GET /tasks",
-                "health": "GET /health",
-                "docs": "GET /docs"
-            },
-            "space_url": "https://kiransin-openaudit.hf.space"
+    return {
+        "service": "OpenAudit",
+        "version": "1.0.0",
+        "endpoints": {
+            "reset": "POST /reset?task_id={task_id}",
+            "step": "POST /step",
+            "state": "GET /state",
+            "tasks": "GET /tasks",
+            "health": "GET /health",
+            "docs": "GET /docs"
         }
+    }
 
-# Get global environment instance
 env = get_env()
 
 @app.post("/reset")
-def reset_episode(task_id: Optional[str] = Query(None, description="Task ID to run")):
-    """Reset the audit state machine for a new episode."""
+def reset_episode(task_id: Optional[str] = Query(None)):
     try:
         observation = env.reset(task_id)
         return ResetResult(
@@ -51,7 +52,6 @@ def reset_episode(task_id: Optional[str] = Query(None, description="Task ID to r
 
 @app.post("/step")
 def step(action: AuditAction):
-    """Execute one step in the audit state machine."""
     try:
         observation, total_reward, done, info = env.step(action)
         return {
@@ -65,7 +65,6 @@ def step(action: AuditAction):
 
 @app.get("/state")
 def get_state():
-    """Get current state machine status."""
     try:
         return env.get_state()
     except Exception as e:
@@ -73,7 +72,6 @@ def get_state():
 
 @app.get("/tasks")
 def get_tasks():
-    """List all available tasks."""
     return {
         "tasks": list(env.tasks.keys()),
         "count": len(env.tasks),
@@ -82,7 +80,6 @@ def get_tasks():
 
 @app.get("/health")
 def health_check():
-    """Health check endpoint."""
     return {"status": "healthy", "service": "openaudit"}
 
 if __name__ == "__main__":

@@ -144,21 +144,39 @@ class OpenAuditEnv:
         else:
             return AuditReward(value=0.0, reason="Unknown pillar", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
     
-    def _get_observation(self) -> AuditObservation:
+        def _get_observation(self) -> AuditObservation:
         total_flaws = self._get_total_flaws()
+        content = ""
+        metadata = {}
+        
+        if self.current_artifact:
+            if self.current_pillar == "model_card":
+                content = self.current_artifact.get("card_text", "")
+                metadata = self.current_artifact.get("metadata", {})
+            elif self.current_pillar == "dataset_qc":
+                # Show first 20 rows of dataset as sample
+                dataset = self.current_artifact.get("dataset", [])
+                content = json.dumps({"sample_rows": dataset[:20], "total_rows": len(dataset)}, indent=2)
+                metadata = self.current_artifact.get("metadata", {})
+            elif self.current_pillar == "rl_reward":
+                content = self.current_artifact.get("reward_fn_code", "")
+                metadata = {"config": self.current_artifact.get("config", {})}
+            elif self.current_pillar == "tool_tester":
+                content = self.current_artifact.get("tool_code", "")
+                metadata = self.current_artifact.get("metadata", {})
+        
         return AuditObservation(
             artifact_type=self.current_pillar,
-            content="",
-            metadata={},
+            content=content,
+            metadata=metadata,
             step_number=self.step_number,
             findings_so_far=self.findings_so_far,
             max_steps=self.max_steps,
             task_id=self.current_task_id,
-            instructions="",
+            instructions=self._get_instructions(self.current_task_id),
             flaws_found_count=self.flaws_found_count,
             total_flaws=total_flaws
         )
-    
     def _get_total_flaws(self) -> int:
         if not self.current_artifact:
             return 0
@@ -183,3 +201,4 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
