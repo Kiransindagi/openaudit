@@ -1,4 +1,4 @@
-name: openaudit
+﻿name: openaudit
 version: "1.0.0"
 description: "AI ecosystem trust & quality auditing environment"
 author: "kiransin"
@@ -69,3 +69,8 @@ reward_space:
   max: 1.0
 
 endpoint: https://kiransin-openaudit.hf.space
+
+
+  - id: model_card_audit_chain
+    name: "Multi-step audit chain (Scan -> Investigate -> Report)"
+    difficulty: hard
