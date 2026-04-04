@@ -120,8 +120,7 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
     
-    def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
-        """Process agent action with multi-phase reward logic"""
+        def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
         if self.completed:
             return self._get_observation(), self.total_reward, True, {"error": "Episode completed"}
         
@@ -135,21 +134,19 @@ class OpenAuditEnv:
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
         
-        # Multi-phase bonus for audit chain tasks
-        is_multi_step = self.tasks.get(self.current_task_id, {}).get("multi_step", False)
-        
-        if is_multi_step:
-            # Phase 1: Scan - low reward for initial detection
-            if self.current_phase == "scan" and reward_value > 0:
-                reward_value = min(reward_value * 0.5, 0.3)
-                self.current_phase = "investigate"
-            # Phase 2: Investigate - medium reward for evidence
-            elif self.current_phase == "investigate" and reward_value > 0:
-                reward_value = min(reward_value * 0.7, 0.5)
-                self.current_phase = "report"
-            # Phase 3: Report - full reward for final report
-            elif self.current_phase == "report" and reward_value > 0:
-                reward_value = min(reward_value * 1.2, 1.0)
+        # Simple multi-phase bonus for audit chain task
+        if self.current_task_id == "model_card_audit_chain":
+            if self.step_number == 0:
+                reward_value = reward_value * 0.5
+                current_phase = "scan"
+            elif self.step_number == 1:
+                reward_value = reward_value * 0.7
+                current_phase = "investigate"
+            else:
+                reward_value = reward_value * 1.2
+                current_phase = "report"
+        else:
+            current_phase = "standard"
         
         if reward_obj.finding_matched and not reward_obj.is_false_positive:
             self.flaws_found_count += 1
@@ -159,7 +156,7 @@ class OpenAuditEnv:
             "action": action.dict(),
             "reward": reward_value,
             "reason": reward_obj.reason,
-            "phase": self.current_phase
+            "phase": current_phase
         })
         
         self.total_reward += reward_value
@@ -176,9 +173,8 @@ class OpenAuditEnv:
         return self._get_observation(), self.total_reward, self.completed, {
             "flaws_found": self.flaws_found_count,
             "total_flaws": total_flaws,
-            "phase": self.current_phase
+            "phase": current_phase
         }
-    
     def _grade_action(self, action: AuditAction) -> AuditReward:
         """Route action to appropriate grader"""
         if self.current_pillar == "model_card":
@@ -289,3 +285,4 @@ def get_env():
 # Force rebuild for multi-phase rewards
 
 # Force rebuild for multi-phase rewards
+
