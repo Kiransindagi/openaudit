@@ -1,186 +1,71 @@
-﻿
-
 name: openaudit
 version: "1.0.0"
-description: >
-  OpenAudit is an AI ecosystem trust and quality auditing environment.
-  An agent learns to inspect AI artifacts — model cards, datasets, reward
-  functions, and agent tools — for trust, quality, and safety issues before
-  they enter the Hugging Face ecosystem.
-author: your-hf-username
-license: apache-2.0
-homepage: https://huggingface.co/spaces/your-hf-username/openaudit
-tags:
-  - openenv
-  - auditing
-  - trust
-  - safety
-  - huggingface
-  - datasets
-  - model-cards
-  - reinforcement-learning
-  - agents
-
-endpoint: http://localhost:7860
-
-observation_space:
-  type: object
-  description: "The artifact to audit plus episode context"
-  fields:
-    artifact_type:
-      type: string
-      description: "One of: model_card, dataset, rl_config, tool"
-    content:
-      type: string
-      description: "Full text content of the artifact being audited"
-    metadata:
-      type: object
-      description: "Structured metadata about the artifact"
-    step_number:
-      type: integer
-      description: "Current step within the episode"
-    max_steps:
-      type: integer
-      description: "Maximum steps allowed for this episode"
-    findings_so_far:
-      type: array
-      description: "List of findings the agent has submitted this episode"
-    task_id:
-      type: string
-      description: "The active task identifier"
-    instructions:
-      type: string
-      description: "Natural language description of what the agent must find"
-
-action_space:
-  type: object
-  description: "A single audit finding submitted by the agent"
-  fields:
-    pillar:
-      type: string
-      description: "One of: model_card, dataset_qc, rl_reward, tool_tester"
-    finding_type:
-      type: string
-      description: "Category: missing_field, wrong_value, license_conflict, duplicate, sparse_reward, reward_hacking, broken_verifier, no_docstring, silent_failure, dangerous_chain"
-    target_field:
-      type: string
-      description: "The specific field, column, or component where the issue was found"
-    description:
-      type: string
-      description: "Agent explanation of the finding in natural language"
-    severity:
-      type: integer
-      description: "0=info, 1=warning, 2=error, 3=critical"
-
-reward_space:
-  type: object
-  fields:
-    value:
-      type: float
-      description: "Reward for this step, range 0.0 to 1.0"
-    reason:
-      type: string
-      description: "Human-readable explanation of the reward"
-    finding_matched:
-      type: string
-      description: "Which ground truth flaw was matched, or null"
-    is_false_positive:
-      type: boolean
-      description: "True if the finding does not match any ground truth flaw"
+description: "AI ecosystem trust & quality auditing environment"
+author: "kiransin"
+tags: [openenv, auditing, trust, safety, huggingface]
 
 tasks:
   - id: model_card_easy
     name: "Model card field completeness"
-    pillar: model_card
     difficulty: easy
-    description: "Identify all required fields missing from a model card"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: model_card_medium
     name: "License conflict detection"
-    pillar: model_card
     difficulty: medium
-    description: "Detect license incompatibilities in the model lineage"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: model_card_hard
     name: "Benchmark claim verification"
-    pillar: model_card
     difficulty: hard
-    description: "Verify benchmark scores in the card against linked paper data"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: dataset_qc_easy
-    name: "Null and empty field detection"
-    pillar: dataset_qc
+    name: "Null detection"
     difficulty: easy
-    description: "Identify columns with null or empty values and report counts"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: dataset_qc_medium
-    name: "Duplicate sample detection"
-    pillar: dataset_qc
+    name: "Duplicate detection"
     difficulty: medium
-    description: "Find exact and near-duplicate rows across the dataset"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: dataset_qc_hard
-    name: "Train-test leakage detection"
-    pillar: dataset_qc
+    name: "Train/test leakage detection"
     difficulty: hard
-    description: "Identify test samples that appear in modified form in the training split"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: rl_reward_easy
-    name: "Sparse reward identification"
-    pillar: rl_reward
+    name: "Sparse reward flag"
     difficulty: easy
-    description: "Detect when a reward function produces near-zero signal across a trajectory"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: rl_reward_medium
-    name: "Reward hacking pattern detection"
-    pillar: rl_reward
+    name: "Reward hacking detection"
     difficulty: medium
-    description: "Identify reward hacking patterns in trajectory logs"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: rl_reward_hard
-    name: "Broken verifier repair"
-    pillar: rl_reward
+    name: "Verifier repair"
     difficulty: hard
-    description: "Diagnose and propose a fix for a broken reward verifier function"
-    max_steps: 15
-    max_reward: 1.0
-
   - id: tool_tester_easy
-    name: "Static code quality analysis"
-    pillar: tool_tester
+    name: "Static analysis"
     difficulty: easy
-    description: "Identify missing docstrings, type hints, and return annotations in a tool"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: tool_tester_medium
     name: "Silent failure detection"
-    pillar: tool_tester
     difficulty: medium
-    description: "Detect exception swallowing and incorrect error return types"
-    max_steps: 10
-    max_reward: 1.0
-
   - id: tool_tester_hard
-    name: "Adversarial tool chain analysis"
-    pillar: tool_tester
+    name: "Adversarial chain detection"
     difficulty: hard
-    description: "Identify the dangerous tool in a chained pipeline and explain the risk"
-    max_steps: 15
-    max_reward: 1.0
+
+observation_space:
+  type: object
+  fields:
+    - artifact_type
+    - content
+    - metadata
+    - step_number
+    - findings_so_far
+    - max_steps
+    - task_id
+    - instructions
+
+action_space:
+  type: object
+  fields:
+    - pillar
+    - finding_type
+    - target_field
+    - description
+    - severity
+
+reward_space:
+  type: float
+  min: 0.0
+  max: 1.0
+
+endpoint: https://kiransin-openaudit.hf.space
