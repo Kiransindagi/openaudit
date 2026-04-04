@@ -96,7 +96,7 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
     
-    def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
+        def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
         if self.completed:
             return self._get_observation(), self.total_reward, True, {"error": "Episode completed"}
         
@@ -111,13 +111,17 @@ class OpenAuditEnv:
         reward_value = reward_obj.value
         
         # Multi-phase bonus for audit chain task
+        phase = "standard"
         if self.current_task_id == "model_card_audit_chain":
             if self.step_number == 0:
                 reward_value = reward_value * 0.5
+                phase = "scan"
             elif self.step_number == 1:
                 reward_value = reward_value * 0.7
+                phase = "investigate"
             else:
                 reward_value = reward_value * 1.2
+                phase = "report"
         
         if reward_obj.finding_matched and not reward_obj.is_false_positive:
             self.flaws_found_count += 1
@@ -126,7 +130,8 @@ class OpenAuditEnv:
             "step": self.step_number,
             "action": action.dict(),
             "reward": reward_value,
-            "reason": reward_obj.reason
+            "reason": reward_obj.reason,
+            "phase": phase
         })
         
         self.total_reward += reward_value
@@ -142,9 +147,9 @@ class OpenAuditEnv:
         
         return self._get_observation(), self.total_reward, self.completed, {
             "flaws_found": self.flaws_found_count,
-            "total_flaws": total_flaws
+            "total_flaws": total_flaws,
+            "phase": phase
         }
-    
     def _grade_action(self, action: AuditAction) -> AuditReward:
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
@@ -222,3 +227,4 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
