@@ -6,6 +6,25 @@ from app.env import get_env
 # Create the FastAPI app instance
 app = FastAPI(title="OpenAudit", version="1.0.0", description="AI Ecosystem Trust & Quality Auditing Environment")
 
+# Root endpoint
+@app.get("/")
+def root():
+    """Root endpoint with API information"""
+    return {
+        "service": "OpenAudit",
+        "version": "1.0.0",
+        "description": "AI Ecosystem Trust & Quality Auditing Environment",
+        "endpoints": {
+            "reset": "POST /reset?task_id={task_id}",
+            "step": "POST /step",
+            "state": "GET /state",
+            "tasks": "GET /tasks",
+            "health": "GET /health",
+            "docs": "GET /docs"
+        },
+        "space_url": "https://kiransin-openaudit.hf.space"
+    }
+
 # Get global environment instance
 env = get_env()
 
@@ -14,7 +33,6 @@ def reset_episode(task_id: Optional[str] = Query(None, description="Task ID to r
     """Reset the audit state machine for a new episode."""
     try:
         observation = env.reset(task_id)
-        # Return in ResetResult format as expected by models.py
         return ResetResult(
             observation=observation,
             info={
