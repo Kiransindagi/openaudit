@@ -523,7 +523,19 @@ python inference.py
             ];
         }
 
-        let rowsHtml = `</table><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
+        // TABULAR FORMAT - Clean table with proper headers
+        let rowsHtml = `<table>
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Pillar</th>
+                    <th>Difficulty</th>
+                    <th>Reward</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>`;
+        
         let totalReward = 0;
         let workingCount = 0;
         let totalTasks = taskList.length;
@@ -544,7 +556,7 @@ python inference.py
             if (result.reward !== null && result.reward > 0) workingCount++;
             if (typeof result.reward === 'number') totalReward += result.reward;
             
-            rowsHtml += `<tr>
+            rowsHtml += `趟
                 <td>${taskId}</td>
                 <td>${pillar.charAt(0).toUpperCase() + pillar.slice(1)}</td>
                 <td>${difficulty}</td>
@@ -566,10 +578,17 @@ python inference.py
             }
         }
         
+        rowsHtml += `</tbody></table>`;
+        
         const successRate = totalTasks > 0 ? ((workingCount / totalTasks) * 100).toFixed(1) : 0;
         const totalRewardFormatted = totalReward.toFixed(2);
-        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong></td>`;
-        tableDiv.innerHTML = `</table>${rowsHtml}</table>`;
+        
+        // Add summary row below table
+        const summaryHtml = `<div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 0.5rem; text-align: center;">
+            <strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong>
+        </div>`;
+        
+        tableDiv.innerHTML = rowsHtml + summaryHtml;
         
         document.getElementById('statsContainer').innerHTML = `
             <div class="stat-card"><div class="stat-number">${totalTasks}</div><div class="stat-label">Auditing Tasks</div></div>
