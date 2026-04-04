@@ -1,4 +1,4 @@
-﻿"""
+"""
 OpenAudit Environment - Complete with All 4 Pillars
 """
 import json
@@ -169,19 +169,21 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
     
-    def _get_total_flaws(self) -> int:
+        def _get_total_flaws(self) -> int:
         if not self.current_artifact:
             return 0
         if self.current_pillar == "model_card":
             return len(self.current_artifact.get("ground_truth_flaws", []))
         elif self.current_pillar == "dataset_qc":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
+            # For dataset_qc, we count null_values, duplicates, test_leakage separately?
+            # Simplified: return number of flaws
+            return len(self.current_artifact.get("ground_truth_flaws", []))
         elif self.current_pillar == "rl_reward":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
+            # Count any flaw in ground_truth_flaws
+            return len(self.current_artifact.get("ground_truth_flaws", []))
         elif self.current_pillar == "tool_tester":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
+            return len(self.current_artifact.get("ground_truth_flaws", []))
         return 0
-    
     def get_state(self) -> dict:
         return {
             "episode_id": self.current_episode_id,
