@@ -5,272 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenAudit - AI Ecosystem Trust & Quality Auditing</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #fff;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .header {
-            text-align: center;
-            padding: 2rem 1rem;
-            animation: fadeInDown 0.8s ease;
-        }
-
-        .logo {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #e0e0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .tagline {
-            font-size: 1.25rem;
-            opacity: 0.95;
-            margin-bottom: 2rem;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background: #4CAF50;
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .card p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
-
-        .test-results {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            overflow-x: auto;
-        }
-
-        .test-results h3 {
-            margin-bottom: 1rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        th {
-            font-weight: 600;
-            opacity: 0.8;
-        }
-
-        .status-pass {
-            color: #4CAF50;
-        }
-
-        .status-partial {
-            color: #FFC107;
-        }
-
-        .status-fail {
-            color: #f44336;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            opacity: 0.7;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        .api-section {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .endpoint {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-        }
-
-        .method {
-            display: inline-block;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.25rem;
-            font-weight: bold;
-            margin-right: 0.5rem;
-        }
-
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .header { text-align: center; padding: 2rem 1rem; animation: fadeInDown 0.8s ease; }
+        .logo { font-size: 4rem; margin-bottom: 1rem; }
+        h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #e0e0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .tagline { font-size: 1.25rem; opacity: 0.95; margin-bottom: 2rem; }
+        .status-badge { display: inline-block; background: #4CAF50; color: white; padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: bold; margin-bottom: 1rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1.5rem; transition: transform 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
+        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
+        .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .card p { font-size: 0.9rem; opacity: 0.9; line-height: 1.5; }
+        .test-results { background: rgba(0,0,0,0.3); border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; overflow-x: auto; }
+        .test-results h3 { margin-bottom: 1rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        th { font-weight: 600; opacity: 0.8; }
+        .status-pass { color: #4CAF50; }
+        .status-partial { color: #FFC107; }
+        .status-fail { color: #f44336; }
+        .loading { text-align: center; padding: 2rem; opacity: 0.7; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 2rem 0; text-align: center; }
+        .stat-card { background: rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 1rem; }
+        .stat-number { font-size: 2rem; font-weight: bold; }
+        .stat-label { font-size: 0.85rem; opacity: 0.8; }
+        .api-section { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; }
+        .endpoint { background: rgba(0,0,0,0.3); border-radius: 0.5rem; padding: 0.75rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.85rem; }
+        .method { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-weight: bold; margin-right: 0.5rem; }
         .method.post { background: #4CAF50; }
         .method.get { background: #2196F3; }
         .url { color: #ffd700; }
-
-        .buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: #fff;
-            color: #667eea;
-        }
-
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid #fff;
-            color: #fff;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .grid, .stats, .api-section, .test-results {
-            animation: fadeInUp 0.8s ease;
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 1rem; }
-            h1 { font-size: 2rem; }
-            .logo { font-size: 3rem; }
-            th, td { font-size: 0.7rem; padding: 0.5rem; }
-        }
+        .code-block { background: rgba(0,0,0,0.4); border-radius: 0.5rem; padding: 1rem; margin: 0.5rem 0; font-family: monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; }
+        .buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 2rem; text-decoration: none; font-weight: 600; transition: all 0.3s ease; cursor: pointer; }
+        .btn-primary { background: #fff; color: #667eea; }
+        .btn-primary:hover { transform: scale(1.05); }
+        .btn-secondary { background: transparent; border: 2px solid #fff; color: #fff; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        .footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; opacity: 0.8; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .grid, .stats, .api-section, .test-results { animation: fadeInUp 0.8s ease; }
+        @media (max-width: 768px) { .container { padding: 1rem; } h1 { font-size: 2rem; } .logo { font-size: 3rem; } th, td { font-size: 0.7rem; padding: 0.5rem; } }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="logo">🔍</div>
-        <div class="status-badge" id="liveStatus">🔄 Auto‑refreshing every 30s</div>
+        <div class="status-badge" id="liveStatus">🔄 Auto-refreshing every 30s</div>
         <h1>OpenAudit</h1>
         <div class="tagline">AI Ecosystem Trust & Quality Auditing Environment</div>
     </div>
@@ -305,6 +96,16 @@
         <div class="endpoint"><span class="method get">GET</span><span class="url">/docs</span><span style="float:right;">Swagger UI</span></div>
     </div>
 
+    <div class="api-section">
+        <h3>🚀 Quick Start - Copy & Paste</h3>
+        <div class="endpoint"><strong>1. Reset an episode:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy</div></div>
+        <div class="endpoint"><strong>2. Submit a finding:</strong><div class="code-block">curl -X POST https://kiransin-openaudit.hf.space/step -H "Content-Type: application/json" -d '{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"Missing license","severity":2}'</div></div>
+        <div class="endpoint"><strong>3. Check episode state:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/state</div></div>
+        <div class="endpoint"><strong>4. List all 12 tasks:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/tasks</div></div>
+        <div class="endpoint"><strong>5. Health check:</strong><div class="code-block">curl -X GET https://kiransin-openaudit.hf.space/health</div></div>
+        <div class="endpoint"><strong>6. Run the full AI agent:</strong><div class="code-block">export API_BASE_URL="https://kiransin-openaudit.hf.space"<br>export MODEL_NAME="gpt-3.5-turbo"<br>export OPENAI_API_KEY="your_key"<br>python inference.py</div></div>
+    </div>
+
     <div class="buttons">
         <a href="/docs" class="btn btn-primary">📖 API Documentation</a>
         <a href="/health" class="btn btn-secondary">❤️ Health Check</a>
@@ -322,15 +123,15 @@
     let autoRefreshInterval = null;
 
     const ACTIONS = {
-        model_card_easy: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "Missing license field", severity: 2 },
-        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict with parent model", severity: 3 },
-        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "MMLU benchmark fraud: claimed 87.3 but actual is 81.2", severity: 3 },
-        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "columns", description: "Found null values in columns", severity: 2 },
+        model_card_easy: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "Missing license, evaluation results, and CO2 emissions fields", severity: 2 },
+        model_card_medium: { pillar: "model_card", finding_type: "license_conflict", target_field: "license", description: "License conflict: MIT license but parent model uses GPL-3.0", severity: 3 },
+        model_card_hard: { pillar: "model_card", finding_type: "benchmark_fraud", target_field: "MMLU", description: "MMLU benchmark fraud: claimed 87.3 actual 81.2", severity: 3 },
+        dataset_qc_easy: { pillar: "dataset_qc", finding_type: "null_values", target_field: "colA,colB,colC", description: "Found null values in columns", severity: 2 },
         dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Found duplicate rows", severity: 2 },
         dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Train/test leakage detected", severity: 3 },
-        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Reward is too sparse", severity: 2 },
-        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Agent always says YES to get reward", severity: 3 },
-        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Verifier always returns 1.0", severity: 3 },
+        rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Sparse reward detected", severity: 2 },
+        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected", severity: 3 },
+        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier", severity: 3 },
         tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Missing docstring and type hints", severity: 2 },
         tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Swallows exceptions", severity: 3 },
         tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Dangerous code execution", severity: 3 }
@@ -339,35 +140,26 @@
     async function testTask(taskId) {
         try {
             const resetRes = await fetch(`${BASE_URL}/reset?task_id=${taskId}`, { method: 'POST' });
-            if (!resetRes.ok) return { reward: null, done: false, error: `Reset failed (${resetRes.status})` };
+            if (!resetRes.ok) return { reward: null, done: false, error: `Reset failed` };
             const resetData = await resetRes.json();
-            const totalFlaws = resetData.observation?.total_flaws || 0;
-
             const action = ACTIONS[taskId] || { pillar: "unknown", finding_type: "test", target_field: "unknown", description: "test", severity: 1 };
-            const stepRes = await fetch(`${BASE_URL}/step`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(action)
-            });
-            if (!stepRes.ok) return { reward: null, done: false, error: `Step failed (${stepRes.status})` };
+            const stepRes = await fetch(`${BASE_URL}/step`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(action) });
+            if (!stepRes.ok) return { reward: null, done: false, error: `Step failed` };
             const stepData = await stepRes.json();
-            const reward = stepData.reward;
-            const done = stepData.done;
-
-            return { reward, done, totalFlaws };
+            return { reward: stepData.reward, done: stepData.done };
         } catch (err) {
             return { reward: null, done: false, error: err.message };
         }
     }
 
-    function getStatusClass(reward, done) {
+    function getStatusClass(reward) {
         if (reward === null) return "status-fail";
         if (reward >= 0.8) return "status-pass";
         if (reward >= 0.3) return "status-partial";
         return "status-fail";
     }
 
-    function getStatusText(reward, done) {
+    function getStatusText(reward) {
         if (reward === null) return "❌ Error";
         if (reward >= 0.8) return "✅ Pass";
         if (reward >= 0.3) return "⚠️ Partial";
@@ -377,66 +169,34 @@
     async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
         tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
-        
-        let taskList = [];
-        try {
-            const tasksRes = await fetch(`${BASE_URL}/tasks`);
-            if (tasksRes.ok) {
-                const tasksData = await tasksRes.json();
-                taskList = tasksData.tasks || [];
-            }
-        } catch(e) { console.warn("Could not fetch tasks, using fallback list"); }
-        
-        if (taskList.length === 0) {
-            taskList = [
-                "model_card_easy", "model_card_medium", "model_card_hard",
-                "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
-                "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
-                "tool_tester_easy", "tool_tester_medium", "tool_tester_hard"
-            ];
-        }
-
-        let rowsHtml = `<table><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
+        const taskList = [
+            "model_card_easy", "model_card_medium", "model_card_hard",
+            "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
+            "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
+            "tool_tester_easy", "tool_tester_medium", "tool_tester_hard"
+        ];
+        let rowsHtml = `<tr><th>Task ID</th><th>Pillar</th><th>Difficulty</th><th>Reward</th><th>Status</th></tr>`;
         let totalReward = 0;
         let workingCount = 0;
-        let totalTasks = taskList.length;
-
         for (const taskId of taskList) {
             const pillar = taskId.split('_')[0];
-            const difficulty = taskId.split('_')[2] || (taskId.includes('easy') ? 'easy' : taskId.includes('medium') ? 'medium' : 'hard');
+            const difficulty = taskId.includes('easy') ? 'easy' : taskId.includes('medium') ? 'medium' : 'hard';
             const result = await testTask(taskId);
             const reward = result.reward !== null ? result.reward.toFixed(3) : '—';
-            const statusClass = getStatusClass(result.reward, result.done);
-            const statusText = getStatusText(result.reward, result.done);
-            
             if (result.reward !== null && result.reward > 0) workingCount++;
             if (typeof result.reward === 'number') totalReward += result.reward;
-            
-            rowsHtml += `<tr>
-                <td>${taskId}</td>
-                <td>${pillar.charAt(0).toUpperCase() + pillar.slice(1)}</td>
-                <td>${difficulty}</td>
-                <td>${reward}</td>
-                <td class="${statusClass}">${statusText}</td>
-            </tr>`;
+            rowsHtml += `<tr><td>${taskId}</td><td>${pillar}</td><td>${difficulty}</td><td>${reward}</td><td class="${getStatusClass(result.reward)}">${getStatusText(result.reward)}</td></tr>`;
         }
-        
-        const successRate = totalTasks > 0 ? ((workingCount / totalTasks) * 100).toFixed(1) : 0;
-        const totalRewardFormatted = totalReward.toFixed(2);
-        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong></td></tr>`;
+        rowsHtml += `<tr style="border-top:2px solid rgba(255,255,255,0.3);"><td colspan="5"><strong>✅ ${workingCount}/12 tasks working | Total Reward: ${totalReward.toFixed(2)} | Success Rate: ${((workingCount/12)*100).toFixed(1)}%</strong></td></tr>`;
         tableDiv.innerHTML = `<table>${rowsHtml}</table>`;
-        
         document.getElementById('statsContainer').innerHTML = `
-            <div class="stat-card"><div class="stat-number">${totalTasks}</div><div class="stat-label">Auditing Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">${workingCount}/${totalTasks}</div><div class="stat-label">Working Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">12</div><div class="stat-label">Auditing Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">${workingCount}/12</div><div class="stat-label">Working Tasks</div></div>
             <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
             <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
             <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
         `;
-        
-        const now = new Date();
-        document.getElementById('lastUpdate').innerHTML = `(updated ${now.toLocaleTimeString()})`;
-        document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
+        document.getElementById('lastUpdate').innerHTML = `(updated ${new Date().toLocaleTimeString()})`;
     }
 
     refreshAllTests();
@@ -445,6 +205,3 @@
 </script>
 </body>
 </html>
-< ! - -   f o r c e   u p d a t e   - - >  
- < ! - -   f o r c e   u p d a t e   - - >  
- 
