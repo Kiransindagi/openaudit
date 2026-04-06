@@ -1,54 +1,28 @@
 ﻿"""
-OpenAudit Baseline Agent - Uses LLM for decision making
+OpenAudit Baseline Agent - Corrected for spec compliance
 """
 import os
 import json
 import requests
 from openai import OpenAI
 
-# Environment API (your Space)
-ENV_API_URL = os.environ.get("API_BASE_URL", "https://kiransin-openaudit.hf.space")
+# Environment API (your Space) - use ENV_API_URL not API_BASE_URL
+ENV_API_URL = os.environ.get("ENV_API_URL", "https://kiransin-openaudit.hf.space")
 
-# LLM API - Hugging Face Inference (serverless)
-LLM_API_BASE = os.environ.get("LLM_API_BASE", "https://api-inference.huggingface.co/models")
+# LLM API (Hugging Face Router) - separate from environment URL
+LLM_API_BASE = os.environ.get("LLM_API_BASE", "https://router.huggingface.co/v1")
 MODEL_NAME = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 LLM_API_KEY = os.environ.get("HF_TOKEN", "") or os.environ.get("OPENAI_API_KEY", "")
 
-# For Hugging Face, we need to use the correct client setup
-# Since OpenAI client may not work directly, let's use requests for HF
-USE_OPENAI_CLIENT = os.environ.get("USE_OPENAI_CLIENT", "false").lower() == "true"
+# Initialize OpenAI client for LLM calls
+client = OpenAI(
+    base_url=LLM_API_BASE,
+    api_key=LLM_API_KEY
+)
 
-def call_huggingface_llm(messages):
-    """Call Hugging Face inference API directly"""
-    url = f"{LLM_API_BASE}/{MODEL_NAME}"
-    headers = {
-        "Authorization": f"Bearer {LLM_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "inputs": messages[-1]["content"],  # Use the last user message
-        "parameters": {
-            "max_new_tokens": 300,
-            "temperature": 0.3,
-            "return_full_text": False
-        }
-    }
-    
-    try:
-        response = requests.post(url, headers=headers, json=payload, timeout=30)
-        if response.status_code == 200:
-            result = response.json()
-            # Extract generated text
-            if isinstance(result, list) and len(result) > 0:
-                return result[0].get("generated_text", "")
-            elif isinstance(result, dict):
-                return result.get("generated_text", "")
-        else:
-            print(f"HF API error: {response.status_code} - {response.text[:200]}")
-            return None
-    except Exception as e:
-        print(f"HF API exception: {e}")
-        return None
+# Tasks to run
+TASKS = ["model_card_easy", "dataset_qc_easy", "rl_reward_easy"]
+MAX_STEPS_PER_TASK = 5
 
 def get_llm_action(observation, step, previous_actions):
     """Call LLM to decide next action based on observation"""
@@ -73,52 +47,55 @@ Previous findings submitted: {json.dumps(previous_actions, indent=2)}
 Based on the instructions, what flaw should you report next? Output JSON."""
 
     try:
-        # Combine system and user prompt for HF
-        full_prompt = f"{system_prompt}\n\n{user_prompt}\n\nOutput JSON:"
-        response_text = call_huggingface_llm([{"role": "user", "content": full_prompt}])
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.3,
+            max_tokens=300
+        )
         
-        if response_text:
-            # Try to extract JSON from response
-            action_text = response_text.strip()
-            if "```json" in action_text:
-                action_text = action_text.split("```json")[1].split("```")[0]
-            elif "```" in action_text:
-                action_text = action_text.split("```")[1].split("```")[0]
-            action = json.loads(action_text)
+        action_text = response.choices[0].message.content
+        if "```json" in action_text:
+            action_text = action_text.split("```json")[1].split("```")[0]
+        elif "```" in action_text:
+            action_text = action_text.split("```")[1].split("```")[0]
+        action = json.loads(action_text.strip())
+        
+        if "pillar" not in action:
+            action["pillar"] = observation.get('artifact_type', 'model_card')
+        if "finding_type" not in action:
+            action["finding_type"] = "missing_field"
+        if "target_field" not in action:
+            action["target_field"] = "unknown"
+        if "description" not in action:
+            action["description"] = "Potential issue detected"
+        if "severity" not in action:
+            action["severity"] = 2
             
-            if "pillar" not in action:
-                action["pillar"] = observation.get('artifact_type', 'model_card')
-            if "finding_type" not in action:
-                action["finding_type"] = "missing_field"
-            if "target_field" not in action:
-                action["target_field"] = "unknown"
-            if "description" not in action:
-                action["description"] = "Potential issue detected"
-            if "severity" not in action:
-                action["severity"] = 2
-            return action
-            
+        return action
+        
     except Exception as e:
         print(f"LLM error: {e}, using fallback action")
-    
-    # Fallback: simple action based on pillar
-    pillar = observation.get('artifact_type', 'model_card')
-    if pillar == "model_card":
-        return {"pillar": pillar, "finding_type": "missing_field", "target_field": "license", "description": "Missing license field", "severity": 2}
-    elif pillar == "dataset_qc":
-        return {"pillar": pillar, "finding_type": "null_values", "target_field": "columns", "description": "Found null values in dataset", "severity": 2}
-    elif pillar == "rl_reward":
-        return {"pillar": pillar, "finding_type": "sparse_reward", "target_field": "reward_function", "description": "Reward is too sparse", "severity": 2}
-    else:
-        return {"pillar": pillar, "finding_type": "code_quality", "target_field": "function", "description": "Missing docstring", "severity": 2}
+        pillar = observation.get('artifact_type', 'model_card')
+        if pillar == "model_card":
+            return {"pillar": pillar, "finding_type": "missing_field", "target_field": "license", "description": "Missing license field", "severity": 2}
+        elif pillar == "dataset_qc":
+            return {"pillar": pillar, "finding_type": "null_values", "target_field": "columns", "description": "Found null values in dataset", "severity": 2}
+        elif pillar == "rl_reward":
+            return {"pillar": pillar, "finding_type": "sparse_reward", "target_field": "reward_function", "description": "Reward is too sparse", "severity": 2}
+        else:
+            return {"pillar": pillar, "finding_type": "code_quality", "target_field": "function", "description": "Missing docstring", "severity": 2}
 
 def run_task(task_id):
     print(f"[START] task={task_id} env=openaudit model={MODEL_NAME}", flush=True)
 
     resp = requests.post(f"{ENV_API_URL}/reset", params={"task_id": task_id})
     if resp.status_code != 200:
-        print(f"[STEP] step=0 action={{}} reward=0.0000 done=True error=Reset failed", flush=True)
-        print(f"[END] success=False steps=1 score=0.0000 rewards=0.0000", flush=True)
+        print(f"[STEP] step=0 action={{}} reward=0.00 done=true error=Reset failed", flush=True)
+        print(f"[END] success=false steps=1 rewards=0.00", flush=True)
         return 0.0
 
     observation = resp.json().get("observation", {})
@@ -133,7 +110,7 @@ def run_task(task_id):
         
         step_resp = requests.post(f"{ENV_API_URL}/step", json=action)
         if step_resp.status_code != 200:
-            print(f"[STEP] step={step} action={json.dumps(action)} reward=0.0000 done=True error=Step failed", flush=True)
+            print(f"[STEP] step={step} action={json.dumps(action)} reward=0.00 done=true error=Step failed", flush=True)
             break
 
         result = step_resp.json()
@@ -142,7 +119,8 @@ def run_task(task_id):
         step_rewards.append(reward)
         done = result.get("done", False)
         
-        print(f"[STEP] step={step} action={json.dumps(action)} reward={reward:.4f} done={str(done).lower()} error=", flush=True)
+        # Format reward to 2 decimal places
+        print(f"[STEP] step={step} action={json.dumps(action)} reward={reward:.2f} done={str(done).lower()} error=", flush=True)
         
         previous_actions.append(action)
         step += 1
@@ -150,10 +128,10 @@ def run_task(task_id):
         if done:
             break
 
-    task_score = min(total_reward / MAX_STEPS_PER_TASK, 1.0)
-    rewards_str = ",".join([f"{r:.4f}" for r in step_rewards])
-    print(f"[END] success=True steps={step} score={task_score:.4f} rewards={rewards_str}", flush=True)
-    return task_score
+    # CORRECT [END] format: success lowercase, no score=, rewards as comma-separated list
+    rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
+    print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
+    return total_reward / MAX_STEPS_PER_TASK
 
 def main():
     print(f"=== OpenAudit Baseline Agent ===", flush=True)
@@ -171,11 +149,7 @@ def main():
     
     overall_score = total_score / len(TASKS)
     print(f"\n=== Final Results ===", flush=True)
-    for task in TASKS:
-        print(f"{task}: score={score:.4f}", flush=True)
     print(f"Overall score: {overall_score:.4f}", flush=True)
 
 if __name__ == "__main__":
-    TASKS = ["model_card_easy", "dataset_qc_easy", "rl_reward_easy"]
-    MAX_STEPS_PER_TASK = 5
     main()
