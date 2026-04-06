@@ -1,4 +1,4 @@
-﻿"""
+"""
 OpenAudit Environment - Fixed State Management
 """
 import json
