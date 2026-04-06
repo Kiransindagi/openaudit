@@ -72,7 +72,7 @@ class OpenAuditEnv:
             instructions = "Find null values in the dataset columns."
         elif self.current_pillar == "rl_reward":
             self.current_artifact = load_rl_config(artifact_id)
-            content = self.current_artifact.get("reward_fn_code", "")
+            content = json.dumps(self.current_artifact.get("trajectory_log", self.current_artifact), indent=2)
             metadata = {"config": self.current_artifact.get("config", {})}
             total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
             instructions = "Identify sparse reward issues."
@@ -183,7 +183,7 @@ class OpenAuditEnv:
                 content = json.dumps({"sample_rows": dataset[:20], "total_rows": len(dataset)}, indent=2)
                 metadata = self.current_artifact.get("metadata", {})
             elif self.current_pillar == "rl_reward":
-                content = self.current_artifact.get("reward_fn_code", "")
+                content = json.dumps(self.current_artifact.get("trajectory_log", self.current_artifact), indent=2)
                 metadata = {"config": self.current_artifact.get("config", {})}
             elif self.current_pillar == "tool_tester":
                 content = self.current_artifact.get("tool_code", "")
@@ -234,6 +234,8 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
+
 
 
 
