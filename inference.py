@@ -130,6 +130,8 @@ def run_task(task_id):
 
     # CORRECT [END] format: success lowercase, no score=, rewards as comma-separated list
     rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
+        # Format rewards as comma-separated list (even for single step)
+    rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
     print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
     return total_reward / MAX_STEPS_PER_TASK
 
@@ -153,3 +155,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
