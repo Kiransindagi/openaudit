@@ -1,4 +1,4 @@
-{
+﻿{
   "card_id": "card_0",
   "card_text": "# Model Card: Test-Model-Alpha\n\n## Model Details\n- Architecture: Transformer\n- Parameters: 7B\n- Base Model: meta-llama/Llama-2-7b\n\n## License\n[MISSING]\n\n## Training Data\nMixed corpus from public datasets\n\n## Evaluation Results\n[MISSING]\n\n## Environmental Impact\nCO2 Emitted: [MISSING]\n\n## Limitations\nStandard transformer limitations apply",
   "metadata": {
@@ -11,11 +11,7 @@
   "ground_truth_flaws": [
     {
       "flaw_type": "missing_field",
-      "fields": [
-        "license",
-        "eval_results",
-        "co2_emitted"
-      ],
+      "fields": ["license", "eval_results", "co2_emitted"],
       "severity": "error"
     }
   ],

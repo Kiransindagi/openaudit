@@ -1,5 +1,5 @@
 ﻿"""
-OpenAudit Environment - Clean Fixed Version
+OpenAudit Environment - Fixed State Management
 """
 import json
 import uuid
@@ -12,17 +12,8 @@ from app.pillars.tool_tester import grade_tool, load_tool
 
 class OpenAuditEnv:
     def __init__(self):
-        self.current_episode_id = None
-        self.current_pillar = None
-        self.current_task_id = None
-        self.current_artifact = None
-        self.step_number = 0
-        self.findings_so_far = []
-        self.max_steps = 10
-        self.completed = False
-        self.total_reward = 0.0
-        self.flaws_found_count = 0
-
+        self.reset_state()
+        
         self.tasks = {
             "model_card_easy": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8},
             "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 10},
@@ -39,7 +30,23 @@ class OpenAuditEnv:
             "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 15}
         }
 
+    def reset_state(self):
+        """Complete state reset"""
+        self.current_episode_id = None
+        self.current_pillar = None
+        self.current_task_id = None
+        self.current_artifact = None
+        self.step_number = 0
+        self.findings_so_far = []
+        self.max_steps = 10
+        self.completed = False
+        self.total_reward = 0.0
+        self.flaws_found_count = 0
+
     def reset(self, task_id: str = None) -> AuditObservation:
+        # Complete reset before loading new task
+        self.reset_state()
+        
         if not task_id or task_id not in self.tasks:
             task_id = "model_card_easy"
 
@@ -48,11 +55,6 @@ class OpenAuditEnv:
         self.current_episode_id = f"ep_{uuid.uuid4().hex[:6]}"
         self.current_pillar = task_config["pillar"]
         self.current_task_id = task_id
-        self.step_number = 0
-        self.findings_so_far = []
-        self.completed = False
-        self.total_reward = 0.0
-        self.flaws_found_count = 0
         self.max_steps = task_config["max_steps"]
 
         artifact_id = task_config["artifact_id"]
@@ -76,7 +78,7 @@ class OpenAuditEnv:
             metadata = {"config": self.current_artifact.get("config", {})}
             total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
             instructions = "Identify sparse reward issues."
-        else:
+        else:  # tool_tester
             self.current_artifact = load_tool(artifact_id)
             content = self.current_artifact.get("tool_code", "")
             metadata = self.current_artifact.get("metadata", {})
@@ -104,8 +106,9 @@ class OpenAuditEnv:
             self.completed = True
             return self._get_observation(), self.total_reward, True, {"error": "Max steps reached"}
 
+        # CRITICAL: Validate pillar matches current task
         if action.pillar != self.current_pillar:
-            return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
+            return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}, got {action.pillar}"}
 
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
@@ -124,6 +127,7 @@ class OpenAuditEnv:
         self.step_number += 1
 
         total_flaws = self._get_total_flaws()
+        # Episode completes ONLY when ALL flaws found
         if self.flaws_found_count >= total_flaws and total_flaws > 0:
             self.completed = True
             self.total_reward += 0.2
