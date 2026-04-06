@@ -1,4 +1,4 @@
-"""
+﻿"""
 OpenAudit Environment - Fixed State Management
 """
 import json
@@ -196,7 +196,14 @@ class OpenAuditEnv:
         if not self.current_artifact:
             return 0
         if self.current_pillar == "model_card":
-            return len(self.current_artifact.get("ground_truth_flaws", []))
+            # Count individual missing fields, not flaw groups
+            total = 0
+            for flaw in self.current_artifact.get("ground_truth_flaws", []):
+                if flaw.get("flaw_type") == "missing_field":
+                    total += len(flaw.get("fields", []))
+                else:
+                    total += 1
+            return total
         elif self.current_pillar == "dataset_qc":
             return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
         elif self.current_pillar == "rl_reward":
@@ -204,7 +211,6 @@ class OpenAuditEnv:
         elif self.current_pillar == "tool_tester":
             return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
         return 0
-
     def get_state(self) -> dict:
         return {
             "episode_id": self.current_episode_id,
@@ -224,3 +230,4 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
