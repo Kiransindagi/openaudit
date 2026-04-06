@@ -1,6 +1,4 @@
-# Create README with front matter at the very beginning
-@'
----
+
 title: OpenAudit
 emoji: 🔍
 colorFrom: blue
@@ -147,8 +145,8 @@ Endpoint	Method	Description
 /step	POST	Submit action
 /state	GET	Current state
 /docs	GET	Swagger UI
+
+
 Live Space
 https://kiransin-openaudit.hf.space
 
-License
-apache 
