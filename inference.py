@@ -22,7 +22,7 @@ client = OpenAI(
 
 # Tasks to run
 TASKS = ["model_card_easy", "dataset_qc_easy", "rl_reward_easy"]
-MAX_STEPS_PER_TASK = 5
+MAX_STEPS_PER_TASK = 3
 
 def get_llm_action(observation, step, previous_actions):
     """Call LLM to decide next action based on observation"""
@@ -155,4 +155,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
