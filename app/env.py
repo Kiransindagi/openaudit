@@ -63,7 +63,7 @@ class OpenAuditEnv:
             self.current_artifact = load_card(artifact_id)
             content = self.current_artifact.get("card_text", "")
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len(self.current_artifact.get("ground_truth_flaws", []))
+            total_flaws = self._get_total_flaws()
             instructions = "Find missing required fields: license, evaluation results, and CO2 emissions."
         elif self.current_pillar == "dataset_qc":
             self.current_artifact = load_dataset(artifact_id)
@@ -230,4 +230,5 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
 
