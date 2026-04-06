@@ -74,3 +74,4 @@ def grade_reward(action: AuditAction, config_data: Dict[str, Any]) -> AuditRewar
         penalty_applied=0.0,
         cumulative_score=0.3
     )
+

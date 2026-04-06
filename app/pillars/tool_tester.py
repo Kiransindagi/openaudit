@@ -32,3 +32,4 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         penalty_applied=0.0,
         cumulative_score=0.0
     )
+
