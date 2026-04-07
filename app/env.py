@@ -1,5 +1,5 @@
 ﻿"""
-OpenAudit Environment - Final Working Version
+OpenAudit Environment - Clean Working Version
 """
 import json
 import uuid
@@ -96,21 +96,18 @@ class OpenAuditEnv:
             total_flaws=total_flaws
         )
 
-        def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
-        # FIRST: Check if episode already completed - reject immediately
+    def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
+        # Check if episode already completed
         if self.completed:
             return self._get_observation(), self.total_reward, True, {"error": "Episode already completed"}
 
-        # THEN: Check max steps
         if self.step_number >= self.max_steps:
             self.completed = True
             return self._get_observation(), self.total_reward, True, {"error": "Max steps reached"}
 
-        # THEN: Validate pillar
         if action.pillar != self.current_pillar:
             return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}, got {action.pillar}"}
 
-        # THEN: Process the action
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
 
@@ -139,6 +136,7 @@ class OpenAuditEnv:
             "flaws_found": self.flaws_found_count,
             "total_flaws": total_flaws
         }
+
     def _grade_action(self, action: AuditAction) -> AuditReward:
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
@@ -243,4 +241,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
