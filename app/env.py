@@ -159,7 +159,25 @@ class OpenAuditEnv:
                 cumulative_score=self.total_reward
             )
 
-    def _get_observation(self) -> AuditObservation:
+        def _get_observation(self) -> AuditObservation:
+        # If episode is completed, return minimal observation
+        if self.completed:
+            return AuditObservation(
+                artifact_type="",
+                content="Episode completed",
+                metadata={},
+                step_number=self.step_number,
+                findings_so_far=self.findings_so_far,
+                max_steps=self.max_steps,
+                task_id=self.current_task_id,
+                instructions="",
+                flaws_found_count=self.flaws_found_count,
+                total_flaws=0
+            )
+        
+        total_flaws = self._get_total_flaws()
+        content = ""
+        metadata = {}
         total_flaws = self._get_total_flaws()
         content = ""
         metadata = {}
@@ -230,5 +248,7 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
+
 
 
