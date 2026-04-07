@@ -1,12 +1,16 @@
 ﻿{
-  "dataset_id": "dataset_1",
-  "dataset": [],
+  "dataset": [
+    {"id": 0, "text": "row1"},
+    {"id": 1, "text": "row1"},
+    {"id": 2, "text": "row2"},
+    {"id": 3, "text": "row3"}
+  ],
+  "metadata": {},
   "ground_truth_flaws": [
     {
       "type": "duplicates",
-      "exact": 5,
-      "near": 3
+      "exact": 1,
+      "near": 0
     }
-  ],
-  "difficulty": "medium"
+  ]
 }

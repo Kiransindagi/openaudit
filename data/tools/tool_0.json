@@ -1,11 +1,10 @@
 ﻿{
-  "tool_id": "tool_0",
-  "tool_code": "def func():\n    pass",
+  "tool_code": "def process(data):\n    return data",
+  "metadata": {},
   "ground_truth_flaws": [
     {
       "type": "code_quality",
-      "issues": ["no_docstring", "no_type_hints", "no_return_annotation"]
+      "issues": ["no_docstring", "no_type_hints"]
     }
-  ],
-  "difficulty": "easy"
+  ]
 }

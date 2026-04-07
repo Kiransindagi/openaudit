@@ -1,11 +1,9 @@
 ﻿{
-  "tool_id": "tool_2",
-  "tool_code": "",
+  "tool_code": "def execute(code):\n    exec(code)",
+  "metadata": {},
   "ground_truth_flaws": [
     {
-      "type": "adversarial_chain",
-      "dangerous_tool": "tool_c"
+      "type": "adversarial_chain"
     }
-  ],
-  "difficulty": "hard"
+  ]
 }

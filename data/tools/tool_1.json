@@ -1,10 +1,9 @@
 ﻿{
-  "tool_id": "tool_1",
-  "tool_code": "def func():\n    try:\n        return x\n    except:\n        return None",
+  "tool_code": "def safe_divide(a, b):\n    try:\n        return a / b\n    except:\n        return None",
+  "metadata": {},
   "ground_truth_flaws": [
     {
       "type": "silent_failure"
     }
-  ],
-  "difficulty": "medium"
+  ]
 }
