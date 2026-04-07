@@ -5,6 +5,7 @@ colorFrom: blue
 colorTo: green
 sdk: docker
 sdk_version: "1.0.0"
+app_file: app/main.py
 pinned: false
 tags:
   - openenv
@@ -139,14 +140,14 @@ export MODEL_NAME="Qwen/Qwen2.5-72B-Instruct"
 export HF_TOKEN="your_token"
 python inference.py
 API Endpoints
-EndpointMethodDescription
-/GETAPI information
-/healthGETHealth check
-/tasksGETList all 13 tasks
-/resetPOSTStart new episode
-/stepPOSTSubmit action
-/stateGETCurrent state
-/docsGETSwagger UI
+Endpoint    Method    Description
+/    GET    API information
+/health    GET    Health check
+/tasks    GET    List all 13 tasks
+/reset    POST    Start new episode
+/step    POST    Submit action
+/state    GET    Current state
+/docs    GET    Swagger UI
 Live Space
 https://kiransin-openaudit.hf.space
 
