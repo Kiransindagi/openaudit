@@ -1,9 +1,10 @@
-
+﻿---
 title: OpenAudit
 emoji: 🔍
 colorFrom: blue
 colorTo: green
 sdk: docker
+sdk_version: "1.0.0"
 pinned: false
 tags:
   - openenv
@@ -11,6 +12,7 @@ tags:
   - trust
   - safety
   - hackathon
+app_port: 7860
 ---
 
 # OpenAudit: AI Ecosystem Trust & Quality Auditing
@@ -60,6 +62,7 @@ dataset_qc_easy: reward=1.10, score=0.220
 rl_reward_easy: reward=1.00, score=0.200
 Overall score: 0.176
 
+text
 
 ## Synthetic Artifacts
 
@@ -112,12 +115,12 @@ When you submit an action via `/step`, the environment:
 ```bash
 docker build -t openaudit .
 docker run -p 7860:7860 openaudit
-
 Run with Python
+bash
 pip install -r requirements.txt
 uvicorn app.main:app --port 7860
-
 Test the API
+bash
 # Reset episode
 curl -X POST "http://localhost:7860/reset?task_id=model_card_easy"
 
@@ -128,25 +131,22 @@ curl -X POST "http://localhost:7860/step" \
 
 # Check state
 curl -X GET "http://localhost:7860/state"
-
 Run the Baseline Agent
+bash
 export ENV_API_URL="https://kiransin-openaudit.hf.space"
 export LLM_API_BASE="https://router.huggingface.co/v1"
 export MODEL_NAME="Qwen/Qwen2.5-72B-Instruct"
 export HF_TOKEN="your_token"
 python inference.py
-
 API Endpoints
-Endpoint	Method	Description
-/	GET	API information
-/health	GET	Health check
-/tasks	GET	List all 13 tasks
-/reset	POST	Start new episode
-/step	POST	Submit action
-/state	GET	Current state
-/docs	GET	Swagger UI
-
-
+EndpointMethodDescription
+/GETAPI information
+/healthGETHealth check
+/tasksGETList all 13 tasks
+/resetPOSTStart new episode
+/stepPOSTSubmit action
+/stateGETCurrent state
+/docsGETSwagger UI
 Live Space
 https://kiransin-openaudit.hf.space
 
