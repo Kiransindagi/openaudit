@@ -454,9 +454,9 @@ python inference.py
         rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Sparse reward detected: only 1 out of 10 steps has non-zero reward (sparsity ratio 0.9)", severity: 2 },
         rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected: agent always outputs 'YES' to get maximum reward regardless of context", severity: 3 },
         rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier: reward function always returns 1.0 and never penalizes incorrect outputs", severity: 3 },
-        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Code quality issues: missing docstring, no type hints, missing return annotation", severity: 2 },
-        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure: try-except block swallows all exceptions and returns None without logging", severity: 3 },
-        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool C executes arbitrary code from file written by Tool A, creating a dangerous injection vulnerability", severity: 3 },
+        tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Missing docstring, no type hints, missing return annotation - all three code quality issues found", severity: 2 },
+        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure: try-except block swallows all exceptions (exception hiding) and returns None without logging - this hides errors", severity: 3 },
+        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool C executes arbitrary code (exec injection) from file written by Tool A, creating a dangerous injection vulnerability", severity: 3 },
         model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License field appears missing. INVESTIGATE: Confirmed [MISSING] placeholder. REPORT: License field missing - compliance issue.", severity: 2 }
     };
 
@@ -615,4 +615,5 @@ python inference.py
 </script>
 </body>
 </html>
+
 
