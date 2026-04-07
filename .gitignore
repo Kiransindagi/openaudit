@@ -4,6 +4,16 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Lock files (ignore, don't commit)
+uv.lock
+poetry.lock
+Pipfile.lock
 
 # Environment
 .env
