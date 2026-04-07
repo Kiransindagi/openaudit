@@ -128,7 +128,7 @@ def run_task(task_id):
         if done:
             break
 
-    # CORRECT [END] format: success lowercase, no score=, rewards as comma-separated list
+    # CORRECT [END] format: success lowercase, no rewards as comma-separated list
     rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
         # Format rewards as comma-separated list (even for single step)
     rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
@@ -157,3 +157,4 @@ if __name__ == "__main__":
     main()
 
 
+ 
