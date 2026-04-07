@@ -1,5 +1,5 @@
 ﻿"""
-OpenAudit Environment - Fixed State Management
+OpenAudit Environment - Clean Working Version
 """
 import json
 import uuid
@@ -31,7 +31,6 @@ class OpenAuditEnv:
         }
 
     def reset_state(self):
-        """Complete state reset"""
         self.current_episode_id = None
         self.current_pillar = None
         self.current_task_id = None
@@ -44,9 +43,8 @@ class OpenAuditEnv:
         self.flaws_found_count = 0
 
     def reset(self, task_id: str = None) -> AuditObservation:
-        # Complete reset before loading new task
         self.reset_state()
-        
+
         if not task_id or task_id not in self.tasks:
             task_id = "model_card_easy"
 
@@ -78,7 +76,7 @@ class OpenAuditEnv:
             metadata = {"config": self.current_artifact.get("config", {})}
             total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
             instructions = "Identify sparse reward issues."
-        else:  # tool_tester
+        else:
             self.current_artifact = load_tool(artifact_id)
             content = self.current_artifact.get("tool_code", "")
             metadata = self.current_artifact.get("metadata", {})
@@ -100,15 +98,14 @@ class OpenAuditEnv:
 
     def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
         if self.completed:
-            return self._get_observation(), self.total_reward, True, {"error": "Episode already completed"}
+            return None, self.total_reward, True, {"error": "Episode already completed"}
 
         if self.step_number >= self.max_steps:
             self.completed = True
-            return self._get_observation(), self.total_reward, True, {"error": "Max steps reached"}
+            return None, self.total_reward, True, {"error": "Max steps reached"}
 
-        # CRITICAL: Validate pillar matches current task
         if action.pillar != self.current_pillar:
-            return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}, got {action.pillar}"}
+            return None, -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}, got {action.pillar}"}
 
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
@@ -127,7 +124,6 @@ class OpenAuditEnv:
         self.step_number += 1
 
         total_flaws = self._get_total_flaws()
-        # Episode completes ONLY when ALL flaws found
         if self.flaws_found_count >= total_flaws and total_flaws > 0:
             self.completed = True
             self.total_reward += 0.2
@@ -159,8 +155,7 @@ class OpenAuditEnv:
                 cumulative_score=self.total_reward
             )
 
-        def _get_observation(self) -> AuditObservation:
-        # If episode is completed, return minimal observation
+    def _get_observation(self) -> AuditObservation:
         if self.completed:
             return AuditObservation(
                 artifact_type="",
@@ -175,9 +170,6 @@ class OpenAuditEnv:
                 total_flaws=0
             )
         
-        total_flaws = self._get_total_flaws()
-        content = ""
-        metadata = {}
         total_flaws = self._get_total_flaws()
         content = ""
         metadata = {}
@@ -214,7 +206,6 @@ class OpenAuditEnv:
         if not self.current_artifact:
             return 0
         if self.current_pillar == "model_card":
-            # Count individual missing fields, not flaw groups
             total = 0
             for flaw in self.current_artifact.get("ground_truth_flaws", []):
                 if flaw.get("flaw_type") == "missing_field":
@@ -229,6 +220,7 @@ class OpenAuditEnv:
         elif self.current_pillar == "tool_tester":
             return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
         return 0
+
     def get_state(self) -> dict:
         return {
             "episode_id": self.current_episode_id,
@@ -248,7 +240,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
-
-
-
