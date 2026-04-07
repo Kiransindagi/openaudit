@@ -2,8 +2,8 @@
 
 WORKDIR /app
 
-# Copy dependency files first for better caching
-COPY requirements.txt pyproject.toml setup.py ./
+# Copy only requirements.txt (no pyproject.toml or setup.py)
+COPY requirements.txt .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
