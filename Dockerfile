@@ -2,10 +2,10 @@
 
 WORKDIR /app
 
-# Copy only requirements.txt (no pyproject.toml or setup.py)
-COPY requirements.txt .
+# Copy dependency files
+COPY requirements.txt pyproject.toml ./
 
-# Install dependencies
+# Install dependencies using pip (reads both files)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application
