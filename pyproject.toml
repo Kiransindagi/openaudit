@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "openaudit"
 version = "1.0.0"
 description = "AI Ecosystem Trust & Quality Auditing Environment"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "fastapi",
     "uvicorn",
