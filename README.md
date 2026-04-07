@@ -1,12 +1,11 @@
-# Fix README.md with complete front matter including sdk_version
-@'
----
+﻿---
 title: OpenAudit
 emoji: 🔍
 colorFrom: blue
 colorTo: green
 sdk: docker
 sdk_version: "1.0.0"
+app_file: app/main.py
 pinned: false
 tags:
   - openenv
@@ -141,18 +140,16 @@ export MODEL_NAME="Qwen/Qwen2.5-72B-Instruct"
 export HF_TOKEN="your_token"
 python inference.py
 API Endpoints
-Endpoint	Method	Description
-/	GET	API information
-/health	GET	Health check
-/tasks	GET	List all 13 tasks
-/reset	POST	Start new episode
-/step	POST	Submit action
-/state	GET	Current state
-/docs	GET	Swagger UI
+Endpoint    Method    Description
+/    GET    API information
+/health    GET    Health check
+/tasks    GET    List all 13 tasks
+/reset    POST    Start new episode
+/step    POST    Submit action
+/state    GET    Current state
+/docs    GET    Swagger UI
 Live Space
 https://kiransin-openaudit.hf.space
 
 License
 MIT
-'@ | Out-File README.md -Encoding utf8
-
