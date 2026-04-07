@@ -135,3 +135,4 @@ def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditRew
         return grade_benchmark_fraud(action, ground_truth)
     else:
         return AuditReward(value=0.0, reason="Unknown flaw type", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+
