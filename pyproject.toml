@@ -1,0 +1,29 @@
+﻿[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openaudit"
+version = "1.0.0"
+description = "AI Ecosystem Trust & Quality Auditing Environment"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Kiran Sindagi", email = "kiransindagi@example.com"}
+]
+
+[project.dependencies]
+fastapi = ">=0.104.0"
+uvicorn = ">=0.24.0"
+pydantic = ">=2.0.0"
+openai = ">=1.0.0"
+requests = ">=2.31.0"
+python-dotenv = ">=1.0.0"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.setuptools.package-data]
+app = ["**/*.json", "**/*.yaml"]
