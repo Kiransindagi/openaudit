@@ -1,0 +1,11 @@
+{
+  "card_text": "# Model Card\n\n## License\nMIT\n\n## Parent Model\nGPL-3.0 licensed model\n\n## Evaluation Results\n{}",
+  "metadata": {},
+  "ground_truth_flaws": [
+    {
+      "flaw_type": "license_conflict",
+      "card_license": "MIT",
+      "parent_license": "GPL-3.0"
+    }
+  ]
+}

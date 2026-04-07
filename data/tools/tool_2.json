@@ -1,0 +1,8 @@
+{
+  "tool_code": "def run(code):\n    exec(code)",
+  "ground_truth_flaws": [
+    {
+      "type": "adversarial_chain"
+    }
+  ]
+}

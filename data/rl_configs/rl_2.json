@@ -1,0 +1,9 @@
+{
+  "reward_fn_code": "def verifier(x): return 1.0",
+  "trajectory_log": [],
+  "ground_truth_flaws": [
+    {
+      "type": "broken_verifier"
+    }
+  ]
+}

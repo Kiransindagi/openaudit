@@ -1,0 +1,10 @@
+{
+  "reward_fn_code": "def reward_fn(x): return 1 if x > 0 else 0",
+  "trajectory_log": [0,0,0,0,0,0,0,0,0,1],
+  "ground_truth_flaws": [
+    {
+      "type": "sparse_reward",
+      "ratio": 0.9
+    }
+  ]
+}

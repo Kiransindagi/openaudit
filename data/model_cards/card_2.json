@@ -1,0 +1,12 @@
+{
+  "card_text": "# Model Card\n\n## Benchmark Scores\nMMLU: 87.3\n\n## Paper Reference\nActual MMLU: 81.2",
+  "metadata": {},
+  "ground_truth_flaws": [
+    {
+      "flaw_type": "benchmark_fraud",
+      "benchmark": "MMLU",
+      "claimed": 87.3,
+      "actual": 81.2
+    }
+  ]
+}

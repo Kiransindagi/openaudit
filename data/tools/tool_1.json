@@ -1,0 +1,8 @@
+{
+  "tool_code": "def safe_div(a,b):\n    try:\n        return a/b\n    except:\n        return None",
+  "ground_truth_flaws": [
+    {
+      "type": "silent_failure"
+    }
+  ]
+}

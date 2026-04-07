@@ -1,0 +1,9 @@
+{
+  "tool_code": "def process():\n    pass",
+  "ground_truth_flaws": [
+    {
+      "type": "code_quality",
+      "issues": ["no_docstring", "no_type_hints"]
+    }
+  ]
+}
