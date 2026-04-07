@@ -8,29 +8,18 @@ __pycache__/
 *.egg
 *.egg-info/
 dist/
-build/
-
-# Lock files (ignore, don't commit)
-uv.lock
-poetry.lock
-Pipfile.lock
-
-# Environment
+build/\n# Lock files (ignore, don't commit)\npoetry.lock
+Pipfile.lock\n# Environment
 .env
 .env.local
 .env.*.local
-.env.example
-
-# IDE
+.env.example\n# IDE
 .vscode/
-.idea/
-
-# Test files
+.idea/\n# Test files
 test_*.py
 debug_*.py
 validate_*.py
-realtime_*.py
-
-# OS
+realtime_*.py\n# OS
 .DS_Store
 Thumbs.db
+
