@@ -1,15 +1,11 @@
-﻿{
-  "dataset": [
-    {"id": 0, "colA": null, "colB": "value", "colC": "value"},
-    {"id": 1, "colA": "value", "colB": null, "colC": "value"},
-    {"id": 2, "colA": "value", "colB": "value", "colC": null}
-  ],
+{
+  "dataset": [],
   "metadata": {},
   "ground_truth_flaws": [
     {
       "type": "null_values",
       "columns": ["colA", "colB", "colC"],
-      "total_nulls": 3
+      "total_nulls": 8
     }
   ]
 }

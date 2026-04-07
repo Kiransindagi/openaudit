@@ -1,9 +1,0 @@
-﻿{
-  "tool_code": "def safe_divide(a, b):\n    try:\n        return a / b\n    except:\n        return None",
-  "metadata": {},
-  "ground_truth_flaws": [
-    {
-      "type": "silent_failure"
-    }
-  ]
-}

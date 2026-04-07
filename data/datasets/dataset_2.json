@@ -1,15 +1,10 @@
-﻿{
-  "dataset": [
-    {"id": 0, "split": "train"},
-    {"id": 1, "split": "train"},
-    {"id": 96, "split": "test"},
-    {"id": 97, "split": "test"}
-  ],
+{
+  "dataset": [],
   "metadata": {},
   "ground_truth_flaws": [
     {
       "type": "test_leakage",
-      "leaked_ids": [96, 97]
+      "leaked_ids": [96, 97, 98, 99]
     }
   ]
 }
