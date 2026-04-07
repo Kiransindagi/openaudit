@@ -1,5 +1,5 @@
 ﻿"""
-OpenAudit Environment - Clean Working Version
+OpenAudit Environment - Final Working Version
 """
 import json
 import uuid
@@ -97,15 +97,17 @@ class OpenAuditEnv:
         )
 
     def step(self, action: AuditAction) -> Tuple[AuditObservation, float, bool, Dict]:
+        # Guard: if episode already completed, return error without processing
         if self.completed:
-            return None, self.total_reward, True, {"error": "Episode already completed"}
+            # Return current observation without processing action
+            return self._get_observation(), self.total_reward, True, {"error": "Episode already completed"}
 
         if self.step_number >= self.max_steps:
             self.completed = True
-            return None, self.total_reward, True, {"error": "Max steps reached"}
+            return self._get_observation(), self.total_reward, True, {"error": "Max steps reached"}
 
         if action.pillar != self.current_pillar:
-            return None, -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}, got {action.pillar}"}
+            return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}, got {action.pillar}"}
 
         reward_obj = self._grade_action(action)
         reward_value = reward_obj.value
@@ -158,7 +160,7 @@ class OpenAuditEnv:
     def _get_observation(self) -> AuditObservation:
         if self.completed:
             return AuditObservation(
-                artifact_type="",
+                artifact_type=self.current_pillar or "",
                 content="Episode completed",
                 metadata={},
                 step_number=self.step_number,
@@ -240,5 +242,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
-
