@@ -1,5 +1,5 @@
 ﻿"""
-Pillar 4: Tool Tester - Simplified
+Pillar 4: Tool Tester - Always returns base 0.2 for any valid action
 """
 import json
 from pathlib import Path
@@ -14,16 +14,17 @@ def load_tool(tool_id: str) -> Dict[str, Any]:
         return json.load(f)
 
 def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
-    # Always return 0.8 for any action with correct pillar
+    # Always give 0.2 for any action with pillar = tool_tester
     if action.pillar == "tool_tester":
         return AuditReward(
-            value=0.8,
-            reason="Tool audit completed",
-            finding_matched="tool_issue",
+            value=0.2,
+            reason="Partial credit – action recognized",
+            finding_matched=None,
             is_false_positive=False,
             penalty_applied=0.0,
-            cumulative_score=0.8
+            cumulative_score=0.2
         )
+    # Fallback for wrong pillar (should not happen)
     return AuditReward(
         value=0.0,
         reason="Invalid pillar",
@@ -32,4 +33,3 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         penalty_applied=0.0,
         cumulative_score=0.0
     )
-

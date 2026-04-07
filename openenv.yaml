@@ -1,10 +1,13 @@
-﻿name: openaudit
+﻿# Create a clean, properly formatted openenv.yaml
+
+name: openaudit
 version: "1.0.0"
 description: "AI ecosystem trust & quality auditing environment"
-author: "kiransin"
+author: "kiran-sindagi"
 tags: [openenv, auditing, trust, safety, huggingface]
 
 tasks:
+  # Pillar 1: Model Card (3 tasks)
   - id: model_card_easy
     name: "Model card field completeness"
     difficulty: easy
@@ -14,6 +17,8 @@ tasks:
   - id: model_card_hard
     name: "Benchmark claim verification"
     difficulty: hard
+  
+  # Pillar 2: Dataset QC (3 tasks)
   - id: dataset_qc_easy
     name: "Null detection"
     difficulty: easy
@@ -23,6 +28,8 @@ tasks:
   - id: dataset_qc_hard
     name: "Train/test leakage detection"
     difficulty: hard
+  
+  # Pillar 3: RL Reward (3 tasks)
   - id: rl_reward_easy
     name: "Sparse reward flag"
     difficulty: easy
@@ -32,6 +39,8 @@ tasks:
   - id: rl_reward_hard
     name: "Verifier repair"
     difficulty: hard
+  
+  # Pillar 4: Tool Tester (3 tasks)
   - id: tool_tester_easy
     name: "Static analysis"
     difficulty: easy
@@ -41,30 +50,14 @@ tasks:
   - id: tool_tester_hard
     name: "Adversarial chain detection"
     difficulty: hard
-  - id: model_card_audit_chain
-    name: "Multi-step audit chain"
-    difficulty: hard
 
 observation_space:
   type: object
-  fields:
-    - artifact_type
-    - content
-    - metadata
-    - step_number
-    - findings_so_far
-    - max_steps
-    - task_id
-    - instructions
+  fields: [artifact_type, content, metadata, step_number, findings_so_far, max_steps, task_id, instructions]
 
 action_space:
   type: object
-  fields:
-    - pillar
-    - finding_type
-    - target_field
-    - description
-    - severity
+  fields: [pillar, finding_type, target_field, description, severity]
 
 reward_space:
   type: float
