@@ -1,4 +1,4 @@
-﻿---
+
 title: OpenAudit
 emoji: 🔍
 colorFrom: blue
@@ -137,14 +137,14 @@ export HF_TOKEN="your_token"
 python inference.py
 
 API Endpoints
-Endpoint    Method    Description
-/    GET    API information
-/health    GET    Health check
-/tasks    GET    List all 13 tasks
-/reset    POST    Start new episode
-/step    POST    Submit action
-/state    GET    Current state
-/docs    GET    Swagger UI
+Endpoint	Method	Description
+/	GET	API information
+/health	GET	Health check
+/tasks	GET	List all 13 tasks
+/reset	POST	Start new episode
+/step	POST	Submit action
+/state	GET	Current state
+/docs	GET	Swagger UI
 
 
 Live Space
