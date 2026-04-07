@@ -1,7 +1,6 @@
-{
+﻿{
   "tool_id": "tool_0",
-  "tool_code": "def process_data(data):\n    return data",
-  "metadata": {},
+  "tool_code": "def func():\n    pass",
   "ground_truth_flaws": [
     {
       "type": "code_quality",

@@ -1,28 +1,11 @@
-{
-  "code": "\ndef ToolA(path):\n    pass\ndef ToolB(path):\n    try:\n        pass\n    except:\n        return None\ndef ToolC(cmd):\n    import os\n    os.system(cmd)\n",
-  "metadata": {},
+﻿{
+  "tool_id": "tool_2",
+  "tool_code": "",
   "ground_truth_flaws": [
     {
-      "task": "tool_tester_easy",
-      "type": "code_quality",
-      "issues": [
-        "no_docstring",
-        "no_type_hints",
-        "no_return_annotation"
-      ]
-    },
-    {
-      "task": "tool_tester_medium",
-      "type": "silent_failure",
-      "issues": [
-        "swallows_exception",
-        "wrong_return_type"
-      ]
-    },
-    {
-      "task": "tool_tester_hard",
       "type": "adversarial_chain",
-      "dangerous_tool": "ToolC"
+      "dangerous_tool": "tool_c"
     }
-  ]
+  ],
+  "difficulty": "hard"
 }
