@@ -20,7 +20,7 @@ def grade_sparse_reward(action: AuditAction, ground_truth: List[Dict]) -> AuditR
     if any(kw in description for kw in ["sparse", "rare", "only at end"]):
         score += 0.6
     return AuditReward(
-        value=round(min(score, 1.0), 3),
+        value=round(min(0.99, max(0.01, score)), 3),
         reason="Sparse reward detection",
         finding_matched="sparse_reward" if score > 0.5 else None,
         is_false_positive=False,
@@ -41,7 +41,7 @@ def grade_reward_hacking(action: AuditAction, ground_truth: List[Dict]) -> Audit
                 score = max(score, 0.8)
                 break
     return AuditReward(
-        value=round(min(score, 1.0), 3),
+        value=round(min(0.99, max(0.01, score)), 3),
         reason="Reward hacking detection",
         finding_matched="reward_hacking" if score > 0.5 else None,
         is_false_positive=False,
@@ -55,7 +55,7 @@ def grade_broken_verifier(action: AuditAction, ground_truth: List[Dict]) -> Audi
     if any(kw in description for kw in ["broken", "always return", "constant", "never penalize"]):
         score += 0.6
     return AuditReward(
-        value=round(min(score, 1.0), 3),
+        value=round(min(0.99, max(0.01, score)), 3),
         reason="Broken verifier detection",
         finding_matched="broken_verifier" if score > 0.5 else None,
         is_false_positive=False,
@@ -75,10 +75,11 @@ def grade_reward(action: AuditAction, config_data: Dict[str, Any]) -> AuditRewar
             return grade_broken_verifier(action, ground_truth)
     # Fallback
     return AuditReward(
-        value=0.2,
+        value=0.21,
         reason="Partial credit – action recognized",
         finding_matched=None,
         is_false_positive=False,
         penalty_applied=0.0,
         cumulative_score=0.2
     )
+

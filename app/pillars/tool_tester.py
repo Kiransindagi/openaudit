@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pillar 4: Tool Tester - Grades findings against ground truth flaw types
 """
 import json
@@ -55,7 +55,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         score = min(1.0, score + type_bonus)
 
         return AuditReward(
-            value=round(max(0.2, score), 3),
+            value=round(min(0.99, max(0.21, score)), 3),
             reason=f"Matched {len(matched)}/{len(expected_issues)} code quality issues",
             finding_matched=f"code_quality:{list(matched)}" if matched else None,
             is_false_positive=len(matched) == 0,
@@ -75,7 +75,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         if type_match: score += 0.4
 
         return AuditReward(
-            value=round(max(0.2, min(1.0, score)), 3),
+            value=round(max(0.21, min(0.99, score)), 3),
             reason="Silent failure detection",
             finding_matched="silent_failure" if score >= 0.6 else None,
             is_false_positive=score == 0.0,
@@ -95,7 +95,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         if type_match: score += 0.4
 
         return AuditReward(
-            value=round(max(0.2, min(1.0, score)), 3),
+            value=round(max(0.21, min(0.99, score)), 3),
             reason="Adversarial chain detection",
             finding_matched="adversarial_chain" if score >= 0.6 else None,
             is_false_positive=score == 0.0,
@@ -105,7 +105,8 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     # --- unknown flaw type ---
     else:
         return AuditReward(
-            value=0.2, reason=f"Unrecognized flaw type: {primary_flaw}",
+            value=0.21, reason=f"Unrecognized flaw type: {primary_flaw}",
             finding_matched=None, is_false_positive=False,
             penalty_applied=0.0, cumulative_score=0.2
         )
+

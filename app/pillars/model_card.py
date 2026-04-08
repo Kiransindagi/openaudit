@@ -25,7 +25,7 @@ def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> Audit
             missing_fields.update(flaw.get("fields", []))
     
     if not missing_fields:
-        return AuditReward(value=1.0, reason="No missing fields required", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=1.0)
+        return AuditReward(value=0.99, reason="No missing fields required", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=1.0)
     
     agent_fields: Set[str] = set()
     field_keywords = {
@@ -42,12 +42,12 @@ def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> Audit
     
     correct_matches = len(agent_fields & missing_fields)
     total_missing = len(missing_fields)
-    score = correct_matches / total_missing if total_missing > 0 else 1.0
+    score = correct_matches / total_missing if total_missing > 0 else 0.99
     false_positives = len(agent_fields - missing_fields)
     score = max(0.0, score - (false_positives * 0.1))
     
     return AuditReward(
-        value=round(score, 3),
+        value=round(min(0.99, max(0.01, score)), 3),
         reason=f"Found {correct_matches}/{total_missing} missing fields",
         finding_matched=f"missing_field:{list(agent_fields & missing_fields)}" if correct_matches > 0 else None,
         is_false_positive=false_positives > 0,
@@ -76,7 +76,7 @@ def grade_license_conflict(action: AuditAction, ground_truth: List[Dict]) -> Aud
     score = sum([0.3 for v in checks.values() if v])
     
     return AuditReward(
-        value=round(min(score, 1.0), 3),
+        value=round(min(0.99, max(0.01, score)), 3),
         reason=f"License conflict detection",
         finding_matched="license_conflict" if score >= 0.6 else None,
         is_false_positive=score < 0.3,
@@ -114,7 +114,7 @@ def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> Audi
         score += 0.35
     
     return AuditReward(
-        value=round(score, 3),
+        value=round(min(0.99, max(0.01, score)), 3),
         reason=f"Benchmark fraud detection",
         finding_matched="benchmark_fraud" if score >= 0.6 else None,
         is_false_positive=score < 0.3,
@@ -135,4 +135,5 @@ def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditRew
         return grade_benchmark_fraud(action, ground_truth)
     else:
         return AuditReward(value=0.0, reason="Unknown flaw type", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+
 
