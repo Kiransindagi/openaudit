@@ -1,5 +1,5 @@
 ﻿"""
-OpenAudit Environment - Fixed Version
+OpenAudit Environment - Fixed with Score Normalization
 """
 import json
 import uuid
@@ -61,7 +61,7 @@ class OpenAuditEnv:
             self.current_artifact = load_card(artifact_id)
             content = self.current_artifact.get("card_text", "")
             metadata = self.current_artifact.get("metadata", {})
-            instructions = "Find missing required fields: license, evaluation results, and CO2 emissions."
+            instructions = "Find missing required fields."
         elif self.current_pillar == "dataset_qc":
             self.current_artifact = load_dataset(artifact_id)
             dataset = self.current_artifact.get("dataset", [])
@@ -99,18 +99,25 @@ class OpenAuditEnv:
 
         if self.step_number >= self.max_steps:
             self.completed = True
-            return self._get_observation(), 0.5, True, {"error": "Max steps reached"}
+            # Return normalized score
+            normalized = self._get_normalized_score()
+            return self._get_observation(), normalized, True, {"error": "Max steps reached"}
 
         if action.pillar != self.current_pillar:
-            return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
+            return self._get_observation(), 0.3, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
 
         try:
             reward_obj = self._grade_action(action)
             reward_value = reward_obj.value
         except Exception as e:
             print(f"Grading error: {e}")
-            reward_obj = AuditReward(value=0.5, reason=f"Fallback: {str(e)[:50]}", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.0)
             reward_value = 0.5
+
+        # Clamp step reward
+        if reward_value <= 0.0:
+            reward_value = 0.001
+        elif reward_value >= 1.0:
+            reward_value = 0.999
 
         if reward_obj.finding_matched and not reward_obj.is_false_positive:
             self.flaws_found_count += 1
@@ -128,15 +135,36 @@ class OpenAuditEnv:
         total_flaws = self._get_total_flaws()
         if self.flaws_found_count >= total_flaws and total_flaws > 0:
             self.completed = True
-            self.total_reward += 0.2
 
         if self.step_number >= self.max_steps:
             self.completed = True
 
-        return self._get_observation(), self.total_reward, self.completed, {
-            "flaws_found": self.flaws_found_count,
-            "total_flaws": total_flaws
-        }
+        if self.completed:
+            normalized_score = self._get_normalized_score()
+            return self._get_observation(), normalized_score, self.completed, {
+                "flaws_found": self.flaws_found_count,
+                "total_flaws": total_flaws
+            }
+        else:
+            return self._get_observation(), reward_value, self.completed, {
+                "flaws_found": self.flaws_found_count,
+                "total_flaws": total_flaws
+            }
+
+    def _get_normalized_score(self) -> float:
+        """Normalize total reward to be between 0 and 1."""
+        max_possible = self.max_steps * 0.5  # Each step max is 0.5
+        if max_possible > 0:
+            normalized = self.total_reward / max_possible
+        else:
+            normalized = 0.5
+        
+        # Clamp to strictly between 0 and 1
+        if normalized <= 0.0:
+            normalized = 0.001
+        elif normalized >= 1.0:
+            normalized = 0.999
+        return normalized
 
     def _grade_action(self, action: AuditAction) -> AuditReward:
         if self.current_pillar == "model_card":
@@ -191,19 +219,14 @@ class OpenAuditEnv:
         )
 
     def _get_total_flaws(self) -> int:
-        """Safely calculate total flaws without iteration errors."""
         try:
             if not self.current_artifact:
                 return 1
-
             ground_truth = self.current_artifact.get("ground_truth_flaws", [])
-            
             if not isinstance(ground_truth, list):
                 return 1
-                
             if not ground_truth:
                 return 1
-                
             if self.current_pillar == "tool_tester":
                 first_flaw = ground_truth[0] if ground_truth else {}
                 if isinstance(first_flaw, dict) and first_flaw.get("type") == "code_quality":
@@ -211,16 +234,9 @@ class OpenAuditEnv:
                     if isinstance(issues, list):
                         return len(issues) if len(issues) > 0 else 1
                 return len(ground_truth)
-            elif self.current_pillar == "dataset_qc":
-                count = 0
-                for flaw in ground_truth:
-                    if isinstance(flaw, dict) and flaw.get("type") == "null_values":
-                        count += 1
-                return count if count > 0 else 1
             else:
                 return len(ground_truth) if len(ground_truth) > 0 else 1
-        except Exception as e:
-            print(f"Error in _get_total_flaws: {e}")
+        except Exception:
             return 1
 
     def get_state(self) -> dict:
@@ -242,5 +258,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
-
