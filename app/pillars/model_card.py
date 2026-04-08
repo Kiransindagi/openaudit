@@ -4,9 +4,41 @@ Deterministic graders for synthetic data with ground truth flaws
 """
 import json
 import re
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 from pathlib import Path
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 from typing import Dict, List, Any, Set
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 from app.models import AuditAction, AuditReward
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 
 DATA_DIR = Path("data/model_cards")
 
@@ -21,9 +53,9 @@ def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> Audit
     # Give full credit if any missing field keyword found - cumulative chain scoring
     quick_keywords = ["license", "eval", "evaluation", "benchmark", "co2", "carbon", "emission"]
     if any(kw in description for kw in quick_keywords):
-        return AuditReward(value=0.99, reason="Missing field detected", finding_matched="missing_field",
+        return AuditReward(value=_clamp_reward(0.99), reason="Missing field detected", finding_matched="missing_field",
                           is_false_positive=False, penalty_applied=0.0, cumulative_score=0.99)
-    return AuditReward(value=0.01, reason="No matching field found", finding_matched=None,
+    return AuditReward(value=_clamp_reward(0.01), reason="No matching field found", finding_matched=None,
                       is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
     """Easy grader: Field completeness"""
     description = action.description.lower()
@@ -33,7 +65,7 @@ def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> Audit
             missing_fields.update(flaw.get("fields", []))
     
     if not missing_fields:
-        return AuditReward(value=0.99, reason="No missing fields required", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.99)
+        return AuditReward(value=_clamp_reward(0.99), reason="No missing fields required", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.99)
     
     agent_fields: Set[str] = set()
     field_keywords = {
@@ -55,7 +87,7 @@ def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> Audit
     score = max(0.0, score - (false_positives * 0.1))
     
     return AuditReward(
-        value=round(min(0.99, max(0.01, score)), 3),
+        value=_clamp_reward(round(min(0.99), max(0.01, score)), 3),
         reason=f"Found {correct_matches}/{total_missing} missing fields",
         finding_matched=f"missing_field:{list(agent_fields & missing_fields)}" if correct_matches > 0 else None,
         is_false_positive=false_positives > 0,
@@ -73,7 +105,7 @@ def grade_license_conflict(action: AuditAction, ground_truth: List[Dict]) -> Aud
             break
     
     if not conflict:
-        return AuditReward(value=0.01, reason="No license conflict", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
+        return AuditReward(value=_clamp_reward(0.01), reason="No license conflict", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
     
     parent_model = conflict.get("parent_model", "").lower()
     checks = {
@@ -84,7 +116,7 @@ def grade_license_conflict(action: AuditAction, ground_truth: List[Dict]) -> Aud
     score = sum([0.3 for v in checks.values() if v])
     
     return AuditReward(
-        value=round(min(0.99, max(0.01, score)), 3),
+        value=_clamp_reward(round(min(0.99), max(0.01, score)), 3),
         reason=f"License conflict detection",
         finding_matched="license_conflict" if score >= 0.6 else None,
         is_false_positive=score < 0.3,
@@ -102,7 +134,7 @@ def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> Audi
             break
     
     if not fraud:
-        return AuditReward(value=0.01, reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
+        return AuditReward(value=_clamp_reward(0.01), reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
     
     benchmark = fraud.get("benchmark", "").lower()
     claimed = fraud.get("claimed", 0.0)
@@ -122,7 +154,7 @@ def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> Audi
         score += 0.35
     
     return AuditReward(
-        value=round(min(0.99, max(0.01, score)), 3),
+        value=_clamp_reward(round(min(0.99), max(0.01, score)), 3),
         reason=f"Benchmark fraud detection",
         finding_matched="benchmark_fraud" if score >= 0.6 else None,
         is_false_positive=score < 0.3,
@@ -142,7 +174,8 @@ def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditRew
     elif "benchmark_fraud" in flaw_types:
         return grade_benchmark_fraud(action, ground_truth)
     else:
-        return AuditReward(value=0.01, reason="Unknown flaw type", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
+        return AuditReward(value=_clamp_reward(0.01), reason="Unknown flaw type", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
+
 
 
 

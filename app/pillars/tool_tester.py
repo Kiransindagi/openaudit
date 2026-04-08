@@ -2,9 +2,41 @@
 Pillar 4: Tool Tester - Grades findings against ground truth flaw types
 """
 import json
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 from pathlib import Path
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 from typing import Dict, Any
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 from app.models import AuditAction, AuditReward
+
+def _clamp_reward(value: float) -> float:
+    """Ensure reward is strictly between 0 and 1 (never 0.0 or 1.0)."""
+    if value <= 0.0:
+        return 0.001
+    if value >= 1.0:
+        return 0.999
+    return value
 
 DATA_DIR = Path("data/tools")
 
@@ -16,7 +48,7 @@ def load_tool(tool_id: str) -> Dict[str, Any]:
 def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     if action.pillar != "tool_tester":
         return AuditReward(
-            value=0.01, reason="Invalid pillar",
+            value=_clamp_reward(0.01), reason="Invalid pillar",
             finding_matched=None, is_false_positive=True,
             penalty_applied=0.0, cumulative_score=0.01
         )
@@ -55,7 +87,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         score = min(1.0, score + type_bonus)
 
         return AuditReward(
-            value=round(min(0.99, max(0.21, score)), 3),
+            value=_clamp_reward(round(min(0.99), max(0.21, score)), 3),
             reason=f"Matched {len(matched)}/{len(expected_issues)} code quality issues",
             finding_matched=f"code_quality:{list(matched)}" if matched else None,
             is_false_positive=len(matched) == 0,
@@ -75,7 +107,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         if type_match: score += 0.4
 
         return AuditReward(
-            value=round(max(0.21, min(0.99, score)), 3),
+            value=_clamp_reward(round(max(0.21), min(0.99, score)), 3),
             reason="Silent failure detection",
             finding_matched="silent_failure" if score >= 0.6 else None,
             is_false_positive=score == 0.0,
@@ -95,7 +127,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         if type_match: score += 0.4
 
         return AuditReward(
-            value=round(max(0.21, min(0.99, score)), 3),
+            value=_clamp_reward(round(max(0.21), min(0.99, score)), 3),
             reason="Adversarial chain detection",
             finding_matched="adversarial_chain" if score >= 0.6 else None,
             is_false_positive=score == 0.0,
@@ -105,10 +137,11 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     # --- unknown flaw type ---
     else:
         return AuditReward(
-            value=0.21, reason=f"Unrecognized flaw type: {primary_flaw}",
+            value=_clamp_reward(0.21), reason=f"Unrecognized flaw type: {primary_flaw}",
             finding_matched=None, is_false_positive=False,
             penalty_applied=0.0, cumulative_score=0.2
         )
+
 
 
 
