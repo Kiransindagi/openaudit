@@ -98,11 +98,11 @@ class OpenAuditEnv:
 
     def step(self, action: AuditAction) -> tuple:
         if self.completed:
-            return self._get_observation(), round(min(0.99, max(0.01, self.total_reward)), 3), True, {"error": "Episode already completed"}
+            return self._get_observation(), 0.5, True, {"error": "Episode already completed"}
 
         if self.step_number >= self.max_steps:
             self.completed = True
-            return self._get_observation(), round(min(0.99, max(0.01, self.total_reward)), 3), True, {"error": "Max steps reached"}
+            return self._get_observation(), 0.5, True, {"error": "Max steps reached"}
 
         if action.pillar != self.current_pillar:
             return self._get_observation(), 0.01, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
