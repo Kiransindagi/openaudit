@@ -160,10 +160,11 @@ def main():
     total_score = 0.0
     for task in TASKS:
         print(f"\n--- Running task: {task} ---", flush=True)
-        score = run_task(task)
+        score = round(min(0.99, max(0.01, run_task(task))), 3)
         total_score += score
+        print(f"[TASK] task={task} score={score:.3f}", flush=True)
 
-    overall_score = total_score / len(TASKS)
+    overall_score = round(min(0.99, max(0.01, total_score / len(TASKS))), 4)
     print(f"\n=== Final Results ===", flush=True)
     print(f"Overall score: {overall_score:.4f}", flush=True)
 
