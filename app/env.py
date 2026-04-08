@@ -131,7 +131,7 @@ class OpenAuditEnv:
         if self.step_number >= self.max_steps:
             self.completed = True
 
-        return self._get_observation(), self.total_reward, self.completed, {
+        return self._get_observation(), round(min(0.99, max(0.01, reward_value)), 3), self.completed, {
             "flaws_found": self.flaws_found_count,
             "total_flaws": total_flaws
         }
@@ -231,6 +231,7 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
 
 
 

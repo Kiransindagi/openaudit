@@ -140,10 +140,11 @@ def run_task(task_id):
         done = result.get("done", False)
         observation = result.get("observation", observation)
 
-        print(f"[STEP] step={step} action={json.dumps(action)} reward={reward:.2f} done={str(done).lower()} error=", flush=True)
+        clamped = round(min(0.99, max(0.01, reward)), 2)
+        print(f"[STEP] step={step} action={json.dumps(action)} reward={clamped:.2f} done={str(done).lower()} error=", flush=True)
         step += 1
 
-    rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
+    rewards_str = ",".join([f"{round(min(0.99, max(0.01, r)), 2):.2f}" for r in step_rewards])
     print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
     final_reward = step_rewards[-1] if step_rewards else 0.0
     return final_reward if done else total_reward / max(step, 1)
@@ -167,3 +168,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

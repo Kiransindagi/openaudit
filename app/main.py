@@ -56,7 +56,7 @@ def step(action: AuditAction):
         observation, total_reward, done, info = env.step(action)
         return {
             "observation": observation.dict(),
-            "reward": total_reward,
+            "reward": round(min(0.99, max(0.01, total_reward / max(1, observation.step_number))), 3),
             "done": done,
             "info": info
         }
@@ -85,3 +85,4 @@ def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
+
