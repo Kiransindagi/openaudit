@@ -120,7 +120,7 @@ class OpenAuditEnv:
             "reason": reward_obj.reason
         })
 
-        self.total_reward += reward_value
+        self.total_reward = round(min(0.99, max(0.01, self.total_reward + reward_value)), 3)
         self.step_number += 1
 
         total_flaws = self._get_total_flaws()
