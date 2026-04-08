@@ -20,8 +20,21 @@ class OpenAuditEnv:
         self.total_reward = 0.0
         self.flaws_found_count = 0
 
-        self.tasks = {
+                self.tasks = {
             "model_card_easy": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8},
+            "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 8},
+            "model_card_hard": {"pillar": "model_card", "artifact_id": "card_2", "max_steps": 8},
+            "dataset_qc_easy": {"pillar": "dataset_qc", "artifact_id": "dataset_0", "max_steps": 8},
+            "dataset_qc_medium": {"pillar": "dataset_qc", "artifact_id": "dataset_1", "max_steps": 8},
+            "dataset_qc_hard": {"pillar": "dataset_qc", "artifact_id": "dataset_2", "max_steps": 8},
+            "rl_reward_easy": {"pillar": "rl_reward", "artifact_id": "rl_0", "max_steps": 8},
+            "rl_reward_medium": {"pillar": "rl_reward", "artifact_id": "rl_1", "max_steps": 8},
+            "rl_reward_hard": {"pillar": "rl_reward", "artifact_id": "rl_2", "max_steps": 8},
+            "tool_tester_easy": {"pillar": "tool_tester", "artifact_id": "tool_0", "max_steps": 8},
+            "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 8},
+            "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 8},
+            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8}
+        },
             "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 8},
             "model_card_hard": {"pillar": "model_card", "artifact_id": "card_2", "max_steps": 8},
             "dataset_qc_easy": {"pillar": "dataset_qc", "artifact_id": "dataset_0", "max_steps": 8},
@@ -196,3 +209,4 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
