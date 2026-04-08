@@ -105,7 +105,7 @@ def run_task(task_id):
     if resp.status_code != 200:
         print(f"[STEP] step=0 action={{}} reward=0.00 done=true error=Reset failed", flush=True)
         print(f"[END] success=false steps=1 rewards=0.00", flush=True)
-        return 0.0
+        return 0.01
 
     observation = resp.json().get("observation", {})
     artifact_type = observation.get("artifact_type", "model_card")
@@ -147,7 +147,8 @@ def run_task(task_id):
     rewards_str = ",".join([f"{round(min(0.99, max(0.01, r)), 2):.2f}" for r in step_rewards])
     print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
     final_reward = step_rewards[-1] if step_rewards else 0.0
-    return final_reward if done else total_reward / max(step, 1)
+    raw = final_reward if done else total_reward / max(step, 1)
+    return round(min(0.99, max(0.01, raw)), 3)
 
 def main():
     print(f"=== OpenAudit Baseline Agent ===", flush=True)
