@@ -1,4 +1,4 @@
-﻿"""
+"""
 OpenAudit Baseline Agent - Uses injected API_BASE_URL and API_KEY
 """
 import os
@@ -151,4 +151,4 @@ def main():
     print(f"Overall score: {overall_score:.4f}", flush=True)
 
 if __name__ == "__main__":
-    main()s
+    main()
