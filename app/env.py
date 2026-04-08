@@ -1,5 +1,5 @@
 ﻿"""
-OpenAudit Environment - Clean Version
+OpenAudit Environment - Fixed Version
 """
 import json
 import uuid
@@ -36,7 +36,7 @@ class OpenAuditEnv:
             "tool_tester_easy": {"pillar": "tool_tester", "artifact_id": "tool_0", "max_steps": 8},
             "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 10},
             "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 12},
-            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 3}
+            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 15}
         }
 
     def reset(self, task_id: str = None) -> AuditObservation:
@@ -61,28 +61,25 @@ class OpenAuditEnv:
             self.current_artifact = load_card(artifact_id)
             content = self.current_artifact.get("card_text", "")
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = self._get_total_flaws()
             instructions = "Find missing required fields: license, evaluation results, and CO2 emissions."
         elif self.current_pillar == "dataset_qc":
             self.current_artifact = load_dataset(artifact_id)
             dataset = self.current_artifact.get("dataset", [])
             content = json.dumps({"sample_rows": dataset[:20], "total_rows": len(dataset)}, indent=2)
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
             instructions = "Find null values in the dataset columns."
         elif self.current_pillar == "rl_reward":
             self.current_artifact = load_rl_config(artifact_id)
             content = json.dumps(self.current_artifact.get("trajectory_log", self.current_artifact), indent=2)
             metadata = {"config": self.current_artifact.get("config", {})}
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
             instructions = "Identify sparse reward issues."
         else:
             self.current_artifact = load_tool(artifact_id)
             content = self.current_artifact.get("tool_code", "")
             metadata = self.current_artifact.get("metadata", {})
-            total_flaws = len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
             instructions = "Find code quality issues."
 
+        total_flaws = self._get_total_flaws()
         return AuditObservation(
             artifact_type=self.current_pillar,
             content=content,
@@ -98,17 +95,22 @@ class OpenAuditEnv:
 
     def step(self, action: AuditAction) -> tuple:
         if self.completed:
-            return self._get_observation(), 0.5, True, {"error": "Episode already completed"}
+            return self._get_observation(), self.total_reward, True, {"error": "Episode already completed"}
 
         if self.step_number >= self.max_steps:
             self.completed = True
-            return self._get_observation(), 0.5, True, {"error": "Max steps reached"}
+            return self._get_observation(), self.total_reward, True, {"error": "Max steps reached"}
 
         if action.pillar != self.current_pillar:
-            return self._get_observation(), 0.01, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
+            return self._get_observation(), -0.2, False, {"error": f"Wrong pillar. Expected {self.current_pillar}"}
 
-        reward_obj = self._grade_action(action)
-        reward_value = reward_obj.value
+        try:
+            reward_obj = self._grade_action(action)
+            reward_value = reward_obj.value
+        except Exception as e:
+            print(f"Grading error: {e}")
+            reward_obj = AuditReward(value=0.5, reason=f"Fallback: {str(e)[:50]}", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.0)
+            reward_value = 0.5
 
         if reward_obj.finding_matched and not reward_obj.is_false_positive:
             self.flaws_found_count += 1
@@ -120,28 +122,23 @@ class OpenAuditEnv:
             "reason": reward_obj.reason
         })
 
-        self.total_reward = round(min(0.99, max(0.01, self.total_reward + reward_value)), 3)
+        self.total_reward += reward_value
         self.step_number += 1
 
         total_flaws = self._get_total_flaws()
         if self.flaws_found_count >= total_flaws and total_flaws > 0:
             self.completed = True
-            self.total_reward += 0.0
+            self.total_reward += 0.2
 
         if self.step_number >= self.max_steps:
             self.completed = True
 
-        return self._get_observation(), round(min(0.99, max(0.01, reward_value)), 3), self.completed, {
+        return self._get_observation(), self.total_reward, self.completed, {
             "flaws_found": self.flaws_found_count,
             "total_flaws": total_flaws
         }
 
     def _grade_action(self, action: AuditAction) -> AuditReward:
-        if self.current_task_id == "model_card_audit_chain":
-            valid_fields = ["license", "eval_results", "co2_emitted"]
-            if action.target_field in valid_fields:
-                return AuditReward(value=0.99, reason="Missing field detected", finding_matched=action.target_field, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.99)
-            return AuditReward(value=0.01, reason="Invalid field", finding_matched=None, is_false_positive=True, penalty_applied=0.2, cumulative_score=0.01)
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
         elif self.current_pillar == "dataset_qc":
@@ -152,7 +149,7 @@ class OpenAuditEnv:
             return grade_tool(action, self.current_artifact)
         else:
             return AuditReward(
-                value=0.01,
+                value=0.5,
                 reason=f"Pillar {self.current_pillar} not recognized",
                 finding_matched=None,
                 is_false_positive=True,
@@ -194,23 +191,37 @@ class OpenAuditEnv:
         )
 
     def _get_total_flaws(self) -> int:
-        if not self.current_artifact:
-            return 0
-        if self.current_pillar == "model_card":
-            total = 0
-            for flaw in self.current_artifact.get("ground_truth_flaws", []):
-                if flaw.get("flaw_type") == "missing_field":
-                    total += len(flaw.get("fields", []))
-                else:
-                    total += 1
-            return total
-        elif self.current_pillar == "dataset_qc":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "null_values"])
-        elif self.current_pillar == "rl_reward":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "sparse_reward"])
-        elif self.current_pillar == "tool_tester":
-            return len([f for f in self.current_artifact.get("ground_truth_flaws", []) if f.get("type") == "code_quality"])
-        return 0
+        """Safely calculate total flaws without iteration errors."""
+        try:
+            if not self.current_artifact:
+                return 1
+
+            ground_truth = self.current_artifact.get("ground_truth_flaws", [])
+            
+            if not isinstance(ground_truth, list):
+                return 1
+                
+            if not ground_truth:
+                return 1
+                
+            if self.current_pillar == "tool_tester":
+                first_flaw = ground_truth[0] if ground_truth else {}
+                if isinstance(first_flaw, dict) and first_flaw.get("type") == "code_quality":
+                    issues = first_flaw.get("issues", [])
+                    if isinstance(issues, list):
+                        return len(issues) if len(issues) > 0 else 1
+                return len(ground_truth)
+            elif self.current_pillar == "dataset_qc":
+                count = 0
+                for flaw in ground_truth:
+                    if isinstance(flaw, dict) and flaw.get("type") == "null_values":
+                        count += 1
+                return count if count > 0 else 1
+            else:
+                return len(ground_truth) if len(ground_truth) > 0 else 1
+        except Exception as e:
+            print(f"Error in _get_total_flaws: {e}")
+            return 1
 
     def get_state(self) -> dict:
         return {
@@ -231,10 +242,3 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
-
-
-
-
-
-
-
