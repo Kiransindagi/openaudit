@@ -36,7 +36,7 @@ class OpenAuditEnv:
             "tool_tester_easy": {"pillar": "tool_tester", "artifact_id": "tool_0", "max_steps": 8},
             "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 10},
             "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 12},
-            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 15}
+            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 3}
         }
 
     def reset(self, task_id: str = None) -> AuditObservation:
@@ -226,4 +226,6 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
+
 
