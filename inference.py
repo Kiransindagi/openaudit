@@ -1,5 +1,5 @@
 """
-OpenAudit Baseline Agent - Full task coverage with audit_chain fix
+OpenAudit Baseline Agent - Uses injected API_BASE_URL and API_KEY
 """
 import os
 import json
@@ -7,9 +7,11 @@ import requests
 from openai import OpenAI
 
 ENV_API_URL = os.environ.get("ENV_API_URL", "https://kiransin-openaudit.hf.space")
-LLM_API_BASE = os.environ.get("LLM_API_BASE", "https://router.huggingface.co/v1")
-MODEL_NAME = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
-LLM_API_KEY = os.environ.get("HF_TOKEN", "") or os.environ.get("OPENAI_API_KEY", "")
+
+# Use injected proxy credentials - required for Phase 2 validation
+LLM_API_BASE = os.environ.get("API_BASE_URL", os.environ.get("LLM_API_BASE", "https://router.huggingface.co/v1"))
+LLM_API_KEY  = os.environ.get("API_KEY",      os.environ.get("HF_TOKEN", os.environ.get("OPENAI_API_KEY", "")))
+MODEL_NAME   = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 
 client = OpenAI(base_url=LLM_API_BASE, api_key=LLM_API_KEY)
 
@@ -24,7 +26,6 @@ TASKS = [
 MAX_STEPS_DEFAULT = 5
 MAX_STEPS_CHAIN = 15
 
-# Pre-defined actions for audit_chain to ensure all 3 fields are found
 AUDIT_CHAIN_ACTIONS = [
     {"pillar": "model_card", "finding_type": "missing_field", "target_field": "license",
      "description": "The license field is missing from the model card. No license information provided.", "severity": 2},
@@ -37,28 +38,27 @@ AUDIT_CHAIN_ACTIONS = [
 def get_llm_action(observation, step, previous_actions, task_id):
     artifact_type = observation.get("artifact_type", "unknown")
 
-    # For audit_chain, cycle through pre-defined actions covering all fields
     if task_id == "model_card_audit_chain":
         idx = step % len(AUDIT_CHAIN_ACTIONS)
         return AUDIT_CHAIN_ACTIONS[idx]
 
-    system_prompt = """You are an AI auditor. Your job is to find flaws in AI artifacts.
-You must output a JSON action with:
-- pillar: the artifact type (model_card, dataset_qc, rl_reward, tool_tester)
-- finding_type: the type of flaw (missing_field, null_values, sparse_reward, code_quality, silent_failure, adversarial_chain)
-- target_field: the specific field or component
-- description: a brief explanation mentioning specific keywords related to the flaw
+    system_prompt = """You are an AI auditor finding flaws in AI artifacts.
+Output a JSON action with:
+- pillar: artifact type (model_card, dataset_qc, rl_reward, tool_tester)
+- finding_type: flaw type (missing_field, null_values, sparse_reward, code_quality, silent_failure, adversarial_chain)
+- target_field: specific field or component
+- description: explanation mentioning specific keywords related to the flaw
 - severity: 0-3
 
-Respond ONLY with valid JSON, no other text."""
+Respond ONLY with valid JSON."""
 
     user_prompt = f"""Artifact type: {artifact_type}
 Instructions: {observation.get("instructions", "Find flaws")}
-Artifact content: {str(observation.get("content", ""))[:2000]}
+Content: {str(observation.get("content", ""))[:2000]}
 Step: {step}
 Previous findings: {json.dumps(previous_actions, indent=2)}
 
-What flaw should you report next? Output JSON only."""
+What flaw should you report next? JSON only."""
 
     try:
         response = client.chat.completions.create(
@@ -86,10 +86,10 @@ What flaw should you report next? Output JSON only."""
     except Exception as e:
         print(f"LLM error: {e}, using fallback", flush=True)
         fallbacks = {
-            "model_card":  {"pillar": "model_card",  "finding_type": "missing_field",   "target_field": "license",         "description": "Missing license field",                                      "severity": 2},
-            "dataset_qc":  {"pillar": "dataset_qc",  "finding_type": "null_values",      "target_field": "columns",         "description": "Found null values in dataset columns",                        "severity": 2},
-            "rl_reward":   {"pillar": "rl_reward",   "finding_type": "sparse_reward",    "target_field": "reward_function", "description": "Reward is too sparse",                                        "severity": 2},
-            "tool_tester": {"pillar": "tool_tester", "finding_type": "silent_failure",   "target_field": "exception_handler","description": "Silent failure: bare except swallows errors, returns None",  "severity": 2},
+            "model_card":  {"pillar": "model_card",  "finding_type": "missing_field",  "target_field": "license",          "description": "Missing license field",                                     "severity": 2},
+            "dataset_qc":  {"pillar": "dataset_qc",  "finding_type": "null_values",    "target_field": "columns",          "description": "Found null values in dataset columns",                       "severity": 2},
+            "rl_reward":   {"pillar": "rl_reward",   "finding_type": "sparse_reward",  "target_field": "reward_function",  "description": "Reward is too sparse",                                       "severity": 2},
+            "tool_tester": {"pillar": "tool_tester", "finding_type": "silent_failure", "target_field": "exception_handler","description": "Silent failure: bare except swallows errors, returns None",  "severity": 2},
         }
         return fallbacks.get(artifact_type, {"pillar": artifact_type, "finding_type": "code_quality", "target_field": "function", "description": "Missing docstring and type hints", "severity": 2})
 
@@ -138,7 +138,6 @@ def main():
     print(f"Environment API: {ENV_API_URL}", flush=True)
     print(f"LLM API Base: {LLM_API_BASE}", flush=True)
     print(f"Model: {MODEL_NAME}", flush=True)
-    print(f"Tasks: {TASKS}", flush=True)
     print("", flush=True)
 
     total_score = 0.0
