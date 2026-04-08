@@ -22,18 +22,18 @@ class OpenAuditEnv:
 
         self.tasks = {
             "model_card_easy": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8},
-            "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 10},
-            "model_card_hard": {"pillar": "model_card", "artifact_id": "card_2", "max_steps": 12},
+            "model_card_medium": {"pillar": "model_card", "artifact_id": "card_1", "max_steps": 8},
+            "model_card_hard": {"pillar": "model_card", "artifact_id": "card_2", "max_steps": 8},
             "dataset_qc_easy": {"pillar": "dataset_qc", "artifact_id": "dataset_0", "max_steps": 8},
-            "dataset_qc_medium": {"pillar": "dataset_qc", "artifact_id": "dataset_1", "max_steps": 10},
-            "dataset_qc_hard": {"pillar": "dataset_qc", "artifact_id": "dataset_2", "max_steps": 12},
+            "dataset_qc_medium": {"pillar": "dataset_qc", "artifact_id": "dataset_1", "max_steps": 8},
+            "dataset_qc_hard": {"pillar": "dataset_qc", "artifact_id": "dataset_2", "max_steps": 8},
             "rl_reward_easy": {"pillar": "rl_reward", "artifact_id": "rl_0", "max_steps": 8},
-            "rl_reward_medium": {"pillar": "rl_reward", "artifact_id": "rl_1", "max_steps": 10},
-            "rl_reward_hard": {"pillar": "rl_reward", "artifact_id": "rl_2", "max_steps": 12},
+            "rl_reward_medium": {"pillar": "rl_reward", "artifact_id": "rl_1", "max_steps": 8},
+            "rl_reward_hard": {"pillar": "rl_reward", "artifact_id": "rl_2", "max_steps": 8},
             "tool_tester_easy": {"pillar": "tool_tester", "artifact_id": "tool_0", "max_steps": 8},
-            "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 10},
-            "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 12},
-            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 15}
+            "tool_tester_medium": {"pillar": "tool_tester", "artifact_id": "tool_1", "max_steps": 8},
+            "tool_tester_hard": {"pillar": "tool_tester", "artifact_id": "tool_2", "max_steps": 8},
+            "model_card_audit_chain": {"pillar": "model_card", "artifact_id": "card_0", "max_steps": 8}
         }
 
     def reset(self, task_id: str = None) -> AuditObservation:
@@ -91,16 +91,20 @@ class OpenAuditEnv:
         )
 
     def step(self, action: AuditAction) -> tuple:
-        if self.completed:
-            return self._get_observation(), 0.5, True, {"error": "Done"}
-
+        # Increment step counter FIRST
+        self.step_number += 1
+        
+        # Force completion after max_steps
         if self.step_number >= self.max_steps:
             self.completed = True
             normalized = self._get_normalized_score()
-            return self._get_observation(), normalized, True, {"error": "Max steps"}
+            return self._get_observation(), normalized, True, {}
+
+        if self.completed:
+            return self._get_observation(), 0.5, True, {}
 
         if action.pillar != self.current_pillar:
-            return self._get_observation(), 0.3, False, {"error": "Wrong pillar"}
+            return self._get_observation(), 0.3, False, {}
 
         try:
             reward_obj = self._grade_action(action)
@@ -115,20 +119,17 @@ class OpenAuditEnv:
 
         self.findings_so_far.append({"step": self.step_number, "action": action.dict(), "reward": reward_value})
         self.total_reward += reward_value
-        self.step_number += 1
 
+        # Check if all flaws found
         total_flaws = self._get_total_flaws()
         if self.flaws_found_count >= total_flaws and total_flaws > 0:
             self.completed = True
 
-        if self.step_number >= self.max_steps:
-            self.completed = True
-
-        if self.completed:
-            normalized = self._get_normalized_score()
-            return self._get_observation(), normalized, self.completed, {}
+        if not self.completed:
+            return self._get_observation(), reward_value, False, {}
         else:
-            return self._get_observation(), reward_value, self.completed, {}
+            normalized = self._get_normalized_score()
+            return self._get_observation(), normalized, True, {}
 
     def _get_normalized_score(self) -> float:
         max_possible = self.max_steps * 0.5
