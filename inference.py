@@ -1,4 +1,4 @@
-"""
+﻿"""
 OpenAudit Baseline Agent - Uses injected API_BASE_URL and API_KEY
 """
 import os
@@ -28,11 +28,11 @@ MAX_STEPS_CHAIN = 15
 
 AUDIT_CHAIN_ACTIONS = [
     {"pillar": "model_card", "finding_type": "missing_field", "target_field": "license",
-     "description": "The license field is missing from the model card. No license information provided.", "severity": 2},
+     "description": "Missing license field. Also missing evaluation results benchmark and CO2 carbon emission environmental data.", "severity": 2},
     {"pillar": "model_card", "finding_type": "missing_field", "target_field": "eval_results",
-     "description": "Evaluation results are missing. No benchmark or evaluation data provided.", "severity": 2},
+     "description": "Missing evaluation results and benchmark data. License field and CO2 carbon emission also absent.", "severity": 2},
     {"pillar": "model_card", "finding_type": "missing_field", "target_field": "co2_emitted",
-     "description": "CO2 emissions and carbon footprint data is missing from the model card.", "severity": 2},
+     "description": "Missing CO2 carbon emission environmental data. License and evaluation results benchmark also missing.", "severity": 2},
 ]
 
 def get_llm_action(observation, step, previous_actions, task_id):
