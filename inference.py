@@ -144,7 +144,7 @@ def run_task(task_id):
         print(f"[STEP] step={step} action={json.dumps(action)} reward={clamped:.2f} done={str(done).lower()} error=", flush=True)
         step += 1
 
-    rewards_str = ",".join([f"{round(min(0.99, max(0.01, r)), 2):.2f}" for r in step_rewards])
+    rewards_str = ",".join([f"{round(min(0.99, max(0.01, r)), 2):.2f}" for r in step_rewards]) or "0.01"
     print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
     final_reward = step_rewards[-1] if step_rewards else 0.0
     raw = final_reward if done else total_reward / max(step, 1)
