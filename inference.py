@@ -4,7 +4,23 @@ OpenAudit Baseline Agent - Task-specific actions for maximum reward
 import os
 import json
 import requests
+
+def clamp_score(score):
+    """Ensure score is strictly between 0 and 1 for validator."""
+    if score <= 0.0:
+        return 0.001
+    if score >= 1.0:
+        return 0.999
+    return score
 from openai import OpenAI
+
+def clamp_score(score):
+    """Ensure score is strictly between 0 and 1 for validator."""
+    if score <= 0.0:
+        return 0.001
+    if score >= 1.0:
+        return 0.999
+    return score
 
 ENV_API_URL = os.environ.get("ENV_API_URL", "https://kiransin-openaudit.hf.space")
 LLM_API_BASE = os.environ.get("API_BASE_URL", os.environ.get("LLM_API_BASE", "https://router.huggingface.co/v1"))
@@ -157,7 +173,7 @@ def main():
     print(f"Model: {MODEL_NAME}", flush=True)
     print("", flush=True)
 
-    total_score = 0.0
+    total_score = clamp_score(0.0)
     for task in TASKS:
         print(f"\n--- Running task: {task} ---", flush=True)
         score = round(min(0.99, max(0.01, run_task(task))), 3)
@@ -282,7 +298,7 @@ def main():
     print(f"Model: {MODEL_NAME}", flush=True)
     print("", flush=True)
 
-    total_score = 0.0
+    total_score = clamp_score(0.0)
     for task in TASKS:
         print(f"\n--- Running task: {task} ---", flush=True)
         score = round(min(0.99, max(0.01, run_task(task))), 3)
@@ -295,5 +311,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
