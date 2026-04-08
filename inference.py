@@ -103,8 +103,8 @@ def run_task(task_id):
 
     resp = requests.post(f"{ENV_API_URL}/reset", params={"task_id": task_id})
     if resp.status_code != 200:
-        print(f"[STEP] step=0 action={{}} reward=0.00 done=true error=Reset failed", flush=True)
-        print(f"[END] success=false steps=1 rewards=0.00", flush=True)
+        print(f"[STEP] step=0 action={{}} reward=0.01 done=true error=Reset failed", flush=True)
+        print(f"[END] success=false steps=1 rewards=0.01", flush=True)
         return 0.01
 
     observation = resp.json().get("observation", {})
@@ -130,7 +130,7 @@ def run_task(task_id):
 
         step_resp = requests.post(f"{ENV_API_URL}/step", json=action)
         if step_resp.status_code != 200:
-            print(f"[STEP] step={step} action={json.dumps(action)} reward=0.00 done=true error=Step failed", flush=True)
+            print(f"[STEP] step={step} action={json.dumps(action)} reward=0.01 done=true error=Step failed", flush=True)
             break
 
         result = step_resp.json()
