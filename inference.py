@@ -1,4 +1,4 @@
-"""
+﻿"""
 OpenAudit Baseline Agent - Task-specific actions for maximum reward
 """
 import os
@@ -145,7 +145,8 @@ def run_task(task_id):
 
     rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
     print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
-    return total_reward / max_steps
+    final_reward = step_rewards[-1] if step_rewards else 0.0
+    return final_reward if done else total_reward / max(step, 1)
 
 def main():
     print(f"=== OpenAudit Baseline Agent ===", flush=True)
