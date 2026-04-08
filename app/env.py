@@ -141,7 +141,7 @@ class OpenAuditEnv:
             valid_fields = ["license", "eval_results", "co2_emitted"]
             if action.target_field in valid_fields:
                 return AuditReward(value=0.99, reason="Missing field detected", finding_matched=action.target_field, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.99)
-            return AuditReward(value=-0.2, reason="Invalid field", finding_matched=None, is_false_positive=True, penalty_applied=0.2, cumulative_score=0.0)
+            return AuditReward(value=0.01, reason="Invalid field", finding_matched=None, is_false_positive=True, penalty_applied=0.2, cumulative_score=0.0)
         if self.current_pillar == "model_card":
             return grade_model_card(action, self.current_artifact)
         elif self.current_pillar == "dataset_qc":
@@ -152,7 +152,7 @@ class OpenAuditEnv:
             return grade_tool(action, self.current_artifact)
         else:
             return AuditReward(
-                value=0.0,
+                value=0.01,
                 reason=f"Pillar {self.current_pillar} not recognized",
                 finding_matched=None,
                 is_false_positive=True,
@@ -231,6 +231,7 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+
 
 
 

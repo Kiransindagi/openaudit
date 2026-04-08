@@ -73,7 +73,7 @@ def grade_license_conflict(action: AuditAction, ground_truth: List[Dict]) -> Aud
             break
     
     if not conflict:
-        return AuditReward(value=0.0, reason="No license conflict", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+        return AuditReward(value=0.01, reason="No license conflict", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
     
     parent_model = conflict.get("parent_model", "").lower()
     checks = {
@@ -102,7 +102,7 @@ def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> Audi
             break
     
     if not fraud:
-        return AuditReward(value=0.0, reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+        return AuditReward(value=0.01, reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
     
     benchmark = fraud.get("benchmark", "").lower()
     claimed = fraud.get("claimed", 0.0)
@@ -142,7 +142,8 @@ def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditRew
     elif "benchmark_fraud" in flaw_types:
         return grade_benchmark_fraud(action, ground_truth)
     else:
-        return AuditReward(value=0.0, reason="Unknown flaw type", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+        return AuditReward(value=0.01, reason="Unknown flaw type", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.0)
+
 
 
 

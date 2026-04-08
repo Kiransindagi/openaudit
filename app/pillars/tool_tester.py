@@ -16,7 +16,7 @@ def load_tool(tool_id: str) -> Dict[str, Any]:
 def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     if action.pillar != "tool_tester":
         return AuditReward(
-            value=0.0, reason="Invalid pillar",
+            value=0.01, reason="Invalid pillar",
             finding_matched=None, is_false_positive=True,
             penalty_applied=0.0, cumulative_score=0.0
         )
@@ -109,4 +109,5 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
             finding_matched=None, is_false_positive=False,
             penalty_applied=0.0, cumulative_score=0.2
         )
+
 
