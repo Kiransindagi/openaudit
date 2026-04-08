@@ -55,3 +55,5 @@ def validate_scores():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
+
+# Force rebuild - 2026-04-08 21:48:36
