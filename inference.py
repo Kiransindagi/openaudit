@@ -32,7 +32,7 @@ TASK_ACTIONS = {
     ],
     "model_card_hard": [
         {"pillar": "model_card", "finding_type": "benchmark_fraud", "target_field": "benchmark",
-         "description": "Benchmark fraud: MMLU claimed 87.3 but actual score is 81.2 inflated results.", "severity": 3},
+         "description": "Benchmark fraud detected on MMLU benchmark, claimed score is inflated versus actual score.", "severity": 3},
     ],
     "dataset_qc_easy": [
         {"pillar": "dataset_qc", "finding_type": "null_values", "target_field": "columns",
@@ -56,7 +56,7 @@ TASK_ACTIONS = {
     ],
     "rl_reward_hard": [
         {"pillar": "rl_reward", "finding_type": "broken_verifier", "target_field": "verifier",
-         "description": "Broken verifier always returns constant 1.0 never penalizes incorrect outputs.", "severity": 3},
+         "description": "Broken verifier always returns constant value never penalizes incorrect outputs.", "severity": 3},
     ],
     "tool_tester_easy": [
         {"pillar": "tool_tester", "finding_type": "code_quality", "target_field": "function",
@@ -149,3 +149,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
