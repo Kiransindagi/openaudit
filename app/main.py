@@ -50,7 +50,7 @@ def step_action(action: AuditAction):
     try:
         obs, reward, done, info = env.step(action)
         reward = round(min(0.99, max(0.01, float(reward))), 3)
-        return {"observation": obs.dict(), "reward": reward, "done": done, "info": info}
+        return {"observation": obs.model_dump(), "reward": reward, "done": done, "info": info}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Step failed: {str(e)}")
 
@@ -59,16 +59,9 @@ def get_state():
     env = get_env()
     return env.get_state()
 
-@app.get("/debug-step")
-def debug_step():
-    env = get_env()
-    env.reset("model_card_easy")
-    from app.models import AuditAction
-    action = AuditAction(pillar="model_card", finding_type="missing_field", target_field="license",
-                         description="Missing license field evaluation results benchmark CO2 carbon emission", severity=2)
-    obs, reward, done, info = env.step(action)
-    return {"raw_reward": reward, "done": done}
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=7860)
+
+

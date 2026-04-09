@@ -116,7 +116,7 @@ def run_task(task_id):
 
         result = step_resp.json()
         reward = float(result.get("reward", 0.5))
-        reward = round(min(0.99, max(0.01, reward)), 2)
+        reward = round(min(0.98, max(0.02, reward)), 2)
         done = result.get("done", False)
         step_rewards.append(reward)
 
@@ -149,5 +149,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 

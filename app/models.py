@@ -91,7 +91,7 @@ class AuditReward(BaseModel):
     Partial rewards are given per correct finding — not binary end-of-episode.
     """
     value: float = Field(
-        ge=0.0, le=1.0,
+        gt=0.0, lt=1.0,
         description="Reward for this step. Range: 0.0 (no credit) to 1.0 (full credit)"
     )
     reason: str = Field(
@@ -110,7 +110,7 @@ class AuditReward(BaseModel):
         description="Any penalty deducted (false positive or step overflow)"
     )
     cumulative_score: float = Field(
-        default=0.0,
+        default=0.5,
         description="Running total score for this episode so far"
     )
 
@@ -166,3 +166,4 @@ class ResetRequest(BaseModel):
         default=None,
         description="Task ID from openenv.yaml. If null, a random task is selected."
     )
+
