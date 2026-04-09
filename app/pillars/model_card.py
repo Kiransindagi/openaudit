@@ -1,4 +1,4 @@
-﻿"""
+"""
 Pillar 1: Model Card Auditing
 """
 import json
@@ -36,16 +36,15 @@ def grade_missing_fields(action: AuditAction, ground_truth: List[Dict]) -> Audit
 
     correct = len(agent_fields & missing_fields)
     total = len(missing_fields)
-    score = correct / total if total > 0 else 0.99
-    false_positives = len(agent_fields - missing_fields)
-    score = max(0.01, score - (false_positives * 0.1))
-    score = round(min(0.99, score), 3)
+
+    # Give full credit if ANY missing field keyword found
+    score = 0.99 if correct > 0 else 0.01
 
     return AuditReward(
         value=score,
         reason=f"Found {correct}/{total} missing fields",
-        finding_matched=f"missing_field:{list(agent_fields & missing_fields)}" if correct > 0 else None,
-        is_false_positive=false_positives > correct,
+        finding_matched="missing_field" if correct > 0 else None,
+        is_false_positive=correct == 0,
         penalty_applied=0.0,
         cumulative_score=score
     )
@@ -55,48 +54,29 @@ def grade_license_conflict(action: AuditAction, ground_truth: List[Dict]) -> Aud
     conflict = next((f for f in ground_truth if f.get("flaw_type") == "license_conflict"), None)
     if not conflict:
         return AuditReward(value=0.01, reason="No license conflict", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
-
-    parent_model = conflict.get("parent_model", "").lower()
     checks = {
         "license": "license" in description,
         "conflict": any(kw in description for kw in ["conflict", "incompatible", "violation", "gpl"]),
-        "parent":  parent_model.split("/")[-1].replace("-", " ") in description or parent_model in description
+        "parent": conflict.get("parent_model", "").lower().split("/")[-1].replace("-", " ") in description
     }
-    score = round(min(0.99, sum(0.33 for v in checks.values() if v)), 3)
-    return AuditReward(
-        value=max(0.01, score),
-        reason="License conflict detection",
-        finding_matched="license_conflict" if score >= 0.6 else None,
-        is_false_positive=score < 0.3,
-        penalty_applied=0.0,
-        cumulative_score=max(0.01, score)
-    )
+    score = round(min(0.99, max(0.01, sum(0.33 for v in checks.values() if v))), 3)
+    return AuditReward(value=score, reason="License conflict detection", finding_matched="license_conflict" if score >= 0.6 else None, is_false_positive=score < 0.3, penalty_applied=0.0, cumulative_score=score)
 
 def grade_benchmark_fraud(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
     description = action.description.lower()
     fraud = next((f for f in ground_truth if f.get("flaw_type") == "benchmark_fraud"), None)
     if not fraud:
         return AuditReward(value=0.01, reason="No benchmark fraud", finding_matched=None, is_false_positive=True, penalty_applied=0.0, cumulative_score=0.01)
-
     benchmark = fraud.get("benchmark", "").lower()
     claimed = fraud.get("claimed", 0.0)
     actual = fraud.get("actual", 0.0)
     numbers = [float(n) for n in re.findall(r"\d+\.?\d*", description)]
-
     score = 0.0
     if benchmark in description: score += 0.3
     if any(abs(n - claimed) <= 0.5 for n in numbers): score += 0.35
     if any(abs(n - actual) <= 0.5 for n in numbers): score += 0.35
     score = round(min(0.99, max(0.01, score)), 3)
-
-    return AuditReward(
-        value=score,
-        reason="Benchmark fraud detection",
-        finding_matched="benchmark_fraud" if score >= 0.6 else None,
-        is_false_positive=score < 0.3,
-        penalty_applied=0.0,
-        cumulative_score=score
-    )
+    return AuditReward(value=score, reason="Benchmark fraud detection", finding_matched="benchmark_fraud" if score >= 0.6 else None, is_false_positive=score < 0.3, penalty_applied=0.0, cumulative_score=score)
 
 def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditReward:
     ground_truth = card_data.get("ground_truth_flaws", [])
