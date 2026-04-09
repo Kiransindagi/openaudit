@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Query
+﻿from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse
 from typing import Optional
 from app.models import AuditAction, ResetResult
@@ -58,6 +58,16 @@ def step_action(action: AuditAction):
 def get_state():
     env = get_env()
     return env.get_state()
+
+@app.get("/debug-step")
+def debug_step():
+    env = get_env()
+    env.reset("model_card_easy")
+    from app.models import AuditAction
+    action = AuditAction(pillar="model_card", finding_type="missing_field", target_field="license",
+                         description="Missing license field evaluation results benchmark CO2 carbon emission", severity=2)
+    obs, reward, done, info = env.step(action)
+    return {"raw_reward": reward, "done": done}
 
 if __name__ == "__main__":
     import uvicorn
