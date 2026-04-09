@@ -134,6 +134,7 @@ class OpenAuditEnv:
             normalized = self.total_reward / max_possible
         else:
             normalized = 0.5
+        return round(min(0.99, max(0.01, normalized)), 3)
         if normalized <= 0.0:
             return 0.001
         if normalized >= 1.0:
@@ -193,3 +194,4 @@ def get_env():
     if _env_instance is None:
         _env_instance = OpenAuditEnv()
     return _env_instance
+

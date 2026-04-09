@@ -2,7 +2,9 @@
 from fastapi.responses import HTMLResponse
 from typing import Optional
 from app.models import AuditAction, ResetResult
+from app.middleware import force_valid_scores
 from app.env import get_env
+
 import os
 
 app = FastAPI(
@@ -57,3 +59,5 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=7860)
 
 # Force rebuild - 2026-04-08 21:48:36
+
+
