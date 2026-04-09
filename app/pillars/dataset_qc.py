@@ -1,25 +1,47 @@
-﻿from app.models import AuditAction, AuditReward
+"""
+Pillar 2: Dataset Quality Control
+"""
+import json
+from pathlib import Path
+from typing import Dict, List, Any
+from app.models import AuditAction, AuditReward
 
-def load_card(artifact_id):
-    return {"ground_truth_flaws": [{"type": "test"}]}
+DATA_DIR = Path("data/datasets")
 
-def grade_model_card(action, artifact_data):
-    return AuditReward(value=0.5, reason="OK", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
+def load_dataset(dataset_id: str) -> Dict[str, Any]:
+    filepath = DATA_DIR / f"{dataset_id}.json"
+    with open(filepath, encoding="utf-8") as f:
+        return json.load(f)
 
-def load_dataset(artifact_id):
-    return {"ground_truth_flaws": [{"type": "test"}]}
+def grade_null_values(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
+    description = action.description.lower()
+    score = 0.21
+    if any(kw in description for kw in ["null", "missing", "empty"]):
+        score = 0.8
+    return AuditReward(value=score, reason="Null detection", finding_matched="null_values" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
 
-def grade_dataset(action, artifact_data):
-    return AuditReward(value=0.5, reason="OK", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
+def grade_duplicates(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
+    description = action.description.lower()
+    score = 0.21
+    if any(kw in description for kw in ["duplicate", "identical", "same rows"]):
+        score = 0.8
+    return AuditReward(value=score, reason="Duplicate detection", finding_matched="duplicates" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
 
-def load_rl_config(artifact_id):
-    return {"ground_truth_flaws": [{"type": "test"}]}
+def grade_test_leakage(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
+    description = action.description.lower()
+    score = 0.21
+    if any(kw in description for kw in ["leak", "leakage", "train", "test", "overlap"]):
+        score = 0.8
+    return AuditReward(value=score, reason="Test leakage detection", finding_matched="test_leakage" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
 
-def grade_reward(action, artifact_data):
-    return AuditReward(value=0.5, reason="OK", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
-
-def load_tool(artifact_id):
-    return {"ground_truth_flaws": [{"type": "test"}]}
-
-def grade_tool(action, artifact_data):
-    return AuditReward(value=0.5, reason="OK", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
+def grade_dataset(action: AuditAction, dataset_data: Dict[str, Any]) -> AuditReward:
+    ground_truth = dataset_data.get("ground_truth_flaws", [])
+    for flaw in ground_truth:
+        flaw_type = flaw.get("type") or flaw.get("flaw_type", "")
+        if flaw_type == "null_values":
+            return grade_null_values(action, ground_truth)
+        elif flaw_type == "duplicates":
+            return grade_duplicates(action, ground_truth)
+        elif flaw_type == "test_leakage":
+            return grade_test_leakage(action, ground_truth)
+    return AuditReward(value=0.5, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
