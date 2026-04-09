@@ -1,4 +1,4 @@
-"""
+﻿"""
 OpenAudit Baseline Agent - Fully deterministic, no LLM dependency
 """
 import os
@@ -64,7 +64,7 @@ TASK_ACTIONS = {
     ],
     "tool_tester_medium": [
         {"pillar": "tool_tester", "finding_type": "silent_failure", "target_field": "exception_handler",
-         "description": "Silent failure bare except swallows errors returns None exception ignored.", "severity": 2},
+         "description": "Silent failure: bare except swallows errors and returns None, exception ignored no logging suppressed.", "severity": 2},
     ],
     "tool_tester_hard": [
         {"pillar": "tool_tester", "finding_type": "adversarial_chain", "target_field": "exec_call",

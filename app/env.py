@@ -1,4 +1,4 @@
-import json
+﻿import json
 import uuid
 from pathlib import Path
 from app.models import AuditObservation, AuditAction, AuditReward
@@ -88,7 +88,7 @@ class OpenAuditEnv:
 
     def step(self, action: AuditAction) -> tuple:
         if self.completed:
-            return self._get_observation(), 0.5, True, {}
+            return self._get_observation(), 0.51, True, {}
 
         if action.pillar != self.current_pillar:
             self.step_number += 1

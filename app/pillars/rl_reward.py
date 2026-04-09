@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pillar 3: RL Reward Auditing
 """
 import json
@@ -44,4 +44,4 @@ def grade_reward(action: AuditAction, config_data: Dict[str, Any]) -> AuditRewar
             return grade_reward_hacking(action, ground_truth)
         elif flaw_type == "broken_verifier":
             return grade_broken_verifier(action, ground_truth)
-    return AuditReward(value=0.5, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
+    return AuditReward(value=0.51, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)

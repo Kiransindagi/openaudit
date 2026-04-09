@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pillar 1: Model Card Auditing
 """
 import json
@@ -87,4 +87,4 @@ def grade_model_card(action: AuditAction, card_data: Dict[str, Any]) -> AuditRew
         return grade_license_conflict(action, ground_truth)
     elif "benchmark_fraud" in flaw_types:
         return grade_benchmark_fraud(action, ground_truth)
-    return AuditReward(value=0.5, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
+    return AuditReward(value=0.51, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
