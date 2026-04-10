@@ -106,7 +106,7 @@ class AuditReward(BaseModel):
         description="True if the finding did not match any ground-truth flaw"
     )
     penalty_applied: float = Field(
-        default=0.0,
+        default=0.01,
         description="Any penalty deducted (false positive or step overflow)"
     )
     cumulative_score: float = Field(
@@ -166,4 +166,5 @@ class ResetRequest(BaseModel):
         default=None,
         description="Task ID from openenv.yaml. If null, a random task is selected."
     )
+
 
