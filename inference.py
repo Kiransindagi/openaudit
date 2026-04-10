@@ -8,7 +8,10 @@ from openai import OpenAI
 
 ENV_API_URL = os.environ.get("ENV_API_URL", "https://kiransin-openaudit.hf.space")
 LLM_API_BASE = os.environ.get("API_BASE_URL", os.environ.get("LLM_API_BASE", "https://router.huggingface.co/v1"))
-LLM_API_KEY  = os.environ.get("API_KEY", os.environ.get("HF_TOKEN", os.environ.get("OPENAI_API_KEY", "dummy")))
+HF_TOKEN = os.environ.get("HF_TOKEN")
+if HF_TOKEN is None:
+    raise ValueError("HF_TOKEN environment variable is required")
+LLM_API_KEY = os.environ.get("API_KEY", HF_TOKEN)
 MODEL_NAME   = os.environ.get("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 
 client = OpenAI(base_url=LLM_API_BASE, api_key=LLM_API_KEY)
@@ -120,7 +123,7 @@ def run_task(task_id):
         done = result.get("done", False)
         step_rewards.append(reward)
 
-        print(f"[STEP] step={step} action={json.dumps(action)} reward={reward:.2f} done={str(done).lower()} error=", flush=True)
+        print(f"[STEP] step={step} action={json.dumps(action)} reward={reward:.2f} done={str(done).lower()} error=null", flush=True)
         step += 1
 
     rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
@@ -149,6 +152,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
 
 
