@@ -18,21 +18,21 @@ def grade_null_values(action: AuditAction, ground_truth: List[Dict]) -> AuditRew
     score = 0.21
     if any(kw in description for kw in ["null", "missing", "empty"]):
         score = 0.8
-    return AuditReward(value=score, reason="Null detection", finding_matched="null_values" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
+    return AuditReward(value=score, reason="Null detection", finding_matched="null_values" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.01, cumulative_score=score)
 
 def grade_duplicates(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
     description = action.description.lower()
     score = 0.21
     if any(kw in description for kw in ["duplicate", "identical", "same rows"]):
         score = 0.8
-    return AuditReward(value=score, reason="Duplicate detection", finding_matched="duplicates" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
+    return AuditReward(value=score, reason="Duplicate detection", finding_matched="duplicates" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.01, cumulative_score=score)
 
 def grade_test_leakage(action: AuditAction, ground_truth: List[Dict]) -> AuditReward:
     description = action.description.lower()
     score = 0.21
     if any(kw in description for kw in ["leak", "leakage", "train", "test", "overlap"]):
         score = 0.8
-    return AuditReward(value=score, reason="Test leakage detection", finding_matched="test_leakage" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
+    return AuditReward(value=score, reason="Test leakage detection", finding_matched="test_leakage" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.01, cumulative_score=score)
 
 def grade_dataset(action: AuditAction, dataset_data: Dict[str, Any]) -> AuditReward:
     ground_truth = dataset_data.get("ground_truth_flaws", [])
@@ -44,4 +44,5 @@ def grade_dataset(action: AuditAction, dataset_data: Dict[str, Any]) -> AuditRew
             return grade_duplicates(action, ground_truth)
         elif flaw_type == "test_leakage":
             return grade_test_leakage(action, ground_truth)
-    return AuditReward(value=0.51, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.5)
+    return AuditReward(value=0.51, reason="Unknown flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.01, cumulative_score=0.5)
+

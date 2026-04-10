@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pillar 4: Tool Tester
 """
 import json
@@ -31,7 +31,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         matched = {i for i, kws in keywords.items() if i in expected and any(kw in description for kw in kws)}
         bonus = 0.1 if "code_quality" in finding_type else 0.0
         score = round(min(0.99, max(0.21, (len(matched)/max(1,len(expected))) + bonus)), 3)
-        return AuditReward(value=score, reason=f"Code quality: {matched}", finding_matched="code_quality" if matched else None, is_false_positive=not matched, penalty_applied=0.0, cumulative_score=score)
+        return AuditReward(value=score, reason=f"Code quality: {matched}", finding_matched="code_quality" if matched else None, is_false_positive=not matched, penalty_applied=0.01, cumulative_score=score)
 
     elif primary_flaw == "silent_failure":
         score = 0.21
@@ -40,7 +40,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         if "silent" in finding_type:
             score += 0.1
         score = round(min(0.99, score), 3)
-        return AuditReward(value=score, reason="Silent failure", finding_matched="silent_failure" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
+        return AuditReward(value=score, reason="Silent failure", finding_matched="silent_failure" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.01, cumulative_score=score)
 
     elif primary_flaw == "adversarial_chain":
         score = 0.21
@@ -49,6 +49,6 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
         if "adversarial" in finding_type or "injection" in finding_type:
             score += 0.1
         score = round(min(0.99, score), 3)
-        return AuditReward(value=score, reason="Adversarial chain", finding_matched="adversarial_chain" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.0, cumulative_score=score)
+        return AuditReward(value=score, reason="Adversarial chain", finding_matched="adversarial_chain" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.01, cumulative_score=score)
 
-    return AuditReward(value=0.21, reason="Unrecognized flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.0, cumulative_score=0.21)
+    return AuditReward(value=0.21, reason="Unrecognized flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.01, cumulative_score=0.21)
