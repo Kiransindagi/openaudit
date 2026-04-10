@@ -40,6 +40,10 @@ tasks:
     name: "Verifier repair"
     difficulty: hard
   
+  # Multi-step chain
+  - id: model_card_audit_chain
+    name: "Multi-step model card audit"
+    difficulty: hard
   # Pillar 4: Tool Tester (3 tasks)
   - id: tool_tester_easy
     name: "Static analysis"
@@ -61,7 +65,9 @@ action_space:
 
 reward_space:
   type: float
-  min: 0.0
-  max: 1.0
+  min: 0.01
+  max: 0.99
 
 endpoint: https://kiransin-openaudit.hf.space
+
+
