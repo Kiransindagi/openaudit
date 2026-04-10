@@ -65,9 +65,10 @@ action_space:
 
 reward_space:
   type: float
-  min: 0.01
-  max: 0.99
+  min: 0.0
+  max: 1.0
 
 endpoint: https://kiransin-openaudit.hf.space
+
 
 
