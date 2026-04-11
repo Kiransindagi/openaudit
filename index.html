@@ -1,115 +1,367 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAudit - AI Ecosystem Trust & Quality Auditing</title>
+    <title>OpenAudit — AI Ecosystem Trust & Quality Auditing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #08090c;
+            --surface: #0f1117;
+            --surface-2: #161a24;
+            --border: rgba(255,255,255,0.07);
+            --border-bright: rgba(255,255,255,0.14);
+            --accent: #c8f135;
+            --accent-dim: rgba(200,241,53,0.12);
+            --accent-glow: rgba(200,241,53,0.25);
+            --text: #f0f0f0;
+            --text-muted: #6b7280;
+            --text-dim: #9ca3af;
+            --pass: #4ade80;
+            --pass-bg: rgba(74,222,128,0.08);
+            --warn: #facc15;
+            --warn-bg: rgba(250,204,21,0.08);
+            --fail: #f87171;
+            --fail-bg: rgba(248,113,113,0.08);
+            --mono: 'DM Mono', monospace;
+            --sans: 'DM Sans', sans-serif;
+            --display: 'Syne', sans-serif;
         }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            line-height: 1.6;
             min-height: 100vh;
-            color: #fff;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
+        /* GRID OVERLAY */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ACCENT ORBS */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(200,241,53,0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .layout {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 0 2rem;
         }
 
-        .header {
-            text-align: center;
-            padding: 2rem 1rem;
-            animation: fadeInDown 0.8s ease;
+        /* ── HEADER ── */
+        header {
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(8,9,12,0.92);
+            backdrop-filter: blur(20px);
+            z-index: 100;
         }
 
-        .logo {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wordmark {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .wordmark span {
+            color: var(--accent);
+        }
+
+        .live-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 0.3rem 0.75rem;
+            border-radius: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 5rem 0 3.5rem;
+            position: relative;
+        }
+
+        .hero-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-label::after {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 3rem;
+            background: var(--accent);
+            opacity: 0.5;
         }
 
         h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #e0e0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-family: var(--display);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            color: var(--text);
         }
 
-        .tagline {
-            font-size: 1.25rem;
-            opacity: 0.95;
-            margin-bottom: 2rem;
-        }
-
-        .status-badge {
+        h1 .accent-word {
+            color: var(--accent);
+            position: relative;
             display: inline-block;
-            background: #4CAF50;
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
         }
 
-        .grid {
+        .hero-sub {
+            font-size: 1rem;
+            color: var(--text-dim);
+            max-width: 520px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* ── STAT STRIP ── */
+        .stat-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(5, 1fr);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 3rem 0;
+            background: var(--surface);
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .stat-item:last-child { border-right: none; }
+        .stat-item:hover { background: var(--surface-2); }
+
+        .stat-number {
+            font-family: var(--display);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* ── SECTION HEADERS ── */
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-title {
+            font-family: var(--display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── TWO-COLUMN LAYOUT ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
-            margin: 2rem 0;
+            margin-bottom: 1.5rem;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* ── AUDIT LOG ── */
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.15);
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        .panel-title {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
         }
 
-        .card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
+        .panel-badge {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            background: var(--accent-dim);
+            color: var(--accent);
+            letter-spacing: 0.05em;
         }
 
-        .card p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            line-height: 1.5;
+        .audit-log {
+            height: 220px;
+            overflow-y: auto;
+            padding: 0.75rem;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            line-height: 1.8;
+            scroll-behavior: smooth;
         }
 
-        .test-results {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            overflow-x: auto;
+        .audit-log::-webkit-scrollbar { width: 3px; }
+        .audit-log::-webkit-scrollbar-track { background: transparent; }
+        .audit-log::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+        .log-entry {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.15rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            animation: slideIn 0.25s ease;
         }
 
-        .test-results h3 {
-            margin-bottom: 1rem;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .log-time { color: var(--text-muted); flex-shrink: 0; }
+        .log-info .log-msg { color: var(--text-dim); }
+        .log-success .log-msg { color: var(--pass); }
+        .log-warning .log-msg { color: var(--warn); }
+        .log-error .log-msg { color: var(--fail); }
+
+        /* ── RESULTS TABLE ── */
+        .results-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-state {
+            padding: 3rem;
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .loading-bar {
+            width: 120px;
+            height: 2px;
+            background: var(--border);
+            border-radius: 1px;
+            margin: 1rem auto 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            left: -50%;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: var(--accent);
+            animation: loading 1.2s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -50%; }
+            100% { left: 150%; }
         }
 
         table {
@@ -117,330 +369,564 @@
             border-collapse: collapse;
         }
 
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        thead tr {
+            border-bottom: 1px solid var(--border);
         }
 
         th {
-            font-weight: 600;
-            opacity: 0.8;
+            padding: 0.85rem 1.25rem;
+            text-align: left;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
-        .status-pass {
-            color: #4CAF50;
+        td {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: var(--text-dim);
         }
 
-        .status-partial {
-            color: #FFC107;
+        tr:last-child td { border-bottom: none; }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.02);
+            color: var(--text);
         }
 
-        .status-fail {
-            color: #f44336;
+        td:first-child {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text);
         }
 
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            opacity: 0.7;
+        .reward-cell {
+            font-family: var(--mono);
+            font-weight: 500;
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        .api-section {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .endpoint {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-        }
-
-        .method {
-            display: inline-block;
-            padding: 0.2rem 0.5rem;
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.2rem 0.65rem;
             border-radius: 0.25rem;
-            font-weight: bold;
-            margin-right: 0.5rem;
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
         }
 
-        .method.post { background: #4CAF50; }
-        .method.get { background: #2196F3; }
-        .url { color: #ffd700; }
+        .badge-pass { background: var(--pass-bg); color: var(--pass); }
+        .badge-partial { background: var(--warn-bg); color: var(--warn); }
+        .badge-fail { background: var(--fail-bg); color: var(--fail); }
+
+        .badge-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .summary-bar {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface-2);
+        }
+
+        .summary-text {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .summary-text strong {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* ── PILLAR CARDS ── */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pillar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .pillar-card:hover {
+            border-color: var(--border-bright);
+            background: var(--surface-2);
+        }
+
+        .pillar-card:hover::before { transform: scaleX(1); }
+
+        .pillar-number {
+            font-family: var(--display);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .pillar-name {
+            font-family: var(--display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .pillar-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ── API SECTION ── */
+        .api-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .endpoint-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .endpoint-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 1rem;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 0.4rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            transition: border-color 0.2s;
+        }
+
+        .endpoint-row:hover { border-color: var(--border-bright); }
+
+        .method-tag {
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.2rem;
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+
+        .method-post { background: rgba(74,222,128,0.15); color: var(--pass); }
+        .method-get { background: rgba(96,165,250,0.15); color: #60a5fa; }
+
+        .endpoint-url { color: var(--accent); flex: 1; }
+        .endpoint-desc { color: var(--text-muted); font-size: 0.65rem; }
+
+        .code-panel {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 0.4rem;
+            overflow: hidden;
+        }
+
+        .code-panel-header {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
 
         .code-block {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 0.5rem;
             padding: 1rem;
-            margin: 0.5rem 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            line-height: 1.8;
             overflow-x: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
+            white-space: pre;
         }
 
-        /* Live Audit Log Styles */
-        .audit-log {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 0.75rem;
-            padding: 1rem;
-            height: 200px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.7rem;
-            margin-top: 0.5rem;
-        }
+        .code-block .cmd { color: var(--accent); }
+        .code-block .key { color: #60a5fa; }
+        .code-block .val { color: #f9a8d4; }
+        .code-block .cmt { color: var(--text-muted); }
 
-        .log-entry {
-            padding: 0.2rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .log-info { color: #64B5F6; }
-        .log-success { color: #81C784; }
-        .log-warning { color: #FFD54F; }
-        .log-error { color: #E57373; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .buttons {
+        /* ── BUTTONS ── */
+        .actions {
             display: flex;
             gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
             margin: 2rem 0;
         }
 
         .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.5rem;
+            border-radius: 0.4rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
+            border: 1px solid transparent;
             cursor: pointer;
         }
 
         .btn-primary {
-            background: #fff;
-            color: #667eea;
+            background: var(--accent);
+            color: #08090c;
+            font-weight: 500;
         }
 
         .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: #d4f557;
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .btn-secondary {
+        .btn-ghost {
             background: transparent;
-            border: 2px solid #fff;
-            color: #fff;
+            color: var(--text-dim);
+            border-color: var(--border);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .btn-ghost:hover {
+            border-color: var(--border-bright);
+            color: var(--text);
+            background: var(--surface-2);
         }
 
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.85rem;
-            opacity: 0.8;
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
+        .footer-brand {
+            font-family: var(--display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .footer-brand span { color: var(--accent); }
+
+        .footer-meta {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .stat-strip { grid-template-columns: repeat(3, 1fr); }
+            .pillars { grid-template-columns: repeat(2, 1fr); }
+            .two-col, .api-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.25rem; }
+        }
+
+        @media (max-width: 600px) {
+            .layout { padding: 0 1rem; }
+            .stat-strip { grid-template-columns: repeat(2, 1fr); }
+            .pillars { grid-template-columns: 1fr; }
+            .actions { flex-direction: column; }
+            th, td { padding: 0.6rem 0.75rem; }
+        }
+
+        /* ── ENTRANCE ANIMATIONS ── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .fade-up:nth-child(1) { animation-delay: 0.05s; }
+        .fade-up:nth-child(2) { animation-delay: 0.1s; }
+        .fade-up:nth-child(3) { animation-delay: 0.15s; }
+        .fade-up:nth-child(4) { animation-delay: 0.2s; }
+        .fade-up:nth-child(5) { animation-delay: 0.25s; }
 
-        .grid, .stats, .api-section, .test-results {
-            animation: fadeInUp 0.8s ease;
-        }
+        /* reward color coding */
+        .r-high { color: var(--pass); }
+        .r-mid { color: var(--warn); }
+        .r-low { color: var(--fail); }
 
-        @media (max-width: 768px) {
-            .container { padding: 1rem; }
-            h1 { font-size: 2rem; }
-            .logo { font-size: 3rem; }
-            th, td { font-size: 0.7rem; padding: 0.5rem; }
-            .code-block { font-size: 0.7rem; }
-            .audit-log { height: 150px; font-size: 0.6rem; }
+        #lastUpdate {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo">🔍</div>
-        <div class="status-badge" id="liveStatus">🔄 Auto‑refreshing every 30s</div>
-        <h1>OpenAudit</h1>
-        <div class="tagline">AI Ecosystem Trust & Quality Auditing Environment</div>
-    </div>
 
-    <div class="stats" id="statsContainer">
-        <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Auditing Tasks</div></div>
-        <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Working Tasks</div></div>
-        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
-        <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
-        <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
+<header>
+    <div class="layout">
+        <div class="header-inner">
+            <div class="wordmark">Open<span>Audit</span></div>
+            <div class="live-pill">
+                <div class="live-dot"></div>
+                <span id="liveStatus">Auto-refreshing every 30s</span>
+            </div>
+        </div>
     </div>
+</header>
 
-    <!-- LIVE AUDIT LOG - ADDED -->
-    <div class="api-section">
-        <h3>📝 Live Audit Log <span style="font-size:0.7rem; opacity:0.7;">(Real-time agent activity)</span></h3>
-        <div id="auditLog" class="audit-log">
-            <div class="log-entry log-info">🟢 OpenAudit environment initialized</div>
-            <div class="log-entry log-info">📡 Connected to API endpoint</div>
-            <div class="log-entry log-info">🔄 Starting automated audit cycle...</div>
+<div class="layout">
+
+    <!-- HERO -->
+    <section class="hero fade-up">
+        <div class="hero-label">OpenEnv / AI Trust Infrastructure</div>
+        <h1>Audit the<br><span class="accent-word">AI Ecosystem</span><br>at scale.</h1>
+        <p class="hero-sub">A production-grade reinforcement learning environment for training agents to detect quality failures, license conflicts, and dangerous patterns across AI artifacts.</p>
+    </section>
+
+    <!-- STATS -->
+    <div class="stat-strip fade-up" id="statsContainer">
+        <div class="stat-item">
+            <div class="stat-number" id="s-tasks">—</div>
+            <div class="stat-label">Audit Tasks</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="s-working">—</div>
+            <div class="stat-label">Tasks Passing</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Pillars</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">40+</div>
+            <div class="stat-label">Synthetic Artifacts</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Live API</div>
         </div>
     </div>
 
-    <div class="test-results">
-        <h3>📊 Live Test Results <span id="lastUpdate"></span></h3>
-        <div id="resultsTable" class="loading">⏳ Fetching latest test results...</div>
-    </div>
+    <!-- LOG + RESULTS (side by side) -->
+    <div class="two-col fade-up">
 
-    <div class="grid">
-        <div class="card"><div class="card-icon">📋</div><h3>Model Card Auditing</h3><p>Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</p></div>
-        <div class="card"><div class="card-icon">📊</div><h3>Dataset Quality Control</h3><p>Find null values, duplicate rows, and train/test leakage in datasets.</p></div>
-        <div class="card"><div class="card-icon">🎯</div><h3>RL Reward Auditing</h3><p>Identify sparse rewards, reward hacking, and broken verifiers in RL training.</p></div>
-        <div class="card"><div class="card-icon">🛠️</div><h3>Tool Tester</h3><p>Detect code quality issues, silent failures, and dangerous tool chains.</p></div>
-    </div>
-
-    <!-- API Endpoints Section -->
-    <div class="api-section">
-        <h3>📡 API Endpoints</h3>
-        <div class="endpoint"><span class="method post">POST</span><span class="url">/reset?task_id={task_id}</span><span style="float:right;">Start a new audit episode</span></div>
-        <div class="endpoint"><span class="method post">POST</span><span class="url">/step</span><span style="float:right;">Submit an audit finding</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/state</span><span style="float:right;">Get current episode state</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/tasks</span><span style="float:right;">List all 13 tasks</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/health</span><span style="float:right;">Health check</span></div>
-        <div class="endpoint"><span class="method get">GET</span><span class="url">/docs</span><span style="float:right;">Swagger UI</span></div>
-    </div>
-
-    <!-- Quick Start / Copy-Paste Command Snippets -->
-    <div class="api-section">
-        <h3>🚀 Quick Start - Copy & Paste</h3>
-
-        <div class="endpoint">
-            <strong>1. Reset an episode:</strong>
-            <div class="code-block">
-curl -X POST https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy
+        <!-- AUDIT LOG -->
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Live Audit Log</span>
+                <span class="panel-badge">Real-time</span>
+            </div>
+            <div id="auditLog" class="audit-log">
+                <div class="log-entry log-info"><span class="log-time">--:--:--</span><span class="log-msg">OpenAudit environment initialized</span></div>
+                <div class="log-entry log-info"><span class="log-time">--:--:--</span><span class="log-msg">Connected to API endpoint</span></div>
+                <div class="log-entry log-info"><span class="log-time">--:--:--</span><span class="log-msg">Starting automated audit cycle...</span></div>
             </div>
         </div>
 
-        <div class="endpoint">
-            <strong>2. Submit a finding:</strong>
-            <div class="code-block">
-curl -X POST https://kiransin-openaudit.hf.space/step \
-  -H "Content-Type: application/json" \
-  -d '{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"Missing license","severity":2}'
+        <!-- MINI STATS WHILE RUNNING -->
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Session Summary</span>
+                <span id="lastUpdate"></span>
             </div>
-        </div>
-
-        <div class="endpoint">
-            <strong>3. Check episode state:</strong>
-            <div class="code-block">
-curl -X GET https://kiransin-openaudit.hf.space/state
-            </div>
-        </div>
-
-        <div class="endpoint">
-            <strong>4. List all 13 tasks:</strong>
-            <div class="code-block">
-curl -X GET https://kiransin-openaudit.hf.space/tasks
-            </div>
-        </div>
-
-        <div class="endpoint">
-            <strong>5. Health check:</strong>
-            <div class="code-block">
-curl -X GET https://kiransin-openaudit.hf.space/health
-            </div>
-        </div>
-
-        <div class="endpoint">
-            <strong>6. Run the full AI agent (requires OpenAI key):</strong>
-            <div class="code-block">
-export API_BASE_URL="https://kiransin-openaudit.hf.space"
-export MODEL_NAME="gpt-3.5-turbo"
-export OPENAI_API_KEY="your_openai_key"
-python inference.py
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; height: 220px; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+                    <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">TOTAL REWARD</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--accent);" id="summaryReward">—</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+                    <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">SUCCESS RATE</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryRate">—</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                    <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">TASKS COMPLETE</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryTasks">—</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="buttons">
-        <a href="/docs" class="btn btn-primary">📖 API Documentation</a>
-        <a href="/health" class="btn btn-secondary">❤️ Health Check</a>
-        <a href="/tasks" class="btn btn-secondary">📋 View Tasks</a>
+    <!-- RESULTS TABLE -->
+    <div class="section-header fade-up">
+        <span class="section-title">Live Test Results</span>
+        <div class="section-line"></div>
     </div>
 
-    <div class="footer">
-        <p>OpenAudit v1.0.0 | Built for the Hugging Face Hackathon</p>
-        <p>🔍 Auditing AI artifacts to build trust in the ecosystem</p>
+    <div class="results-panel fade-up">
+        <div id="resultsTable">
+            <div class="loading-state">
+                Running audit cycle
+                <div class="loading-bar"></div>
+            </div>
+        </div>
     </div>
+
+    <!-- PILLARS -->
+    <div class="section-header fade-up">
+        <span class="section-title">Audit Pillars</span>
+        <div class="section-line"></div>
+    </div>
+
+    <div class="pillars fade-up">
+        <div class="pillar-card">
+            <div class="pillar-number">Pillar 01</div>
+            <div class="pillar-name">Model Card</div>
+            <div class="pillar-desc">Detect missing fields, license conflicts, and benchmark fraud in AI model documentation.</div>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-number">Pillar 02</div>
+            <div class="pillar-name">Dataset QC</div>
+            <div class="pillar-desc">Find null values, duplicate rows, and train/test leakage in datasets.</div>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-number">Pillar 03</div>
+            <div class="pillar-name">RL Reward</div>
+            <div class="pillar-desc">Identify sparse rewards, reward hacking, and broken verifiers in RL training configurations.</div>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-number">Pillar 04</div>
+            <div class="pillar-name">Tool Tester</div>
+            <div class="pillar-desc">Detect code quality issues, silent failures, and adversarial injection chains in tools.</div>
+        </div>
+    </div>
+
+    <!-- API SECTION -->
+    <div class="section-header fade-up">
+        <span class="section-title">API Reference</span>
+        <div class="section-line"></div>
+    </div>
+
+    <div class="api-grid fade-up">
+        <div>
+            <div class="endpoint-list">
+                <div class="endpoint-row">
+                    <span class="method-tag method-post">POST</span>
+                    <span class="endpoint-url">/reset?task_id={task_id}</span>
+                    <span class="endpoint-desc">Start episode</span>
+                </div>
+                <div class="endpoint-row">
+                    <span class="method-tag method-post">POST</span>
+                    <span class="endpoint-url">/step</span>
+                    <span class="endpoint-desc">Submit finding</span>
+                </div>
+                <div class="endpoint-row">
+                    <span class="method-tag method-get">GET</span>
+                    <span class="endpoint-url">/state</span>
+                    <span class="endpoint-desc">Episode state</span>
+                </div>
+                <div class="endpoint-row">
+                    <span class="method-tag method-get">GET</span>
+                    <span class="endpoint-url">/tasks</span>
+                    <span class="endpoint-desc">List all 13 tasks</span>
+                </div>
+                <div class="endpoint-row">
+                    <span class="method-tag method-get">GET</span>
+                    <span class="endpoint-url">/health</span>
+                    <span class="endpoint-desc">Health check</span>
+                </div>
+                <div class="endpoint-row">
+                    <span class="method-tag method-get">GET</span>
+                    <span class="endpoint-url">/docs</span>
+                    <span class="endpoint-desc">Swagger UI</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-panel">
+            <div class="code-panel-header">Quick Start</div>
+            <div class="code-block"><span class="cmt"># 1. Reset an episode</span>
+<span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/reset</span>\
+     ?task_id=model_card_easy
+
+<span class="cmt"># 2. Submit a finding</span>
+<span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
+     -H <span class="key">"Content-Type: application/json"</span> \
+     -d <span class="val">'{"pillar":"model_card",
+        "finding_type":"missing_field",
+        "target_field":"license",
+        "description":"Missing license",
+        "severity":2}'</span>
+
+<span class="cmt"># 3. Check state</span>
+<span class="cmd">curl</span> <span class="val">https://kiransin-openaudit.hf.space/state</span></div>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions fade-up">
+        <a href="/docs" class="btn btn-primary">API Documentation</a>
+        <a href="/health" class="btn btn-ghost">Health Check</a>
+        <a href="/tasks" class="btn btn-ghost">View All Tasks</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="fade-up">
+        <div class="footer-brand">Open<span>Audit</span> v1.0.0</div>
+        <div class="footer-meta">Built for the Meta PyTorch Hackathon x Scaler SST</div>
+    </footer>
+
 </div>
 
 <script>
     const BASE_URL = window.location.origin;
     let autoRefreshInterval = null;
 
-    // Live Audit Log function
     function addLogEntry(message, type) {
         const logDiv = document.getElementById('auditLog');
         if (!logDiv) return;
-        const timestamp = new Date().toLocaleTimeString();
-        let icon = '📌', cls = 'log-info';
-        if (type === 'success') { icon = '✅'; cls = 'log-success'; }
-        else if (type === 'warning') { icon = '⚠️'; cls = 'log-warning'; }
-        else if (type === 'error') { icon = '❌'; cls = 'log-error'; }
+        const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+        let cls = 'log-info';
+        if (type === 'success') cls = 'log-success';
+        else if (type === 'warning') cls = 'log-warning';
+        else if (type === 'error') cls = 'log-error';
         const entry = document.createElement('div');
         entry.className = `log-entry ${cls}`;
-        entry.innerHTML = `[${timestamp}] ${icon} ${message}`;
+        entry.innerHTML = `<span class="log-time">${timestamp}</span><span class="log-msg">${message}</span>`;
         logDiv.appendChild(entry);
-        entry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Auto-scroll to bottom
+        logDiv.scrollTop = logDiv.scrollHeight;
         while (logDiv.children.length > 100) logDiv.removeChild(logDiv.firstChild);
     }
 
@@ -452,12 +938,12 @@ python inference.py
         dataset_qc_medium: { pillar: "dataset_qc", finding_type: "duplicates", target_field: "rows", description: "Found exact duplicate rows at positions 5 and 42, and near-duplicates at rows 7 and 88", severity: 2 },
         dataset_qc_hard: { pillar: "dataset_qc", finding_type: "test_leakage", target_field: "split", description: "Train/test leakage detected: test rows 96,97,98,99 appear in training data with minor edits", severity: 3 },
         rl_reward_easy: { pillar: "rl_reward", finding_type: "sparse_reward", target_field: "reward_function", description: "Sparse reward detected: only 1 out of 10 steps has non-zero reward (sparsity ratio 0.9)", severity: 2 },
-        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected: agent always outputs 'YES' to get maximum reward regardless of context", severity: 3 },
-        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier: reward function always returns 1.0 and never penalizes incorrect outputs", severity: 3 },
+        rl_reward_medium: { pillar: "rl_reward", finding_type: "reward_hacking", target_field: "policy", description: "Reward hacking detected: agent always outputs YES to get maximum reward regardless of context", severity: 3 },
+        rl_reward_hard: { pillar: "rl_reward", finding_type: "broken_verifier", target_field: "verifier", description: "Broken verifier: reward function always returns constant value and never penalizes incorrect outputs", severity: 3 },
         tool_tester_easy: { pillar: "tool_tester", finding_type: "code_quality", target_field: "function", description: "Missing docstring, no type hints, missing return annotation - all three code quality issues found", severity: 2 },
-        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure: try-except block swallows all exceptions (exception hiding) and returns None without logging - this hides errors", severity: 3 },
-        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool C executes arbitrary code (exec injection) from file written by Tool A, creating a dangerous injection vulnerability", severity: 3 },
-        model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License field appears missing. INVESTIGATE: Confirmed [MISSING] placeholder. REPORT: License field missing - compliance issue.", severity: 2 }
+        tool_tester_medium: { pillar: "tool_tester", finding_type: "silent_failure", target_field: "exception", description: "Silent failure: try-except block swallows all exceptions and returns None without logging - this hides errors", severity: 3 },
+        tool_tester_hard: { pillar: "tool_tester", finding_type: "adversarial_chain", target_field: "tool_chain", description: "Adversarial chain: Tool executes arbitrary code via exec injection creating a dangerous vulnerability", severity: 3 },
+        model_card_audit_chain: { pillar: "model_card", finding_type: "missing_field", target_field: "license", description: "SCAN: License field appears missing. INVESTIGATE: Confirmed MISSING placeholder. REPORT: License field missing - compliance issue.", severity: 2 }
     };
 
     async function testTask(taskId) {
@@ -466,7 +952,6 @@ python inference.py
             if (!resetRes.ok) return { reward: null, done: false, error: `Reset failed (${resetRes.status})` };
             const resetData = await resetRes.json();
             const totalFlaws = resetData.observation?.total_flaws || 0;
-
             const action = ACTIONS[taskId] || { pillar: "unknown", finding_type: "test", target_field: "unknown", description: "test", severity: 1 };
             const stepRes = await fetch(`${BASE_URL}/step`, {
                 method: 'POST',
@@ -475,34 +960,31 @@ python inference.py
             });
             if (!stepRes.ok) return { reward: null, done: false, error: `Step failed (${stepRes.status})` };
             const stepData = await stepRes.json();
-            const reward = stepData.reward;
-            const done = stepData.done;
-
-            return { reward, done, totalFlaws };
+            return { reward: stepData.reward, done: stepData.done, totalFlaws };
         } catch (err) {
             return { reward: null, done: false, error: err.message };
         }
     }
 
-    function getStatusClass(reward, done) {
-        if (reward === null) return "status-fail";
-        if (reward >= 0.8) return "status-pass";
-        if (reward >= 0.3) return "status-partial";
-        return "status-fail";
+    function getStatusBadge(reward) {
+        if (reward === null) return `<span class="badge badge-fail"><span class="badge-dot"></span>Error</span>`;
+        if (reward >= 0.8) return `<span class="badge badge-pass"><span class="badge-dot"></span>Pass</span>`;
+        if (reward >= 0.3) return `<span class="badge badge-partial"><span class="badge-dot"></span>Partial</span>`;
+        return `<span class="badge badge-fail"><span class="badge-dot"></span>Needs Work</span>`;
     }
 
-    function getStatusText(reward, done) {
-        if (reward === null) return "❌ Error";
-        if (reward >= 0.8) return "✅ Pass";
-        if (reward >= 0.3) return "⚠️ Partial";
-        return "❌ Needs Work";
+    function getRewardClass(reward) {
+        if (reward === null) return 'r-low';
+        if (reward >= 0.8) return 'r-high';
+        if (reward >= 0.3) return 'r-mid';
+        return 'r-low';
     }
 
-        async function refreshAllTests() {
+    async function refreshAllTests() {
         const tableDiv = document.getElementById('resultsTable');
-        tableDiv.innerHTML = '<div class="loading">⏳ Running tests...</div>';
+        tableDiv.innerHTML = '<div class="loading-state">Running audit cycle<div class="loading-bar"></div></div>';
         addLogEntry('Starting automated audit cycle...', 'info');
-        
+
         let taskList = [];
         try {
             const tasksRes = await fetch(`${BASE_URL}/tasks`);
@@ -511,111 +993,94 @@ python inference.py
                 taskList = tasksData.tasks || [];
                 addLogEntry(`Loaded ${taskList.length} audit tasks from /tasks endpoint`, 'success');
             }
-        } catch(e) { console.warn("Could not fetch tasks, using fallback list"); }
-        
+        } catch(e) { console.warn("Could not fetch tasks"); }
+
         if (taskList.length === 0) {
             taskList = [
-                "model_card_easy", "model_card_medium", "model_card_hard",
-                "dataset_qc_easy", "dataset_qc_medium", "dataset_qc_hard",
-                "rl_reward_easy", "rl_reward_medium", "rl_reward_hard",
-                "tool_tester_easy", "tool_tester_medium", "tool_tester_hard",
+                "model_card_easy","model_card_medium","model_card_hard",
+                "dataset_qc_easy","dataset_qc_medium","dataset_qc_hard",
+                "rl_reward_easy","rl_reward_medium","rl_reward_hard",
+                "tool_tester_easy","tool_tester_medium","tool_tester_hard",
                 "model_card_audit_chain"
             ];
         }
 
-        // TABULAR FORMAT - Clean table with proper headers
         let rowsHtml = `<table>
-            <thead>
-                <tr>
-                    <th>Task ID</th>
-                    <th>Pillar</th>
-                    <th>Difficulty</th>
-                    <th>Reward</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>`;
-        
+            <thead><tr>
+                <th>Task ID</th>
+                <th>Pillar</th>
+                <th>Difficulty</th>
+                <th>Reward</th>
+                <th>Status</th>
+            </tr></thead><tbody>`;
+
         let totalReward = 0;
         let workingCount = 0;
-        let totalTasks = taskList.length;
+        const totalTasks = taskList.length;
 
         for (const taskId of taskList) {
-            const pillar = taskId.split('_')[0];
-            let difficulty = "unknown";
-            if (taskId.includes('easy')) difficulty = "easy";
-            else if (taskId.includes('medium')) difficulty = "medium";
-            else if (taskId.includes('hard')) difficulty = "hard";
-            else if (taskId === "model_card_audit_chain") difficulty = "multi-step";
-            
+            const parts = taskId.split('_');
+            let pillar = parts.slice(0, parts.length === 4 ? 2 : -1).join(' ');
+            pillar = pillar.charAt(0).toUpperCase() + pillar.slice(1);
+
+            let difficulty = 'unknown';
+            if (taskId.includes('easy')) difficulty = 'easy';
+            else if (taskId.includes('medium')) difficulty = 'medium';
+            else if (taskId.includes('hard')) difficulty = 'hard';
+            else if (taskId === 'model_card_audit_chain') difficulty = 'multi-step';
+
             const result = await testTask(taskId);
-            const reward = result.reward !== null ? result.reward.toFixed(3) : '—';
-            const statusClass = getStatusClass(result.reward, result.done);
-            const statusText = getStatusText(result.reward, result.done);
-            
+            const rewardDisplay = result.reward !== null ? result.reward.toFixed(3) : '—';
+            const rewardClass = getRewardClass(result.reward);
+
             if (result.reward !== null && result.reward > 0) workingCount++;
             if (typeof result.reward === 'number') totalReward += result.reward;
-            
+
             rowsHtml += `<tr>
                 <td>${taskId}</td>
-                <td>${pillar.charAt(0).toUpperCase() + pillar.slice(1)}</td>
-                <td>${difficulty}</td>
-                <td>${reward}</td>
-                <td class="${statusClass}">${statusText}${result.reward >= 0.8 ? ' ✅' : result.reward >= 0.3 ? ' ⚠️' : ' ❌'}</td>
+                <td>${pillar}</td>
+                <td style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);">${difficulty}</td>
+                <td class="reward-cell ${rewardClass}">${rewardDisplay}</td>
+                <td>${getStatusBadge(result.reward)}</td>
             </tr>`;
-            
-            // Add to live audit log
+
             if (result.reward !== null) {
-                if (result.reward >= 0.8) {
-                    addLogEntry(`${taskId}: Audit passed with reward ${result.reward}`, 'success');
-                } else if (result.reward >= 0.3) {
-                    addLogEntry(`${taskId}: Partial pass - reward ${result.reward}`, 'warning');
-                } else if (result.reward > 0) {
-                    addLogEntry(`${taskId}: Low reward (${result.reward}) - needs improvement`, 'warning');
-                } else {
-                    addLogEntry(`${taskId}: Audit failed - reward ${result.reward}`, 'error');
-                }
+                if (result.reward >= 0.8) addLogEntry(`${taskId}: Audit passed with reward ${result.reward}`, 'success');
+                else if (result.reward >= 0.3) addLogEntry(`${taskId}: Partial pass — reward ${result.reward}`, 'warning');
+                else addLogEntry(`${taskId}: Low reward (${result.reward}) — needs improvement`, 'warning');
             }
         }
-        
-        rowsHtml += `</tbody>
-        </table>`;
-        
+
+        rowsHtml += `</tbody></table>`;
+
         const successRate = totalTasks > 0 ? ((workingCount / totalTasks) * 100).toFixed(1) : 0;
-        const totalRewardFormatted = totalReward.toFixed(2);
-        
-        // Add summary row below table
-        const summaryHtml = `<div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 0.5rem; text-align: center;">
-            <strong>✅ ${workingCount}/${totalTasks} tasks working | Total Reward: ${totalRewardFormatted} | Success Rate: ${successRate}%</strong>
+
+        tableDiv.innerHTML = rowsHtml + `<div class="summary-bar">
+            <span class="summary-text"><strong>${workingCount}/${totalTasks}</strong> tasks passing</span>
+            <span class="summary-text">Total Reward: <strong>${totalReward.toFixed(2)}</strong></span>
+            <span class="summary-text">Success Rate: <strong>${successRate}%</strong></span>
         </div>`;
-        
-        tableDiv.innerHTML = rowsHtml + summaryHtml;
-        
-        document.getElementById('statsContainer').innerHTML = `
-            <div class="stat-card"><div class="stat-number">${totalTasks}</div><div class="stat-label">Auditing Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">${workingCount}/${totalTasks}</div><div class="stat-label">Working Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Pillars</div></div>
-            <div class="stat-card"><div class="stat-number">40+</div><div class="stat-label">Synthetic Artifacts</div></div>
-            <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Live API</div></div>
-        `;
-        
+
+        // Update sidebar stats
+        document.getElementById('s-tasks').textContent = totalTasks;
+        document.getElementById('s-working').textContent = `${workingCount}/${totalTasks}`;
+        document.getElementById('summaryReward').textContent = totalReward.toFixed(2);
+        document.getElementById('summaryRate').textContent = `${successRate}%`;
+        document.getElementById('summaryTasks').textContent = `${workingCount}/${totalTasks}`;
+
         const now = new Date();
-        document.getElementById('lastUpdate').innerHTML = `(updated ${now.toLocaleTimeString()})`;
-        document.getElementById('liveStatus').innerHTML = `✅ Live · Auto‑refresh every 30s`;
+        document.getElementById('lastUpdate').textContent = `updated ${now.toLocaleTimeString('en-US', { hour12: false })}`;
+        document.getElementById('liveStatus').textContent = `Live — refreshing every 30s`;
+
         addLogEntry(`Audit cycle complete: ${workingCount}/${totalTasks} tasks passed (${successRate}% success rate)`, 'success');
     }
 
-    // Initial load with welcome message
-    addLogEntry('🚀 OpenAudit dashboard ready', 'success');
-    addLogEntry('📡 API endpoint: ' + BASE_URL, 'info');
+    addLogEntry('OpenAudit dashboard ready', 'success');
+    addLogEntry('API endpoint: ' + BASE_URL, 'info');
     refreshAllTests();
-    
+
     if (autoRefreshInterval) clearInterval(autoRefreshInterval);
     autoRefreshInterval = setInterval(refreshAllTests, 30000);
 </script>
 </body>
 </html>
-
-
-
-
