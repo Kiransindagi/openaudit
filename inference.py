@@ -35,7 +35,7 @@ TASK_ACTIONS = {
     ],
     "model_card_hard": [
         {"pillar": "model_card", "finding_type": "benchmark_fraud", "target_field": "benchmark",
-         "description": "Benchmark fraud detected on MMLU benchmark, claimed score is inflated versus actual score.", "severity": 3},
+         "description": "Benchmark fraud on MMLU benchmark: claimed score 87.3 is inflated, actual score is 81.2 points lower.", "severity": 3},
     ],
     "dataset_qc_easy": [
         {"pillar": "dataset_qc", "finding_type": "null_values", "target_field": "columns",
@@ -153,6 +153,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
