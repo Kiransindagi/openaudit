@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAudit — AI Ecosystem Trust & Quality Auditing</title>
+    <title>OpenAudit â€” AI Ecosystem Trust & Quality Auditing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -78,7 +78,7 @@
             padding: 0 2rem;
         }
 
-        /* ── HEADER ── */
+        /* â”€â”€ HEADER â”€â”€ */
         header {
             border-bottom: 1px solid var(--border);
             padding: 1.25rem 0;
@@ -133,7 +133,7 @@
             50% { opacity: 0.4; transform: scale(0.8); }
         }
 
-        /* ── HERO ── */
+        /* â”€â”€ HERO â”€â”€ */
         .hero {
             padding: 5rem 0 3.5rem;
             position: relative;
@@ -184,7 +184,7 @@
             line-height: 1.7;
         }
 
-        /* ── STAT STRIP ── */
+        /* â”€â”€ STAT STRIP â”€â”€ */
         .stat-strip {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -222,7 +222,7 @@
             color: var(--text-muted);
         }
 
-        /* ── SECTION HEADERS ── */
+        /* â”€â”€ SECTION HEADERS â”€â”€ */
         .section-header {
             display: flex;
             align-items: baseline;
@@ -245,7 +245,7 @@
             background: var(--border);
         }
 
-        /* ── TWO-COLUMN LAYOUT ── */
+        /* â”€â”€ TWO-COLUMN LAYOUT â”€â”€ */
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -253,7 +253,7 @@
             margin-bottom: 1.5rem;
         }
 
-        /* ── AUDIT LOG ── */
+        /* â”€â”€ AUDIT LOG â”€â”€ */
         .panel {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -320,7 +320,7 @@
         .log-warning .log-msg { color: var(--warn); }
         .log-error .log-msg { color: var(--fail); }
 
-        /* ── RESULTS TABLE ── */
+        /* â”€â”€ RESULTS TABLE â”€â”€ */
         .results-panel {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -452,7 +452,7 @@
             font-weight: 500;
         }
 
-        /* ── PILLAR CARDS ── */
+        /* â”€â”€ PILLAR CARDS â”€â”€ */
         .pillars {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -514,7 +514,7 @@
             line-height: 1.6;
         }
 
-        /* ── API SECTION ── */
+        /* â”€â”€ API SECTION â”€â”€ */
         .api-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -586,7 +586,7 @@
         .code-block .val { color: #f9a8d4; }
         .code-block .cmt { color: var(--text-muted); }
 
-        /* ── BUTTONS ── */
+        /* â”€â”€ BUTTONS â”€â”€ */
         .actions {
             display: flex;
             gap: 1rem;
@@ -631,7 +631,7 @@
             background: var(--surface-2);
         }
 
-        /* ── FOOTER ── */
+        /* â”€â”€ FOOTER â”€â”€ */
         footer {
             border-top: 1px solid var(--border);
             padding: 2rem 0;
@@ -657,7 +657,7 @@
             letter-spacing: 0.05em;
         }
 
-        /* ── RESPONSIVE ── */
+        /* â”€â”€ RESPONSIVE â”€â”€ */
         @media (max-width: 900px) {
             .stat-strip { grid-template-columns: repeat(3, 1fr); }
             .pillars { grid-template-columns: repeat(2, 1fr); }
@@ -673,7 +673,7 @@
             th, td { padding: 0.6rem 0.75rem; }
         }
 
-        /* ── ENTRANCE ANIMATIONS ── */
+        /* â”€â”€ ENTRANCE ANIMATIONS â”€â”€ */
         .fade-up {
             opacity: 0;
             transform: translateY(20px);
@@ -728,11 +728,11 @@
     <!-- STATS -->
     <div class="stat-strip fade-up" id="statsContainer">
         <div class="stat-item">
-            <div class="stat-number" id="s-tasks">—</div>
+            <div class="stat-number" id="s-tasks">â€”</div>
             <div class="stat-label">Audit Tasks</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="s-working">—</div>
+            <div class="stat-number" id="s-working">â€”</div>
             <div class="stat-label">Tasks Passing</div>
         </div>
         <div class="stat-item">
@@ -774,15 +774,15 @@
             <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; height: 220px; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
                     <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">TOTAL REWARD</span>
-                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--accent);" id="summaryReward">—</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--accent);" id="summaryReward">â€”</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
                     <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">SUCCESS RATE</span>
-                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryRate">—</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryRate">â€”</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: baseline;">
                     <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">TASKS COMPLETE</span>
-                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryTasks">—</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryTasks">â€”</span>
                 </div>
             </div>
         </div>
@@ -875,23 +875,48 @@
         </div>
 
         <div class="code-panel">
-            <div class="code-panel-header">Quick Start</div>
-            <div class="code-block"><span class="cmt"># 1. Reset an episode</span>
+                            <div class="code-panel-header">Quick Start</div>
+                <div class="code-block"><span class="cmt"># 1. Health check</span>
+<span class="cmd">curl</span> <span class="val">https://kiransin-openaudit.hf.space/health</span>
+
+<span class="cmt"># 2. List all 13 tasks</span>
+<span class="cmd">curl</span> <span class="val">https://kiransin-openaudit.hf.space/tasks</span>
+
+<span class="cmt"># 3. Reset an episode</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/reset</span>\
      ?task_id=model_card_easy
 
-<span class="cmt"># 2. Submit a finding</span>
+<span class="cmt"># 4. Submit a finding</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -H <span class="key">"Content-Type: application/json"</span> \
      -d <span class="val">'{"pillar":"model_card",
         "finding_type":"missing_field",
         "target_field":"license",
-        "description":"Missing license",
+        "description":"Missing license field",
         "severity":2}'</span>
 
-<span class="cmt"># 3. Check state</span>
-<span class="cmd">curl</span> <span class="val">https://kiransin-openaudit.hf.space/state</span></div>
-        </div>
+<span class="cmt"># 5. Check episode state</span>
+<span class="cmd">curl</span> <span class="val">https://kiransin-openaudit.hf.space/state</span>
+
+<span class="cmt"># 6. Python — run the baseline agent</span>
+<span class="cmd">pip</span> install openai requests
+<span class="key">export</span> HF_TOKEN=<span class="val">"your_hf_token"</span>
+<span class="key">export</span> API_BASE_URL=<span class="val">"https://router.huggingface.co/v1"</span>
+<span class="key">export</span> MODEL_NAME=<span class="val">"Qwen/Qwen2.5-72B-Instruct"</span>
+<span class="key">export</span> ENV_API_URL=<span class="val">"https://kiransin-openaudit.hf.space"</span>
+<span class="cmd">python</span> inference.py
+
+<span class="cmt"># 7. Python — single step example</span>
+<span class="cmd">import</span> requests
+obs = requests.<span class="key">post</span>(<span class="val">"https://kiransin-openaudit.hf.space/reset"</span>,
+      params={<span class="val">"task_id"</span>: <span class="val">"dataset_qc_easy"</span>})
+result = requests.<span class="key">post</span>(<span class="val">"https://kiransin-openaudit.hf.space/step"</span>,
+      json={<span class="val">"pillar"</span>: <span class="val">"dataset_qc"</span>,
+            <span class="val">"finding_type"</span>: <span class="val">"null_values"</span>,
+            <span class="val">"target_field"</span>: <span class="val">"columns"</span>,
+            <span class="val">"description"</span>: <span class="val">"Null values found"</span>,
+            <span class="val">"severity"</span>: 2})
+<span class="cmd">print</span>(result.json()[<span class="val">"reward"</span>])</div>
     </div>
 
     <!-- ACTIONS -->
@@ -1030,7 +1055,7 @@
             else if (taskId === 'model_card_audit_chain') difficulty = 'multi-step';
 
             const result = await testTask(taskId);
-            const rewardDisplay = result.reward !== null ? result.reward.toFixed(3) : '—';
+            const rewardDisplay = result.reward !== null ? result.reward.toFixed(3) : 'â€”';
             const rewardClass = getRewardClass(result.reward);
 
             if (result.reward !== null && result.reward > 0) workingCount++;
@@ -1046,8 +1071,8 @@
 
             if (result.reward !== null) {
                 if (result.reward >= 0.8) addLogEntry(`${taskId}: Audit passed with reward ${result.reward}`, 'success');
-                else if (result.reward >= 0.3) addLogEntry(`${taskId}: Partial pass — reward ${result.reward}`, 'warning');
-                else addLogEntry(`${taskId}: Low reward (${result.reward}) — needs improvement`, 'warning');
+                else if (result.reward >= 0.3) addLogEntry(`${taskId}: Partial pass â€” reward ${result.reward}`, 'warning');
+                else addLogEntry(`${taskId}: Low reward (${result.reward}) â€” needs improvement`, 'warning');
             }
         }
 
@@ -1070,7 +1095,7 @@
 
         const now = new Date();
         document.getElementById('lastUpdate').textContent = `updated ${now.toLocaleTimeString('en-US', { hour12: false })}`;
-        document.getElementById('liveStatus').textContent = `Live — refreshing every 30s`;
+        document.getElementById('liveStatus').textContent = `Live â€” refreshing every 30s`;
 
         addLogEntry(`Audit cycle complete: ${workingCount}/${totalTasks} tasks passed (${successRate}% success rate)`, 'success');
     }
