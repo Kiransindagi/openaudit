@@ -127,7 +127,8 @@ def run_task(task_id):
         step += 1
 
     rewards_str = ",".join([f"{r:.2f}" for r in step_rewards])
-    print(f"[END] success={str(done).lower()} steps={step} rewards={rewards_str}", flush=True)
+    score = round(min(0.98, max(0.02, sum(step_rewards)/max(1,len(step_rewards)))), 3)
+    print(f"[END] success={str(done).lower()} steps={step} score={score:.3f} rewards={rewards_str}", flush=True)
     return sum(step_rewards) / max(1, len(step_rewards))
 
 def main():
@@ -152,6 +153,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
