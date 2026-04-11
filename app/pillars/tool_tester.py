@@ -36,7 +36,7 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     elif primary_flaw == "silent_failure":
         score = 0.21
         if any(kw in description for kw in ["silent", "swallow", "bare except", "return none", "exception ignored"]):
-            score += 0.6
+            score += 0.78
         if "silent" in finding_type:
             score += 0.1
         score = round(min(0.99, score), 3)
@@ -45,10 +45,11 @@ def grade_tool(action: AuditAction, tool_data: Dict[str, Any]) -> AuditReward:
     elif primary_flaw == "adversarial_chain":
         score = 0.21
         if any(kw in description for kw in ["exec", "arbitrary code", "injection", "unsafe", "security", "rce"]):
-            score += 0.6
+            score += 0.78
         if "adversarial" in finding_type or "injection" in finding_type:
             score += 0.1
         score = round(min(0.99, score), 3)
         return AuditReward(value=score, reason="Adversarial chain", finding_matched="adversarial_chain" if score > 0.5 else None, is_false_positive=False, penalty_applied=0.01, cumulative_score=score)
 
     return AuditReward(value=0.21, reason="Unrecognized flaw", finding_matched=None, is_false_positive=False, penalty_applied=0.01, cumulative_score=0.21)
+
