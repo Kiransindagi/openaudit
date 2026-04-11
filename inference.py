@@ -104,7 +104,7 @@ def run_task(task_id):
         return 0.5
 
     actions = TASK_ACTIONS.get(task_id, TASK_ACTIONS["model_card_easy"])
-    max_steps = len(actions) * 3
+    max_steps = len(actions)
 
     step = 0
     step_rewards = []
@@ -152,6 +152,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 
 
 
