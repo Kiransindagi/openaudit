@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAudit ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â AI Ecosystem Trust & Quality Auditing</title>
+    <title>OpenAudit —</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -78,629 +78,7 @@
             padding: 0 2rem;
         }
 
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ HEADER ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        header {
-            border-bottom: 1px solid var(--border);
-            padding: 1.25rem 0;
-            position: sticky;
-            top: 0;
-            background: rgba(8,9,12,0.92);
-            backdrop-filter: blur(20px);
-            z-index: 100;
-        }
-
-        .header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .wordmark {
-            font-family: var(--display);
-            font-weight: 800;
-            font-size: 1.15rem;
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-
-        .wordmark span {
-            color: var(--accent);
-        }
-
-        .live-pill {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 0.3rem 0.75rem;
-            border-radius: 2rem;
-            letter-spacing: 0.05em;
-        }
-
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ HERO ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .hero {
-            padding: 5rem 0 3.5rem;
-            position: relative;
-        }
-
-        .hero-label {
-            font-family: var(--mono);
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .hero-label::after {
-            content: '';
-            display: block;
-            height: 1px;
-            width: 3rem;
-            background: var(--accent);
-            opacity: 0.5;
-        }
-
-        h1 {
-            font-family: var(--display);
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            margin-bottom: 1.5rem;
-            color: var(--text);
-        }
-
-        h1 .accent-word {
-            color: var(--accent);
-            position: relative;
-            display: inline-block;
-        }
-
-        .hero-sub {
-            font-size: 1rem;
-            color: var(--text-dim);
-            max-width: 520px;
-            font-weight: 300;
-            line-height: 1.7;
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ STAT STRIP ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .stat-strip {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            margin: 3rem 0;
-            background: var(--surface);
-        }
-
-        .stat-item {
-            padding: 1.5rem;
-            border-right: 1px solid var(--border);
-            transition: background 0.2s;
-        }
-
-        .stat-item:last-child { border-right: none; }
-        .stat-item:hover { background: var(--surface-2); }
-
-        .stat-number {
-            font-family: var(--display);
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent);
-            letter-spacing: -0.03em;
-            line-height: 1;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-label {
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ SECTION HEADERS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .section-header {
-            display: flex;
-            align-items: baseline;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .section-title {
-            font-family: var(--display);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text);
-        }
-
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TWO-COLUMN LAYOUT ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ AUDIT LOG ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            overflow: hidden;
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .panel-title {
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .panel-badge {
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 0.25rem;
-            background: var(--accent-dim);
-            color: var(--accent);
-            letter-spacing: 0.05em;
-        }
-
-        .audit-log {
-            height: 220px;
-            overflow-y: auto;
-            padding: 0.75rem;
-            font-family: var(--mono);
-            font-size: 0.68rem;
-            line-height: 1.8;
-            scroll-behavior: smooth;
-        }
-
-        .audit-log::-webkit-scrollbar { width: 3px; }
-        .audit-log::-webkit-scrollbar-track { background: transparent; }
-        .audit-log::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
-
-        .log-entry {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.15rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            animation: slideIn 0.25s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-8px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .log-time { color: var(--text-muted); flex-shrink: 0; }
-        .log-info .log-msg { color: var(--text-dim); }
-        .log-success .log-msg { color: var(--pass); }
-        .log-warning .log-msg { color: var(--warn); }
-        .log-error .log-msg { color: var(--fail); }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ RESULTS TABLE ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .results-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
-        .loading-state {
-            padding: 3rem;
-            text-align: center;
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        .loading-bar {
-            width: 120px;
-            height: 2px;
-            background: var(--border);
-            border-radius: 1px;
-            margin: 1rem auto 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .loading-bar::after {
-            content: '';
-            position: absolute;
-            left: -50%;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: var(--accent);
-            animation: loading 1.2s infinite;
-        }
-
-        @keyframes loading {
-            0% { left: -50%; }
-            100% { left: 150%; }
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead tr {
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            padding: 0.85rem 1.25rem;
-            text-align: left;
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        td {
-            padding: 0.75rem 1.25rem;
-            font-size: 0.8rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            color: var(--text-dim);
-        }
-
-        tr:last-child td { border-bottom: none; }
-
-        tr:hover td {
-            background: rgba(255,255,255,0.02);
-            color: var(--text);
-        }
-
-        td:first-child {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--text);
-        }
-
-        .reward-cell {
-            font-family: var(--mono);
-            font-weight: 500;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.2rem 0.65rem;
-            border-radius: 0.25rem;
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-        }
-
-        .badge-pass { background: var(--pass-bg); color: var(--pass); }
-        .badge-partial { background: var(--warn-bg); color: var(--warn); }
-        .badge-fail { background: var(--fail-bg); color: var(--fail); }
-
-        .badge-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        .summary-bar {
-            padding: 1rem 1.25rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--surface-2);
-        }
-
-        .summary-text {
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-
-        .summary-text strong {
-            color: var(--accent);
-            font-weight: 500;
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ PILLAR CARDS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .pillars {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .pillar-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            transition: border-color 0.2s, background 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pillar-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
-        }
-
-        .pillar-card:hover {
-            border-color: var(--border-bright);
-            background: var(--surface-2);
-        }
-
-        .pillar-card:hover::before { transform: scaleX(1); }
-
-        .pillar-number {
-            font-family: var(--display);
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 0.75rem;
-        }
-
-        .pillar-name {
-            font-family: var(--display);
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .pillar-desc {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ API SECTION ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .api-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .endpoint-list { display: flex; flex-direction: column; gap: 0.5rem; }
-
-        .endpoint-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.65rem 1rem;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 0.4rem;
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            transition: border-color 0.2s;
-        }
-
-        .endpoint-row:hover { border-color: var(--border-bright); }
-
-        .method-tag {
-            padding: 0.15rem 0.5rem;
-            border-radius: 0.2rem;
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            flex-shrink: 0;
-        }
-
-        .method-post { background: rgba(74,222,128,0.15); color: var(--pass); }
-        .method-get { background: rgba(96,165,250,0.15); color: #60a5fa; }
-
-        .endpoint-url { color: var(--accent); flex: 1; }
-        .endpoint-desc { color: var(--text-muted); font-size: 0.65rem; }
-
-        .code-panel {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 0.4rem;
-            overflow: hidden;
-        }
-
-        .code-panel-header {
-            padding: 0.6rem 1rem;
-            border-bottom: 1px solid var(--border);
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .code-block {
-            padding: 1rem;
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            line-height: 1.8;
-            overflow-x: auto;
-            white-space: pre;
-        }
-
-        .code-block .cmd { color: var(--accent); }
-        .code-block .key { color: #60a5fa; }
-        .code-block .val { color: #f9a8d4; }
-        .code-block .cmt { color: var(--text-muted); }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ BUTTONS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .actions {
-            display: flex;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.65rem 1.5rem;
-            border-radius: 0.4rem;
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            letter-spacing: 0.05em;
-            text-decoration: none;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #08090c;
-            font-weight: 500;
-        }
-
-        .btn-primary:hover {
-            background: #d4f557;
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-dim);
-            border-color: var(--border);
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--border-bright);
-            color: var(--text);
-            background: var(--surface-2);
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ FOOTER ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 2rem 0;
-            margin-top: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .footer-brand {
-            font-family: var(--display);
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .footer-brand span { color: var(--accent); }
-
-        .footer-meta {
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ RESPONSIVE ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        @media (max-width: 900px) {
-            .stat-strip { grid-template-columns: repeat(3, 1fr); }
-            .pillars { grid-template-columns: repeat(2, 1fr); }
-            .two-col, .api-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 2.25rem; }
-        }
-
-        @media (max-width: 600px) {
-            .layout { padding: 0 1rem; }
-            .stat-strip { grid-template-columns: repeat(2, 1fr); }
-            .pillars { grid-template-columns: 1fr; }
-            .actions { flex-direction: column; }
-            th, td { padding: 0.6rem 0.75rem; }
-        }
-
-        /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ ENTRANCE ANIMATIONS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.6s ease forwards;
-        }
-
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-up:nth-child(1) { animation-delay: 0.05s; }
-        .fade-up:nth-child(2) { animation-delay: 0.1s; }
-        .fade-up:nth-child(3) { animation-delay: 0.15s; }
-        .fade-up:nth-child(4) { animation-delay: 0.2s; }
-        .fade-up:nth-child(5) { animation-delay: 0.25s; }
-
-        /* reward color coding */
-        .r-high { color: var(--pass); }
-        .r-mid { color: var(--warn); }
-        .r-low { color: var(--fail); }
-
-        #lastUpdate {
-            font-family: var(--mono);
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-    </style>
+        /* —</style>
 </head>
 <body>
 
@@ -728,11 +106,11 @@
     <!-- STATS -->
     <div class="stat-strip fade-up" id="statsContainer">
         <div class="stat-item">
-            <div class="stat-number" id="s-tasks">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</div>
+            <div class="stat-number" id="s-tasks">—</div>
             <div class="stat-label">Audit Tasks</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number" id="s-working">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</div>
+            <div class="stat-number" id="s-working">—</div>
             <div class="stat-label">Tasks Passing</div>
         </div>
         <div class="stat-item">
@@ -774,15 +152,15 @@
             <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; height: 220px; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
                     <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">TOTAL REWARD</span>
-                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--accent);" id="summaryReward">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--accent);" id="summaryReward">—</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
                     <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">SUCCESS RATE</span>
-                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryRate">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryRate">—</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: baseline;">
                     <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em;">TASKS COMPLETE</span>
-                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryTasks">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>
+                    <span style="font-family: var(--display); font-size: 1.75rem; font-weight: 800; color: var(--text);" id="summaryTasks">—</span>
                 </div>
             </div>
         </div>
@@ -898,7 +276,7 @@
 <span class="cmt"># 5. Check episode state</span>
 <span class="cmd">curl</span> <span class="val">https://kiransin-openaudit.hf.space/state</span>
 
-<span class="cmt"># 6. Python Ã¢â‚¬â€ run the baseline agent</span>
+<span class="cmt"># 6. Python —</span>
 <span class="cmd">pip</span> install openai requests
 <span class="key">export</span> HF_TOKEN=<span class="val">"your_hf_token"</span>
 <span class="key">export</span> API_BASE_URL=<span class="val">"https://router.huggingface.co/v1"</span>
@@ -906,7 +284,7 @@
 <span class="key">export</span> ENV_API_URL=<span class="val">"https://kiransin-openaudit.hf.space"</span>
 <span class="cmd">python</span> inference.py
 
-<span class="cmt"># 7. Python Ã¢â‚¬â€ single step example</span>
+<span class="cmt"># 7. Python —</span>
 <span class="cmd">import</span> requests
 obs = requests.<span class="key">post</span>(<span class="val">"https://kiransin-openaudit.hf.space/reset"</span>,
       params={<span class="val">"task_id"</span>: <span class="val">"dataset_qc_easy"</span>})
@@ -941,19 +319,19 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
 
                     <!-- TAB 0: MODEL CARD -->
                     <div class="tab-panel active">
-                        <div class="code-block"><span class="cmt"># Step 1 — Start a model card audit episode</span>
+                        <div class="code-block"><span class="cmt"># Step 1 â€” Start a model card audit episode</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/reset?task_id=model_card_easy</span>
 
-<span class="cmt"># Step 2 — Check for missing license field</span>
+<span class="cmt"># Step 2 â€” Check for missing license field</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -H <span class="key">"Content-Type: application/json"</span> \
      -d <span class="val">'{"pillar":"model_card","finding_type":"missing_field","target_field":"license","description":"License field is missing from the model card","severity":2}'</span>
 
-<span class="cmt"># Step 3 — Check for license conflict (e.g. MIT vs GPL parent)</span>
+<span class="cmt"># Step 3 â€” Check for license conflict (e.g. MIT vs GPL parent)</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"model_card","finding_type":"license_conflict","target_field":"license","description":"MIT license conflicts with GPL-3.0 parent model license violation","severity":3}'</span>
 
-<span class="cmt"># Step 4 — Check for benchmark fraud</span>
+<span class="cmt"># Step 4 â€” Check for benchmark fraud</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"model_card","finding_type":"benchmark_fraud","target_field":"MMLU","description":"MMLU score inflated vs actual benchmark results","severity":3}'</span>
 
@@ -963,19 +341,19 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
 
                     <!-- TAB 1: DATASET QC -->
                     <div class="tab-panel">
-                        <div class="code-block"><span class="cmt"># Step 1 — Start a dataset audit episode</span>
+                        <div class="code-block"><span class="cmt"># Step 1 â€” Start a dataset audit episode</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/reset?task_id=dataset_qc_easy</span>
 
-<span class="cmt"># Step 2 — Check for null / missing values</span>
+<span class="cmt"># Step 2 â€” Check for null / missing values</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -H <span class="key">"Content-Type: application/json"</span> \
      -d <span class="val">'{"pillar":"dataset_qc","finding_type":"null_values","target_field":"columns","description":"Null and missing empty values found in dataset columns","severity":2}'</span>
 
-<span class="cmt"># Step 3 — Check for duplicate rows</span>
+<span class="cmt"># Step 3 â€” Check for duplicate rows</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"dataset_qc","finding_type":"duplicates","target_field":"rows","description":"Duplicate and identical same rows detected in dataset","severity":2}'</span>
 
-<span class="cmt"># Step 4 — Check for train/test leakage</span>
+<span class="cmt"># Step 4 â€” Check for train/test leakage</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"dataset_qc","finding_type":"test_leakage","target_field":"split","description":"Train test split overlap and leakage detected between splits","severity":3}'</span>
 
@@ -985,19 +363,19 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
 
                     <!-- TAB 2: RL REWARD -->
                     <div class="tab-panel">
-                        <div class="code-block"><span class="cmt"># Step 1 — Start an RL reward audit episode</span>
+                        <div class="code-block"><span class="cmt"># Step 1 â€” Start an RL reward audit episode</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/reset?task_id=rl_reward_easy</span>
 
-<span class="cmt"># Step 2 — Check for sparse rewards</span>
+<span class="cmt"># Step 2 â€” Check for sparse rewards</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -H <span class="key">"Content-Type: application/json"</span> \
      -d <span class="val">'{"pillar":"rl_reward","finding_type":"sparse_reward","target_field":"reward_function","description":"Reward is too sparse only given rarely at end of episode","severity":2}'</span>
 
-<span class="cmt"># Step 3 — Check for reward hacking</span>
+<span class="cmt"># Step 3 â€” Check for reward hacking</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"rl_reward","finding_type":"reward_hacking","target_field":"policy","description":"Agent exploits YES trigger to always cheat maximum reward","severity":3}'</span>
 
-<span class="cmt"># Step 4 — Check for broken verifier</span>
+<span class="cmt"># Step 4 â€” Check for broken verifier</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"rl_reward","finding_type":"broken_verifier","target_field":"verifier","description":"Broken verifier always returns constant value never penalizes incorrect outputs","severity":3}'</span>
 
@@ -1007,19 +385,19 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
 
                     <!-- TAB 3: TOOL TESTER -->
                     <div class="tab-panel">
-                        <div class="code-block"><span class="cmt"># Step 1 — Start a tool audit episode</span>
+                        <div class="code-block"><span class="cmt"># Step 1 â€” Start a tool audit episode</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/reset?task_id=tool_tester_easy</span>
 
-<span class="cmt"># Step 2 — Check for code quality issues</span>
+<span class="cmt"># Step 2 â€” Check for code quality issues</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -H <span class="key">"Content-Type: application/json"</span> \
      -d <span class="val">'{"pillar":"tool_tester","finding_type":"code_quality","target_field":"function","description":"Missing docstring and type hints no type annotation provided","severity":2}'</span>
 
-<span class="cmt"># Step 3 — Check for silent failures</span>
+<span class="cmt"># Step 3 â€” Check for silent failures</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"tool_tester","finding_type":"silent_failure","target_field":"exception","description":"Silent failure bare except swallows errors and returns None exception ignored","severity":2}'</span>
 
-<span class="cmt"># Step 4 — Check for adversarial chains</span>
+<span class="cmt"># Step 4 â€” Check for adversarial chains</span>
 <span class="cmd">curl</span> -X POST <span class="val">https://kiransin-openaudit.hf.space/step</span> \
      -d <span class="val">'{"pillar":"tool_tester","finding_type":"adversarial_chain","target_field":"exec_call","description":"Exec runs arbitrary code injection unsafe remote code execution RCE risk","severity":3}'</span>
 
@@ -1194,13 +572,7 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
             else if (taskId === 'model_card_audit_chain') difficulty = 'multi-step';
 
             const result = await testTask(taskId);
-            const rewardDisplay = result.reward !== null ? result.reward.toFixed(3) : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â';
-            const rewardClass = getRewardClass(result.reward);
-
-            if (result.reward !== null && result.reward > 0) workingCount++;
-            if (typeof result.reward === 'number') totalReward += result.reward;
-
-            rowsHtml += `<tr>
+            const rewardDisplay = result.reward !== null ? result.reward.toFixed(3) : '—<tr>
                 <td>${taskId}</td>
                 <td>${pillar}</td>
                 <td style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted);">${difficulty}</td>
@@ -1210,12 +582,7 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
 
             if (result.reward !== null) {
                 if (result.reward >= 0.8) addLogEntry(`${taskId}: Audit passed with reward ${result.reward}`, 'success');
-                else if (result.reward >= 0.3) addLogEntry(`${taskId}: Partial pass ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â reward ${result.reward}`, 'warning');
-                else addLogEntry(`${taskId}: Low reward (${result.reward}) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â needs improvement`, 'warning');
-            }
-        }
-
-        rowsHtml += `</tbody></table>`;
+                else if (result.reward >= 0.3) addLogEntry(`${taskId}: Partial pass —</tbody></table>`;
 
         const successRate = totalTasks > 0 ? ((workingCount / totalTasks) * 100).toFixed(1) : 0;
 
@@ -1234,17 +601,6 @@ result = requests.<span class="key">post</span>(<span class="val">"https://kiran
 
         const now = new Date();
         document.getElementById('lastUpdate').textContent = `updated ${now.toLocaleTimeString('en-US', { hour12: false })}`;
-        document.getElementById('liveStatus').textContent = `Live ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â refreshing every 30s`;
-
-        addLogEntry(`Audit cycle complete: ${workingCount}/${totalTasks} tasks passed (${successRate}% success rate)`, 'success');
-    }
-
-    addLogEntry('OpenAudit dashboard ready', 'success');
-    addLogEntry('API endpoint: ' + BASE_URL, 'info');
-    refreshAllTests();
-
-    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-    autoRefreshInterval = setInterval(refreshAllTests, 30000);
-</script>
+        document.getElementById('liveStatus').textContent = `Live —</script>
 </body>
 </html>
