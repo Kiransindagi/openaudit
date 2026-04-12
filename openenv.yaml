@@ -1,74 +1,82 @@
-﻿# Create a clean, properly formatted openenv.yaml
-
 name: openaudit
 version: "1.0.0"
 description: "AI ecosystem trust & quality auditing environment"
 author: "kiran-sindagi"
 tags: [openenv, auditing, trust, safety, huggingface]
-
 tasks:
-  # Pillar 1: Model Card (3 tasks)
   - id: model_card_easy
-    name: "Model card field completeness"
     difficulty: easy
+    grader:
+      type: llm
+      prompt_template: "Score the audit finding for missing model card fields 0.0 to 1.0. Finding: {description}"
   - id: model_card_medium
-    name: "License conflict detection"
     difficulty: medium
+    grader:
+      type: llm
+      prompt_template: "Score the license conflict detection quality 0.0 to 1.0. Finding: {description}"
   - id: model_card_hard
-    name: "Benchmark claim verification"
     difficulty: hard
-  
-  # Pillar 2: Dataset QC (3 tasks)
+    grader:
+      type: llm
+      prompt_template: "Score the benchmark fraud detection quality 0.0 to 1.0. Finding: {description}"
   - id: dataset_qc_easy
-    name: "Null detection"
     difficulty: easy
+    grader:
+      type: llm
+      prompt_template: "Score the null value detection quality 0.0 to 1.0. Finding: {description}"
   - id: dataset_qc_medium
-    name: "Duplicate detection"
     difficulty: medium
+    grader:
+      type: llm
+      prompt_template: "Score the duplicate detection quality 0.0 to 1.0. Finding: {description}"
   - id: dataset_qc_hard
-    name: "Train/test leakage detection"
     difficulty: hard
-  
-  # Pillar 3: RL Reward (3 tasks)
+    grader:
+      type: llm
+      prompt_template: "Score the test leakage detection quality 0.0 to 1.0. Finding: {description}"
   - id: rl_reward_easy
-    name: "Sparse reward flag"
     difficulty: easy
+    grader:
+      type: llm
+      prompt_template: "Score the sparse reward detection quality 0.0 to 1.0. Finding: {description}"
   - id: rl_reward_medium
-    name: "Reward hacking detection"
     difficulty: medium
+    grader:
+      type: llm
+      prompt_template: "Score the reward hacking detection quality 0.0 to 1.0. Finding: {description}"
   - id: rl_reward_hard
-    name: "Verifier repair"
     difficulty: hard
-  
-  # Multi-step chain
-  - id: model_card_audit_chain
-    name: "Multi-step model card audit"
-    difficulty: hard
-  # Pillar 4: Tool Tester (3 tasks)
+    grader:
+      type: llm
+      prompt_template: "Score the broken verifier detection quality 0.0 to 1.0. Finding: {description}"
   - id: tool_tester_easy
-    name: "Static analysis"
     difficulty: easy
+    grader:
+      type: llm
+      prompt_template: "Score the code quality issue detection 0.0 to 1.0. Finding: {description}"
   - id: tool_tester_medium
-    name: "Silent failure detection"
     difficulty: medium
+    grader:
+      type: llm
+      prompt_template: "Score the silent failure detection quality 0.0 to 1.0. Finding: {description}"
   - id: tool_tester_hard
-    name: "Adversarial chain detection"
     difficulty: hard
-
+    grader:
+      type: llm
+      prompt_template: "Score the adversarial chain detection quality 0.0 to 1.0. Finding: {description}"
+  - id: model_card_audit_chain
+    difficulty: hard
+    grader:
+      type: llm
+      prompt_template: "Score the multi-step audit chain quality 0.0 to 1.0. Finding: {description}"
 observation_space:
   type: object
   fields: [artifact_type, content, metadata, step_number, findings_so_far, max_steps, task_id, instructions]
-
 action_space:
   type: object
   fields: [pillar, finding_type, target_field, description, severity]
-
 reward_space:
   type: float
   min: 0.0
   max: 1.0
-
 endpoint: https://kiransin-openaudit.hf.space
-
-
-
